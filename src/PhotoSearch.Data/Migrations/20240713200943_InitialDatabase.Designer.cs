@@ -13,15 +13,15 @@ using PhotoSearch.Data;
 namespace PhotoSearch.Data.Migrations
 {
     [DbContext(typeof(PhotoSearchContext))]
-    [Migration("20240713151732_RefactorPhotoEntity")]
-    partial class RefactorPhotoEntity
+    [Migration("20240713200943_InitialDatabase")]
+    partial class InitialDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -31,23 +31,30 @@ namespace PhotoSearch.Data.Migrations
                     b.Property<string>("RelativePath")
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("CaptureDate")
+                    b.Property<DateTime?>("CaptureDateUTC")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ExactPath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("Height")
                         .HasColumnType("integer");
 
-                    b.Property<DateTimeOffset>("ImportedDate")
+                    b.Property<DateTime>("ImportedDateUTC")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<double>("Latitude")
+                    b.Property<double?>("Latitude")
                         .HasColumnType("double precision");
 
-                    b.Property<double>("Longitude")
+                    b.Property<double?>("Longitude")
                         .HasColumnType("double precision");
 
                     b.Property<string>("PublicUrl")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long>("SizeKb")
@@ -73,7 +80,6 @@ namespace PhotoSearch.Data.Migrations
                                 .HasColumnType("integer");
 
                             b1.Property<List<string>>("Categoties")
-                                .IsRequired()
                                 .HasColumnType("text[]");
 
                             b1.Property<DateTimeOffset>("DateGenerated")
@@ -88,7 +94,6 @@ namespace PhotoSearch.Data.Migrations
                                 .HasColumnType("text");
 
                             b1.Property<List<string>>("ObjectClasses")
-                                .IsRequired()
                                 .HasColumnType("text[]");
 
                             b1.HasKey("PhotoRelativePath", "Id");
@@ -107,15 +112,12 @@ namespace PhotoSearch.Data.Migrations
                                 .HasColumnType("text");
 
                             b1.Property<string>("LargeThumbnailUrl")
-                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("MediumhumbnailUrl")
-                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("SmallThumbnailUrl")
-                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.HasKey("PhotoRelativePath");
@@ -143,13 +145,11 @@ namespace PhotoSearch.Data.Migrations
                                 .HasForeignKey("PhotoRelativePath");
                         });
 
-                    b.Navigation("Metadata")
-                        .IsRequired();
+                    b.Navigation("Metadata");
 
                     b.Navigation("PhotoSummaries");
 
-                    b.Navigation("Thumbnails")
-                        .IsRequired();
+                    b.Navigation("Thumbnails");
                 });
 #pragma warning restore 612, 618
         }

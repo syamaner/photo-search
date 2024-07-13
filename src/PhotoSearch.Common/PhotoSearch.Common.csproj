@@ -7,4 +7,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.9.1" />
+      <PackageReference Include="MetadataExtractor" Version="2.8.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PhotoSearch.Data\PhotoSearch.Data.csproj" />
+    </ItemGroup>
+
 </Project>

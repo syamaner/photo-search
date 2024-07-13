@@ -39,21 +39,27 @@ public class PhotoSearchContext : DbContext
             .IsRequired();
         modelBuilder.Entity<Photo>()
             .Property(p => p.Latitude)
-            .IsRequired();
+            .IsRequired(false).HasDefaultValue(null);;
         modelBuilder.Entity<Photo>()
             .Property(p => p.Longitude)
-            .IsRequired();
+            .IsRequired(false).HasDefaultValue(null);
         modelBuilder.Entity<Photo>()
-            .Property(p => p.CaptureDate)
-            .IsRequired();
+            .Property(p => p.CaptureDateUTC)
+            .IsRequired(false).HasDefaultValue(null);
         modelBuilder.Entity<Photo>()
-            .Property(p => p.ImportedDate)
+            .Property(p => p.ImportedDateUTC)
             .IsRequired();
         modelBuilder.Entity<Photo>()
             .Property(p => p.PublicUrl)
-            .IsRequired();
+            .IsRequired(false).HasDefaultValue(null);;
         modelBuilder.Entity<Photo>()
             .Property(p => p.RelativePath)
+            .IsRequired();
+        modelBuilder.Entity<Photo>()
+            .Property(p => p.ExactPath)
+            .IsRequired();
+        modelBuilder.Entity<Photo>()
+            .Property(p => p.FileType)
             .IsRequired();
         modelBuilder.Entity<Photo>()
             .Property(p => p.SizeKb)

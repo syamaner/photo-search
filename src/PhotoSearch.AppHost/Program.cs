@@ -32,9 +32,8 @@ var messaging = builder.AddRabbitMQ("messaging", rmqUsername, rmqPassword,5672)
 
 var postgres = builder.AddPostgres("postgres", pgUsername, pgPassword, 5432)
     .WithDataVolume("postgres", false)
-    .WithVolume("pgadmin", "/var/lib/pgadmin")
     .WithContainerRuntimeArgs("-p", $"0.0.0.0:5432:5432");
-var postgresDb = postgres.AddDatabase("postgresdb");
+var postgresDb = postgres.AddDatabase("photo-db");
  
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice")
     .WithReference(messaging)

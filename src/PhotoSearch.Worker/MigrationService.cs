@@ -14,11 +14,15 @@ public class MigrationService(PhotoSearchContext dbContext): IMigrationService
 
     public async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        while (!await dbContext.Database.CanConnectAsync(cancellationToken))
+        var attempt = 0;
+        const int maxAttempts = 10;
+        var dbExists = false;
+        while (!await dbContext.Database.CanConnectAsync(cancellationToken) && attempt++ <= maxAttempts && !dbExists)
         {
-            await Task.Delay(500, cancellationToken);
+            await Task.Delay(600, cancellationToken);
+            dbExists = await EnsureDatabaseAsync(dbContext, cancellationToken);
         }
-        
+
         using var activity = s_activitySource.StartActivity("Migrating database", ActivityKind.Client);
 
         try
@@ -34,19 +38,27 @@ public class MigrationService(PhotoSearchContext dbContext): IMigrationService
         }
     }
  
-    private static async Task EnsureDatabaseAsync(PhotoSearchContext dbContext, CancellationToken cancellationToken)
+    private static async Task<bool> EnsureDatabaseAsync(PhotoSearchContext dbContext, CancellationToken cancellationToken)
     {
-        var dbCreator = dbContext.GetService<IRelationalDatabaseCreator>();
-
-        var strategy = dbContext.Database.CreateExecutionStrategy();
-        
-        await strategy.ExecuteAsync(async () =>
+        try
         {
-            if (!await dbCreator.ExistsAsync(cancellationToken))
+            var dbCreator = dbContext.GetService<IRelationalDatabaseCreator>();
+
+            var strategy = dbContext.Database.CreateExecutionStrategy();
+
+            await strategy.ExecuteAsync(async () =>
             {
-                await dbCreator.CreateAsync(cancellationToken);
-            }
-        });
+                if (!await dbCreator.ExistsAsync(cancellationToken))
+                {
+                    await dbCreator.CreateAsync(cancellationToken);
+                }
+            });
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private static async Task RunMigrationAsync(PhotoSearchContext dbContext, CancellationToken cancellationToken)

@@ -1,4 +1,5 @@
 using MassTransit;
+using PhotoSearch.Common;
 using PhotoSearch.Data;
 using PhotoSearch.ServiceDefaults;
 using PhotoSearch.Worker;
@@ -7,6 +8,7 @@ using PhotoSearch.Worker.Consumers;
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddHostedService<Worker>();
 builder.Services.AddTransient<IMigrationService, MigrationService>();
+builder.Services.AddTransient<IPhotoImporter, PhotoImporter>();
 builder.AddRabbitMQClient("messaging");
 builder.AddNpgsqlDbContext<PhotoSearchContext>("postgresdb");
 
