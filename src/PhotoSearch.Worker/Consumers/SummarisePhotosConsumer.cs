@@ -33,20 +33,8 @@ public class SummarisePhotosConsumer(
             {
                 continue;
             }
-
             var request = BuildRequest(context.Message.ModelName, filePath);
-            var result = await ollamaApiClient.GetCompletion(request);
-            var response = result.Response.Replace(Environment.NewLine, "");
-            var pattern = @"\\u([0-9A-Fa-f]{4})";
-            response = Regex.Replace(response, pattern, match =>
-            {
-                char unicodeChar = (char)Convert.ToInt32(match.Groups[1].Value, 16);
-                return unicodeChar.ToString();
-            });
-            var jsonMatch = Regex.Match(response, @"\{.*\}", RegexOptions.Singleline);
-            if (!jsonMatch.Success) continue;
-            
-            var jsonString = jsonMatch.Value;
+            var jsonString = await ExtractJsonDocument(request);
             try
             {
                 var document = JsonDocument.Parse(jsonString);
@@ -77,10 +65,27 @@ public class SummarisePhotosConsumer(
             context.Message.ModelName);
     }
 
+    private async Task<string> ExtractJsonDocument(GenerateCompletionRequest request)
+    {
+        var result = await ollamaApiClient.GetCompletion(request);
+        var response = result.Response.Replace(Environment.NewLine, "");
+        const string pattern = @"\\u([0-9A-Fa-f]{4})";
+        response = Regex.Replace(response, pattern, match =>
+        {
+            var unicodeChar = (char)Convert.ToInt32(match.Groups[1].Value, 16);
+            return unicodeChar.ToString();
+        });
+        var jsonMatch = Regex.Match(response, @"\{.*\}", RegexOptions.Singleline);
+        if (!jsonMatch.Success) return string.Empty;
+            
+        var jsonString = jsonMatch.Value;
+        return jsonString;
+    }
+
     private static GenerateCompletionRequest BuildRequest(string modelName, string filePath)
     {
         using var image = new MagickImage(filePath);
-        byte[] imageBytes = image.ToByteArray();
+        var imageBytes = image.ToByteArray();
         var base64String = Convert.ToBase64String(imageBytes);
 
         var request = new GenerateCompletionRequest()
@@ -111,7 +116,7 @@ public class SummarisePhotosConsumer(
         }
         catch (Exception ex)
         {
-            
+            logger.LogError(ex, "Error getting photos to summarise.");
         }
 
         return photos;

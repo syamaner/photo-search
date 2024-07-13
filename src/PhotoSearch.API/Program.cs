@@ -1,16 +1,15 @@
-using System.Text.Encodings.Web;
 using MassTransit;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using PhotoSearch.Common.Contracts;
 using PhotoSearch.Data;
 using PhotoSearch.ServiceDefaults;
-using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.AddServiceDefaults();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.AddRabbitMQClient("messaging");

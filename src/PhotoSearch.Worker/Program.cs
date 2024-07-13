@@ -7,6 +7,7 @@ using PhotoSearch.Worker;
 using PhotoSearch.Worker.Consumers;
 
 var builder = Host.CreateApplicationBuilder(args);
+builder.AddServiceDefaults();
 builder.Services.AddHostedService<Worker>();
 builder.Services.AddTransient<IMigrationService, MigrationService>();
 builder.Services.AddTransient<IPhotoImporter, PhotoImporter>();
