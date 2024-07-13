@@ -1,0 +1,27 @@
+<mxfile host="app.diagrams.net" modified="2024-07-12T22:57:22.800Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" etag="ZYQvPnV1-0n_xt6jbs8D" version="24.6.5" type="github">
+  <diagram name="development machines" id="C3VDw5aWPiY7srh2QyCc">
+    <mxGraphModel dx="684" dy="1236" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="mQwq3rVBsMqgfcajMx54-5" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="90" width="370" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="mQwq3rVBsMqgfcajMx54-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="mQwq3rVBsMqgfcajMx54-1" target="mQwq3rVBsMqgfcajMx54-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mQwq3rVBsMqgfcajMx54-4" value="ssh" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="mQwq3rVBsMqgfcajMx54-3">
+          <mxGeometry x="-0.3111" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="mQwq3rVBsMqgfcajMx54-1" value="Development Machine&lt;div&gt;with Docker CLI&lt;/div&gt;" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#434445;aspect=fixed;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;shape=mxgraph.vvd.laptop;" vertex="1" parent="1">
+          <mxGeometry x="230" y="130" width="50" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="mQwq3rVBsMqgfcajMx54-2" value="Docker host&amp;nbsp;&lt;div&gt;with GPU&lt;/div&gt;" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.traditional_server;fillColor=#7D7C7C;gradientColor=none;" vertex="1" parent="1">
+          <mxGeometry x="460" y="116.5" width="46.5" height="63" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
