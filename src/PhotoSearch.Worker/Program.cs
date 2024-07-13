@@ -1,5 +1,6 @@
 using MassTransit;
 using PhotoSearch.Data;
+using PhotoSearch.ServiceDefaults;
 using PhotoSearch.Worker;
 using PhotoSearch.Worker.Consumers;
 
@@ -9,19 +10,9 @@ builder.Services.AddTransient<IMigrationService, MigrationService>();
 builder.AddRabbitMQClient("messaging");
 builder.AddNpgsqlDbContext<PhotoSearchContext>("postgresdb");
 
-builder.Services.AddMassTransit(x =>
+builder.AddMasstransit(configurator =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-    x.AddHealthChecks();
-    x.AddConsumer<ImportPhotosConsumer>();
-    
-    x.UsingRabbitMq((context, cfg) =>
-    {
-        var configuration = context.GetRequiredService<IConfiguration>();
-        var host = configuration.GetConnectionString("messaging");
-        cfg.Host(host);
-        cfg.ConfigureEndpoints(context);
-    });
+    configurator.AddConsumer<ImportPhotosConsumer>();
 });
 
 var host = builder.Build();

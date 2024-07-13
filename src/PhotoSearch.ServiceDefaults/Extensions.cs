@@ -1,5 +1,7 @@
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
@@ -90,14 +92,31 @@ public static class Extensions
     }
 
     public static IHostApplicationBuilder AddDefaultHealthChecks(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddHealthChecks()
-            // Add a default liveness check to ensure app is responsive
-            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
-
-        return builder;
-    }
+         {
+             builder.Services.AddHealthChecks()
+                 // Add a default liveness check to ensure app is responsive
+                 .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
+     
+             return builder;
+         }
+       public static IHostApplicationBuilder AddMasstransit(this IHostApplicationBuilder builder, Action<IBusRegistrationConfigurator>? configure = null)
+        {
+            builder.Services.AddMassTransit(x =>
+            {
+                x.SetKebabCaseEndpointNameFormatter();
+                x.AddHealthChecks();
+                configure?.Invoke(x);
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    var configuration = context.GetRequiredService<IConfiguration>();
+                    var host = configuration.GetConnectionString("messaging");
+                    cfg.Host(host);
+                    cfg.ConfigureEndpoints(context);
+                });
+            });
     
+            return builder;
+        }
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
         // Uncomment the following line to enable the Prometheus endpoint (requires the OpenTelemetry.Exporter.Prometheus.AspNetCore package)

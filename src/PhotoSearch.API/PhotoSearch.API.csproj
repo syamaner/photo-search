@@ -26,6 +26,7 @@
     <ItemGroup>
       <ProjectReference Include="..\PhotoSearch.Common\PhotoSearch.Common.csproj" />
       <ProjectReference Include="..\PhotoSearch.Data\PhotoSearch.Data.csproj" />
+      <ProjectReference Include="..\PhotoSearch.ServiceDefaults\PhotoSearch.ServiceDefaults.csproj" />
     </ItemGroup>
 
 </Project>
