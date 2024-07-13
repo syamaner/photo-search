@@ -11,7 +11,6 @@ public class OllamaResource : ContainerResource, IResourceWithConnectionString
     public OllamaResource(string name, string modelName, string externalHostIpAddress, string publicPort,
         string? entrypoint = null) : base(name, entrypoint)
     {
-        if (string.IsNullOrWhiteSpace(externalHostIpAddress)) throw new ArgumentNullException(nameof(externalHostIpAddress));
         if (string.IsNullOrWhiteSpace(publicPort)) throw new ArgumentNullException(nameof(publicPort));
 
         if (string.IsNullOrWhiteSpace(modelName))
@@ -20,7 +19,8 @@ public class OllamaResource : ContainerResource, IResourceWithConnectionString
         }
 
         ModelName = modelName;
-        _externalHostIpAddress = externalHostIpAddress;
+        _externalHostIpAddress =
+            string.IsNullOrWhiteSpace(externalHostIpAddress) ? "localhost" : externalHostIpAddress;
         _publicPort = publicPort;
     }
 
