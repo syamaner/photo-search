@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using Aspire.Hosting;
+using ImageMagick;
 using PhotoSearch.Ollama;
 
 var builder = DistributedApplication.CreateBuilder(args);
@@ -33,6 +34,13 @@ var messaging = builder.AddRabbitMQ("messaging", rmqUsername, rmqPassword,5672)
 var postgres = builder.AddPostgres("postgres", pgUsername, pgPassword, 5432)
     .WithDataVolume("postgres", false)
     .WithContainerRuntimeArgs("-p", $"0.0.0.0:5432:5432");
+
+builder.AddContainer("pgadmin","dpage/pgadmin4")
+    .WithEnvironment("PGADMIN_DEFAULT_EMAIL","a@a.com")
+    .WithEnvironment("PGADMIN_DEFAULT_PASSWORD",pgPassword.Resource.Value)
+    .WithVolume("pgadmin-data","/var/lib/pgadmin")
+    .WithContainerRuntimeArgs("-p", $"0.0.0.0:8008:80");
+
 var postgresDb = postgres.AddDatabase("photo-db");
  
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice")
