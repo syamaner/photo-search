@@ -25,12 +25,26 @@ public class PhotoSearchContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .Entity<Photo>()
-            .OwnsOne(product => product.Thumbnails, builder => { builder.ToJson(); })
-            .OwnsOne(product => product.Metadata, builder => { builder.ToJson(); })
-            .OwnsMany(product => product.PhotoSummaries, builder => { builder.ToJson(); });
+        // modelBuilder
+        //     .Entity<Photo>()
+        //    .OwnsOne(product => product.Thumbnails, builder => { builder.ToJson(); })
+          //  .OwnsOne(product => product.Metadata, builder => { builder.ToJson();  })
+       //     .OwnsMany(product => product.PhotoSummaries, builder => { builder.ToJson(); });
+ 
+        modelBuilder.Entity<Photo>()
+            .Property(p => p.Metadata)
+            .HasColumnType("jsonb")
+            .IsRequired();
+        modelBuilder.Entity<Photo>()
+            .Property(p => p.Thumbnails)
+            .HasColumnType("jsonb")
+            .IsRequired(false);
+        modelBuilder.Entity<Photo>()
+            .Property(p => p.PhotoSummaries)
+            .HasColumnType("jsonb")
+            .IsRequired(false);
 
+        
         modelBuilder.Entity<Photo>()
             .Property(p => p.Height)
             .IsRequired();

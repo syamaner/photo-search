@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+using PhotoSearch.Data.Models;
 
 #nullable disable
 
@@ -26,9 +28,9 @@ namespace PhotoSearch.Data.Migrations
                     Width = table.Column<int>(type: "integer", nullable: false),
                     Height = table.Column<int>(type: "integer", nullable: false),
                     SizeKb = table.Column<long>(type: "bigint", nullable: false),
-                    Metadata = table.Column<string>(type: "jsonb", nullable: true),
-                    PhotoSummaries = table.Column<string>(type: "jsonb", nullable: true),
-                    Thumbnails = table.Column<string>(type: "jsonb", nullable: true)
+                    PhotoSummaries = table.Column<List<PhotoSummary>>(type: "jsonb", nullable: true),
+                    Metadata = table.Column<Dictionary<string, string>>(type: "jsonb", nullable: false),
+                    Thumbnails = table.Column<Thumbnail>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -2,6 +2,10 @@ namespace PhotoSearch.Data.Models;
 
 public class Photo
 {
+    public Photo()
+    {
+        
+    }
     public required string RelativePath { get; set; }
     public required string ExactPath { get; set; }
     public string? PublicUrl { get; set; }
