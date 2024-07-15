@@ -4,3 +4,8 @@ GET {{PhotoSearch.API_HostAddress}}/photos/summarise/llava:13b
 Accept: application/json
 
 ###
+
+GET {{PhotoSearch.API_HostAddress}}/photos/index/test-photos
+Accept: application/json
+
+###

@@ -21,6 +21,30 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <None Remove="TestPhotos\_DSC0011.jpg" />
+      <Content Include="test-photos\_DSC0011.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestPhotos\_DSC0030.jpg" />
+      <Content Include="test-photos\_DSC0030.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestPhotos\_DSC0044.jpg" />
+      <Content Include="test-photos\_DSC0044.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestPhotos\_DSC0640-Enhanced-NR.jpg" />
+      <Content Include="test-photos\_DSC0640-Enhanced-NR.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestPhotos\_DSC5639-Enhanced-NR.jpg" />
+      <Content Include="test-photos\_DSC5639-Enhanced-NR.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestPhotos\IMG_9849_jpg.jpg" />
+      <Content Include="test-photos\IMG_9849_jpg.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
