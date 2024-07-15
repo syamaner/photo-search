@@ -15,7 +15,7 @@ public class ImportPhotosConsumer(IPhotoImporter photoImporter, PhotoSearchConte
         await photoSearchContext.Photos.AddRangeAsync(photos);
         await photoSearchContext.SaveChangesAsync();
 
-        bus.Publish<PhotoSummary>(new { ImagePaths = photos.Select(p => p.ExactPath).ToArray() });
+        await bus.Publish<PhotoSummary>(new { ImagePaths = photos.Select(p => p.ExactPath).ToArray() });
         logger.LogInformation("Inserted {COUNT} photos.",photos.Count);
     }
 }

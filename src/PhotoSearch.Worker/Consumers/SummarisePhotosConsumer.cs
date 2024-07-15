@@ -84,14 +84,13 @@ public class SummarisePhotosConsumer(
         var request = new GenerateCompletionRequest()
         {
             Prompt =
-                "Given the attached picture, please provide a detailed description, list of objects seen and the potential categories the photo belongs to. "+
-                "There should be 3 properties in the response as following. "+
-                "ImageSummary: describe the image in detail in this field. String field. "+
+                "Given the attached photo, please provide a detailed summary and additional details as outlined below: "+
+                "The response json should be as following: {\"ImageSummary\":\"\",\"ListOfObjects\":[\"\",\"\"],\"CandidateCategories\":[\"\",\"\"]}. " +
+                "ImageSummary: Summarise the image in detail in this field. String field. "+
                 "ListOfObjects: Identify object visible in the image. String array. "+
-                "CandidateCategories: Provide a potential list of categories image belongs to. String array. "+
-                "It is essential that the results must be as following json: {\"ImageSummary\":\"\",\"ListOfObjects\":[\"\",\"\"],\"CandidateCategories\":[\"\",\"\"]}. ",
+                "CandidateCategories: Provide a potential list of categories image belongs to. String array. ",
             Model = modelName,
-            Stream = true,
+            Stream = false,
             Context = [],
             Format = "json",
             Images = [base64String]
@@ -107,7 +106,6 @@ public class SummarisePhotosConsumer(
             logger.LogWarning("Ollama returned invalid json. File name {File} model name {ModelName}. Retrying the Ollama API call. Retry attempt {Retry}", filePath, modelName, retryCount);
             request.Prompt = $"Ok let's try again. You have not returned a valid json. Please this time ensure it is a valid json for the same image. {request.Prompt}";
             request.Context = result.Context;
-            request.Images = null;
             result = await ollamaApiClient.GetCompletion(request);
             photoSummary = ParseResponse(result.Response, modelName);
         }

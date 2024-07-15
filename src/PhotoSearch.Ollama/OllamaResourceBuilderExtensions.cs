@@ -9,7 +9,7 @@ public static class OllamaResourceBuilderExtensions
     private const int OllamaContainerPort = 11434;
 
     public static IResourceBuilder<OllamaResource> AddOllama(this IDistributedApplicationBuilder builder,
-        string modelName = "llava:7b",
+        string modelName = "llava:13b",
         string ollamaTag = "latest",
         string hostIpAddress= "",
         string name = "Ollama", int? hostPort = 11438)

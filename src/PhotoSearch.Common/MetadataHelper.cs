@@ -37,7 +37,7 @@ public class MetadataHelper
         return dateTimeOffset.UtcDateTime;
 
     }
-    public static GpsLocation ConvertToDegrees(Dictionary<string, string> metadata)
+    public static GpsLocation? ConvertToDegrees(Dictionary<string, string> metadata)
     {
         if (metadata == null || metadata.Count == 0)
             throw new ArgumentException("Invalid argument. The metadata is empty.");
@@ -54,7 +54,7 @@ public class MetadataHelper
         return new GpsLocation(latitudeDegrees, longitudeDegrees);
 
     }
-    private static double ConvertToDegrees(string gpsCoordinate, string reference)
+    private static double ConvertToDegrees(string? gpsCoordinate, string? reference)
     {
         if (string.IsNullOrWhiteSpace(gpsCoordinate) || string.IsNullOrWhiteSpace(reference))
             throw new ArgumentException("Invalid argument. The GPS coordinate or reference is empty.");

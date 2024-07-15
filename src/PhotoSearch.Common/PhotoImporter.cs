@@ -1,21 +1,23 @@
 using System.Text;
 using ImageMagick;
 using MetadataExtractor;
+using Microsoft.Extensions.Logging;
 using PhotoSearch.Data.Models;
 using Directory = System.IO.Directory;
 
 namespace PhotoSearch.Common;
 
-public class PhotoImporter : IPhotoImporter
+public class PhotoImporter(ILogger<PhotoImporter> logger) : IPhotoImporter
 {
     private readonly List<string> _fileExtensionsToInclude = ["jpg"];
-    
+    private ILogger<PhotoImporter> _logger = logger;
+
     public List<Photo> ImportPhotos(string baseDirectory)
     {
         return GetImageFiles(baseDirectory).Select(file => GetPhotoInformation(file, baseDirectory)).ToList();
     }
 
-    private static Photo GetPhotoInformation(string fullPath, string baseDirectory)
+    private Photo GetPhotoInformation(string fullPath, string baseDirectory)
     {
         if (string.IsNullOrWhiteSpace(fullPath) || !File.Exists(fullPath))
             throw new ArgumentException($"Invalid argument. The image file {fullPath} does not exits.",
@@ -40,7 +42,7 @@ public class PhotoImporter : IPhotoImporter
         return photo;
     }
     
-    private static Dictionary<string, string> ReadExifTags(string imagePath)
+    private Dictionary<string, string> ReadExifTags(string imagePath)
     {
         var directories = ImageMetadataReader.ReadMetadata(imagePath).ToList();
         try
@@ -52,6 +54,7 @@ public class PhotoImporter : IPhotoImporter
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error reading metadata from {ImagePath}", imagePath);
             throw;
         }
     }

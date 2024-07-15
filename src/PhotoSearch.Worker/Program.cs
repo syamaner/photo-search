@@ -14,7 +14,7 @@ builder.Services.AddTransient<IPhotoImporter, PhotoImporter>();
 builder.Services.AddSingleton<IOllamaApiClient>(sp =>
 {
     var lamaConnectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Ollama");
-    return new OllamaApiClient(new Uri(lamaConnectionString));
+    return new OllamaApiClient(new Uri(lamaConnectionString!));
 });
 
 

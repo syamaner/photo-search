@@ -24,7 +24,7 @@ var rmqPassword = builder.AddParameter("rmqPassword", secret: true);
 var pgUsername = builder.AddParameter("pgUsername", secret: true);
 var pgPassword = builder.AddParameter("pgPassword", secret: true);
 
-var ollama = builder.AddOllama(hostIpAddress: dockerHost);
+var ollama = builder.AddOllama(hostIpAddress: dockerHost, modelName:"llava:13b");
 
 var messaging = builder.AddRabbitMQ("messaging", rmqUsername, rmqPassword,5672)
     .WithManagementPlugin()
