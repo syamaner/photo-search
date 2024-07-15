@@ -106,6 +106,7 @@ public static class Extensions
                 x.SetKebabCaseEndpointNameFormatter();
                 x.AddHealthChecks();
                 configure?.Invoke(x);
+                
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     var configuration = context.GetRequiredService<IConfiguration>();

@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using ImageMagick;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +17,10 @@ public class SummarisePhotosConsumer(
 {
     public async Task Consume(ConsumeContext<SummarisePhotos> context)
     {
-        int updateCOunt = 0;
         var photos = await GetPhotosToUpdate(context.Message.ImagePaths);
         ollamaApiClient.SelectedModel = context.Message.ModelName;
 
-        if (photos == null || !photos.Any())
+        if (photos == null || photos.Count == 0)
         {
             return;
         }
@@ -33,26 +31,12 @@ public class SummarisePhotosConsumer(
             {
                 continue;
             }
-            var request = BuildRequest(context.Message.ModelName, filePath);
-            var jsonString = await ExtractJsonDocument(request);
+
             try
             {
-                var document = JsonDocument.Parse(jsonString);
-                var root = document.RootElement;
-                var imageSummary = root.GetProperty("ImageSummary").GetRawText();
-                var objects = root.GetProperty("Objects").EnumerateArray()
-                    .Select(x => x.GetRawText()?.Replace("\"", "")).ToList();
-                var imageCategories = root.GetProperty("ImageCategories").EnumerateArray()
-                    .Select(x => x.GetRawText()?.Replace("\"", "")).ToList();
+                var summary = await GenerateCompletionRequest(context.Message.ModelName, filePath);
                 photos[filePath].PhotoSummaries ??= [];
-                photos[filePath].PhotoSummaries?.Add(new PhotoSummary
-                {
-                    Description = imageSummary,
-                    Model = context.Message.ModelName,
-                    DateGenerated = DateTimeOffset.UtcNow,
-                    Categoties = imageCategories,
-                    ObjectClasses = objects
-                });
+                photos[filePath].PhotoSummaries?.Add(summary);
             }
             catch (Exception ex)
             {
@@ -65,24 +49,33 @@ public class SummarisePhotosConsumer(
             context.Message.ModelName);
     }
 
-    private async Task<string> ExtractJsonDocument(GenerateCompletionRequest request)
+    private PhotoSummary? ParseResponse(string jsonResponse, string modelName)
     {
-        var result = await ollamaApiClient.GetCompletion(request);
-        var response = result.Response.Replace(Environment.NewLine, "");
-        const string pattern = @"\\u([0-9A-Fa-f]{4})";
-        response = Regex.Replace(response, pattern, match =>
+        try
         {
-            var unicodeChar = (char)Convert.ToInt32(match.Groups[1].Value, 16);
-            return unicodeChar.ToString();
-        });
-        var jsonMatch = Regex.Match(response, @"\{.*\}", RegexOptions.Singleline);
-        if (!jsonMatch.Success) return string.Empty;
-            
-        var jsonString = jsonMatch.Value;
-        return jsonString;
+            var document = JsonDocument.Parse(jsonResponse);
+            var root = document.RootElement;
+            if(!root.TryGetProperty("ImageSummary", out var imageSummary)||!root.TryGetProperty("ListOfObjects", out var objects) || 
+               !root.TryGetProperty("CandidateCategories", out var imageCategories))
+            {
+                return null;
+            }
+            return new PhotoSummary
+            {
+                Description = imageSummary.GetString()!,
+                Model = modelName,
+                DateGenerated = DateTimeOffset.UtcNow,
+                Categoties = imageCategories.EnumerateArray().Select(x => x.GetRawText()).ToList(),
+                ObjectClasses = objects.EnumerateArray().Select(x => x.GetRawText()).ToList()
+            };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error parsing ollama response for model {Model}. ", modelName);
+            return null;
+        }
     }
-
-    private static GenerateCompletionRequest BuildRequest(string modelName, string filePath)
+    private async Task<PhotoSummary?> GenerateCompletionRequest(string modelName, string filePath)
     {
         using var image = new MagickImage(filePath);
         var imageBytes = image.ToByteArray();
@@ -91,18 +84,37 @@ public class SummarisePhotosConsumer(
         var request = new GenerateCompletionRequest()
         {
             Prompt =
-                "Please provide the response as valid json as I will need to parse it in code. "+
+                "Given the attached picture, please provide a detailed description, list of objects seen and the potential categories the photo belongs to. "+
                 "There should be 3 properties in the response as following. "+
                 "ImageSummary: describe the image in detail in this field. String field. "+
-                "Objects: list of strings. Identify object classes visible in the image. This must be always a json array. "+
-                "ImageCategories: list of strings. Provide a possible isst of categories image belongs to. This also has to be a valid json array. "+
-                "Can you summarise this photo?",
+                "ListOfObjects: Identify object visible in the image. String array. "+
+                "CandidateCategories: Provide a potential list of categories image belongs to. String array. "+
+                "It is essential that the results must be as following json: {\"ImageSummary\":\"\",\"ListOfObjects\":[\"\",\"\"],\"CandidateCategories\":[\"\",\"\"]}. ",
             Model = modelName,
             Stream = true,
             Context = [],
+            Format = "json",
             Images = [base64String]
         };
-        return request;
+        
+        var result = await ollamaApiClient.GetCompletion(request);
+        var photoSummary = ParseResponse(result.Response, modelName);
+        if (photoSummary != null) return photoSummary;
+        var retryCount = 0;
+        while (photoSummary == null && retryCount < 4)
+        {
+            retryCount++;
+            logger.LogWarning("Ollama returned invalid json. File name {File} model name {ModelName}. Retrying the Ollama API call. Retry attempt {Retry}", filePath, modelName, retryCount);
+            request.Prompt = $"Ok let's try again. You have not returned a valid json. Please this time ensure it is a valid json for the same image. {request.Prompt}";
+            request.Context = result.Context;
+            request.Images = null;
+            result = await ollamaApiClient.GetCompletion(request);
+            photoSummary = ParseResponse(result.Response, modelName);
+        }
+        if(photoSummary==null)
+            logger.LogError("Ollama returned invalid json after {Retry} retries. File name {File} model name {ModelName}.", retryCount, filePath, modelName);
+        
+        return photoSummary;
     }
 
     private async Task<Dictionary<string, Photo>?> GetPhotosToUpdate(List<string> imagePaths)

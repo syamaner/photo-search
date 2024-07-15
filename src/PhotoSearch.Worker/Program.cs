@@ -16,6 +16,9 @@ builder.Services.AddSingleton<IOllamaApiClient>(sp =>
     var lamaConnectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Ollama");
     return new OllamaApiClient(new Uri(lamaConnectionString));
 });
+
+
+
 builder.AddRabbitMQClient("messaging");
 builder.AddNpgsqlDbContext<PhotoSearchContext>("postgresdb");
 
