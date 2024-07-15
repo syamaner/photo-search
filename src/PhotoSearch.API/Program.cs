@@ -14,7 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.AddRabbitMQClient("messaging");
 builder.AddMasstransit();
-builder.AddNpgsqlDbContext<PhotoSearchContext>("postgresdb");
+builder.AddNpgsqlDbContext<PhotoSearchContext>("photo-db");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

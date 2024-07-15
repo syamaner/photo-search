@@ -5,21 +5,17 @@ namespace PhotoSearch.Ollama;
 
 public class OllamaResource : ContainerResource, IResourceWithConnectionString
 {
-    private readonly string _externalHostIpAddress;
+    private readonly string _host;
     private readonly string _publicPort;
 
     public OllamaResource(string name, string modelName, string externalHostIpAddress, string publicPort,
         string? entrypoint = null) : base(name, entrypoint)
     {
         if (string.IsNullOrWhiteSpace(publicPort)) throw new ArgumentNullException(nameof(publicPort));
-
-        if (string.IsNullOrWhiteSpace(modelName))
-        {
-            ModelName = "llava:7b";
-        }
-
+        if (string.IsNullOrWhiteSpace(modelName)) throw new ArgumentNullException(nameof(modelName));
+        
         ModelName = modelName;
-        _externalHostIpAddress =
+        _host =
             string.IsNullOrWhiteSpace(externalHostIpAddress) ? "localhost" : externalHostIpAddress;
         _publicPort = publicPort;
     }
@@ -35,6 +31,6 @@ public class OllamaResource : ContainerResource, IResourceWithConnectionString
 
     public ReferenceExpression ConnectionStringExpression =>
         ReferenceExpression.Create(
-            $"http://{_externalHostIpAddress}:{_publicPort}"
+            $"http://{_host}:{_publicPort}"
         );
 }

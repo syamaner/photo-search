@@ -20,7 +20,7 @@ builder.Services.AddSingleton<IOllamaApiClient>(sp =>
 
 
 builder.AddRabbitMQClient("messaging");
-builder.AddNpgsqlDbContext<PhotoSearchContext>("postgresdb");
+builder.AddNpgsqlDbContext<PhotoSearchContext>("photo-db");
 
 builder.AddMasstransit(configurator =>
 {

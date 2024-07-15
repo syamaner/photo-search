@@ -9,10 +9,12 @@ public static class OllamaResourceBuilderExtensions
     private const int OllamaContainerPort = 11434;
 
     public static IResourceBuilder<OllamaResource> AddOllama(this IDistributedApplicationBuilder builder,
-        string modelName = "llava:13b",
-        string ollamaTag = "latest",
+        string modelName,
         string hostIpAddress= "",
-        string name = "Ollama", int? hostPort = 11438)
+        bool useGpu = true,
+        string ollamaTag = "latest",
+        string name = "Ollama", 
+        int? hostPort = 11438)
     {
         var ollamaResource = new OllamaResource(name, modelName, hostIpAddress, hostPort.ToString()!);
         builder.Services.TryAddLifecycleHook<OllamaResourceLifecycleHook>();
@@ -21,9 +23,12 @@ public static class OllamaResourceBuilderExtensions
             .WithAnnotation(new ContainerImageAnnotation { Image = "ollama/ollama", Tag = ollamaTag })
             .PublishAsContainer()
             .WithVolume("ollama", "/root/.ollama")
-            .WithExternalHttpEndpoints()
-            .WithContainerRuntimeArgs("--gpus=all");
-
+            .WithExternalHttpEndpoints();
+        
+        if (useGpu)
+        {
+            ollamaResourceBuilder.WithContainerRuntimeArgs("--gpus=all");
+        }
         
         if (!string.IsNullOrWhiteSpace(hostIpAddress))
         {

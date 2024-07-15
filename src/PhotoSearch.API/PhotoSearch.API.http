@@ -1,6 +1,6 @@
 @PhotoSearch.API_HostAddress = http://localhost:5291
 
-GET {{PhotoSearch.API_HostAddress}}/photos/summarise/llava:13b
+GET {{PhotoSearch.API_HostAddress}}/photos/summarise/llava:7b
 Accept: application/json
 
 ###
