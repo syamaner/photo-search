@@ -1,13 +1,11 @@
-using System;
 using Aspire.Hosting;
 using PhotoSearch.AppHost;
 using PhotoSearch.Ollama;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-Environment.SetEnvironmentVariable("DOCKER_HOST","");
-
-var dockerHost =StartupHelper.GetDockerHostValue();
+var dockerHost = StartupHelper.GetDockerHostValue();
+var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
 
 var rmqUsername = builder.AddParameter("rmqUsername", secret: true);
 var rmqPassword = builder.AddParameter("rmqPassword", secret: true);
@@ -25,7 +23,7 @@ var pgAdmin = builder.AddContainer("pgadmin", "dpage/pgadmin4")
 var postgresDb = postgres.AddDatabase("photo-db");
 
 var ollama = builder.AddOllama(hostIpAddress: dockerHost, modelName: "llava:7b",
-    useGpu: !string.IsNullOrWhiteSpace(dockerHost));
+    useGpu: enableNvidiaDocker);
 
 
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice")

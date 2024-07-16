@@ -26,6 +26,7 @@
         "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19012",
         "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20074",
         "DOCKER_HOST": "ssh://syamaner@192.168.0.158",
+        "ENABLE_NVIDIA_DOCKER": "true",
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true"
       }
     }

@@ -5,6 +5,11 @@ namespace PhotoSearch.AppHost;
 
 public partial class StartupHelper
 {
+    public static bool NvidiaDockerEnabled()
+    {
+        var nvidiaDockerValue = Environment.GetEnvironmentVariable("ENABLE_NVIDIA_DOCKER");
+        return !string.IsNullOrEmpty(nvidiaDockerValue);
+    }
     public static string GetDockerHostValue(){
         var dockerHostValue = Environment.GetEnvironmentVariable("DOCKER_HOST");
         var dockerHost = string.Empty;
