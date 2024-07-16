@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-07-16T22:37:22.723Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" etag="qjvGN5fSClhsx5aUx0SM" version="24.6.5" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2024-07-16T22:39:49.723Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" etag="ukosUw_6JJDK4ldx411Q" version="24.6.5" type="github" pages="3">
   <diagram name="development machines" id="C3VDw5aWPiY7srh2QyCc">
     <mxGraphModel dx="2132" dy="741" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -204,7 +204,7 @@
         <mxCell id="JPFFNYfnejPQWuh9EYtm-7" value="Photo Storage" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn0.iconfinder.com/data/icons/business-collection-2027/59/record-128.png" vertex="1" parent="1">
           <mxGeometry x="90" y="824.89" width="58" height="58" as="geometry" />
         </mxCell>
-        <mxCell id="JPFFNYfnejPQWuh9EYtm-8" value="Docker Host" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;align=left;" vertex="1" parent="1">
+        <mxCell id="JPFFNYfnejPQWuh9EYtm-8" value="Docker Host - NVIDIA Docker" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;align=left;" vertex="1" parent="1">
           <mxGeometry x="460" y="710" width="290" height="320" as="geometry" />
         </mxCell>
         <mxCell id="JPFFNYfnejPQWuh9EYtm-9" value="PostgreSQL" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/993px-Postgresql_elephant.svg.png;" vertex="1" parent="1">
