@@ -1,4 +1,3 @@
-using System.Text.Json;
 using ImageMagick;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -49,33 +48,6 @@ public class SummarisePhotosConsumer(
             context.Message.ModelName);
     }
 
-    private PhotoSummary? ParseResponse(string jsonResponse, string modelName)
-    {
-        try
-        {
-            var document = JsonDocument.Parse(jsonResponse);
-            var root = document.RootElement;
-            if(!root.TryGetProperty("ImageSummary", out var imageSummary)||!root.TryGetProperty("ListOfObjects", out var objects) || 
-               !root.TryGetProperty("CandidateCategories", out var imageCategories))
-            {
-                return null;
-            }
-            return new PhotoSummary
-            {
-                Description = imageSummary.GetString()!,
-                Model = modelName,
-                DateGenerated = DateTimeOffset.UtcNow,
-                Categoties = imageCategories.EnumerateArray().Select(x => x.GetRawText()).ToList(),
-                ObjectClasses = objects.EnumerateArray().Select(x => x.GetRawText()).ToList()
-            };
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error parsing ollama response for model {Model}. ", modelName);
-            return null;
-        }
-    }
-    
     private async Task<PhotoSummary?> SummarisePhoto(string modelName, string filePath)
     {
         using var image = new MagickImage(filePath);

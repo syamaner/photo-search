@@ -9,13 +9,16 @@ public class MetadataHelper
     private const string GpsLatitudeRefKey = "GPS-GPS Latitude Ref";
     private const string GpsLongitudeKey = "GPS-GPS Longitude";
     private const string GpsLongitudeRefKey = "GPS-GPS Longitude Ref";
-
+    
+    private static readonly string[] TimeZoneKeys = new[] {  "Exif SubIFD-Time Zone Original","Exif SubIFD-Time Zone" };
     public record GpsLocation(double Latitude, double Longitude);
 
     public static DateTime? GetImageCaptureTime(Dictionary<string, string> metadata)
     {
         var dateTimeOriginalStr = metadata.GetValueOrDefault("Exif SubIFD-Date/Time Original");
-        var timeZoneOriginalStr = metadata.GetValueOrDefault("Exif SubIFD-Time Zone Original");
+
+        var timeZoneOriginalStr = TimeZoneKeys.Where(metadata.ContainsKey)
+            .Select(metadata.GetValueOrDefault).FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(dateTimeOriginalStr) ||
             string.IsNullOrWhiteSpace(timeZoneOriginalStr)) return null;
@@ -37,7 +40,7 @@ public class MetadataHelper
         return dateTimeOffset.UtcDateTime;
 
     }
-    public static GpsLocation? ConvertToDegrees(Dictionary<string, string> metadata)
+    public static GpsLocation? GetLocation(Dictionary<string, string> metadata)
     {
         if (metadata == null || metadata.Count == 0)
             throw new ArgumentException("Invalid argument. The metadata is empty.");

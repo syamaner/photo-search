@@ -10,7 +10,7 @@ namespace PhotoSearch.Common;
 public class PhotoImporter(ILogger<PhotoImporter> logger) : IPhotoImporter
 {
     private readonly List<string> _fileExtensionsToInclude = ["jpg"];
-    private ILogger<PhotoImporter> _logger = logger;
+    private readonly ILogger<PhotoImporter> _logger = logger;
 
     public List<Photo> ImportPhotos(string baseDirectory)
     {
@@ -23,7 +23,7 @@ public class PhotoImporter(ILogger<PhotoImporter> logger) : IPhotoImporter
             throw new ArgumentException($"Invalid argument. The image file {fullPath} does not exits.",
                 nameof(fullPath));
         var metadata = ReadExifTags(fullPath);
-        var gpsLocation = MetadataHelper.ConvertToDegrees(metadata);
+        var gpsLocation = MetadataHelper.GetLocation(metadata);
         using var image = new MagickImage(fullPath);
         var photo = new Photo
         {
