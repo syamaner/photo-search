@@ -15,8 +15,7 @@ public partial class StartupHelper
         var dockerHost = string.Empty;
 
         if (string.IsNullOrEmpty(dockerHostValue)) return dockerHost;
-        
-        const string pattern = @"(\d{1,3}\.){3}\d{1,3}";
+
         var match = DockerHostRegex().Match(dockerHostValue);
         if (match.Success)
         {
