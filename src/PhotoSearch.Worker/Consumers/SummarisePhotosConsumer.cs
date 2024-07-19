@@ -34,7 +34,7 @@ public class SummarisePhotosConsumer(
 
             try
             {
-                var summary = await GenerateCompletionRequest(context.Message.ModelName, filePath);
+                var summary = await SummarisePhoto(context.Message.ModelName, filePath);
                 photos[filePath].PhotoSummaries ??= [];
                 photos[filePath].PhotoSummaries?.Add(summary);
             }
@@ -75,46 +75,52 @@ public class SummarisePhotosConsumer(
             return null;
         }
     }
-    private async Task<PhotoSummary?> GenerateCompletionRequest(string modelName, string filePath)
+    
+    private async Task<PhotoSummary?> SummarisePhoto(string modelName, string filePath)
     {
         using var image = new MagickImage(filePath);
         var imageBytes = image.ToByteArray();
         var base64String = Convert.ToBase64String(imageBytes);
 
+        var promptSummary = "Please provide a detailed description of the attached photo.";
+        var promptObjects = "Now please identify object visible in the image as a comma seperated list.";
+        var promptCategories = "Finally, provide a potential list of categories image belongs to as a commas seperated list."; 
+        
         var request = new GenerateCompletionRequest()
         {
-            Prompt =
-                "Given the attached photo, please provide a detailed summary and additional details as outlined below: "+
-                "The response json should be as following: {\"ImageSummary\":\"\",\"ListOfObjects\":[\"\",\"\"],\"CandidateCategories\":[\"\",\"\"]}. " +
-                "ImageSummary: Summarise the image in detail in this field. String field. "+
-                "ListOfObjects: Identify object visible in the image. String array. "+
-                "CandidateCategories: Provide a potential list of categories image belongs to. String array. ",
+            Prompt =promptSummary,
             Model = modelName,
             Stream = false,
             Context = [],
-            Format = "json",
+            //Format = "json",
             Images = [base64String]
         };
         
         var result = await ollamaApiClient.GetCompletion(request);
-        var photoSummary = ParseResponse(result.Response, modelName);
-        if (photoSummary != null) return photoSummary;
-        var retryCount = 0;
-        while (photoSummary == null && retryCount < 4)
-        {
-            retryCount++;
-            logger.LogWarning("Ollama returned invalid json. File name {File} model name {ModelName}. Retrying the Ollama API call. Retry attempt {Retry}", filePath, modelName, retryCount);
-            request.Prompt = $"Ok let's try again. You have not returned a valid json. Please this time ensure it is a valid json for the same image. {request.Prompt}";
-            request.Context = result.Context;
-            result = await ollamaApiClient.GetCompletion(request);
-            photoSummary = ParseResponse(result.Response, modelName);
-        }
-        if(photoSummary==null)
-            logger.LogError("Ollama returned invalid json after {Retry} retries. File name {File} model name {ModelName}.", retryCount, filePath, modelName);
         
-        return photoSummary;
+        var photoSummary = result.Response;
+        
+        request.Prompt = promptObjects;
+        request.Context = result.Context;
+        request.Images = null;
+        result = await ollamaApiClient.GetCompletion(request);
+        var objects = result.Response;
+        
+        request.Prompt = promptCategories;
+        request.Context = result.Context;
+        result = await ollamaApiClient.GetCompletion(request);
+        var categories = result.Response;
+        
+        return new PhotoSummary()
+        {
+             Description = photoSummary,
+             Model = modelName,
+             DateGenerated = DateTimeOffset.Now,
+             ObjectClasses = objects?.Split(",",StringSplitOptions.RemoveEmptyEntries).ToList(),
+             Categoties = categories?.Split(",",StringSplitOptions.RemoveEmptyEntries).ToList()
+        };
     }
-
+    
     private async Task<Dictionary<string, Photo>?> GetPhotosToUpdate(List<string> imagePaths)
     {
         Dictionary<string, Photo>? photos = null;
