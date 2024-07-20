@@ -10,6 +10,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 builder.Services.AddHostedService<Worker>();
 builder.Services.AddTransient<IMigrationService, MigrationService>();
+builder.Services.AddSingleton<IPhotoSummaryClient,OllamaPhotoSummaryClient>();
 builder.Services.AddTransient<IPhotoImporter, PhotoImporter>();
 builder.Services.AddSingleton<IOllamaApiClient>(sp =>
 {

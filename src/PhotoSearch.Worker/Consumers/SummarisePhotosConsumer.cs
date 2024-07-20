@@ -1,8 +1,6 @@
-using ImageMagick;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using OllamaSharp;
-using OllamaSharp.Models;
 using PhotoSearch.Common.Contracts;
 using PhotoSearch.Data;
 using PhotoSearch.Data.Models;
@@ -11,7 +9,8 @@ namespace PhotoSearch.Worker.Consumers;
 
 public class SummarisePhotosConsumer(
     IOllamaApiClient ollamaApiClient,
-    PhotoSearchContext photoSearchContext,
+    PhotoSearchContext photoSearchContext, 
+    IEnumerable<IPhotoSummaryClient> photoSummaryClients,
     ILogger<ImportPhotosConsumer> logger) : IConsumer<SummarisePhotos>
 {
     public async Task Consume(ConsumeContext<SummarisePhotos> context)
@@ -50,47 +49,13 @@ public class SummarisePhotosConsumer(
 
     private async Task<PhotoSummary?> SummarisePhoto(string modelName, string filePath)
     {
-        using var image = new MagickImage(filePath);
-        var imageBytes = image.ToByteArray();
-        var base64String = Convert.ToBase64String(imageBytes);
-
-        var promptSummary = "Please provide a detailed description of the attached photo.";
-        var promptObjects = "Now please identify object visible in the image as a comma seperated list.";
-        var promptCategories = "Finally, provide a potential list of categories image belongs to as a commas seperated list."; 
-        
-        var request = new GenerateCompletionRequest()
+        var client = photoSummaryClients.FirstOrDefault(x => x.CanHandle(modelName));
+        if (client == null)
         {
-            Prompt =promptSummary,
-            Model = modelName,
-            Stream = false,
-            Context = [],
-            //Format = "json",
-            Images = [base64String]
-        };
+            logger.LogError("There is no summary client registered for model {Model}",modelName);
+        }
         
-        var result = await ollamaApiClient.GetCompletion(request);
-        
-        var photoSummary = result.Response;
-        
-        request.Prompt = promptObjects;
-        request.Context = result.Context;
-        request.Images = null;
-        result = await ollamaApiClient.GetCompletion(request);
-        var objects = result.Response;
-        
-        request.Prompt = promptCategories;
-        request.Context = result.Context;
-        result = await ollamaApiClient.GetCompletion(request);
-        var categories = result.Response;
-        
-        return new PhotoSummary()
-        {
-             Description = photoSummary,
-             Model = modelName,
-             DateGenerated = DateTimeOffset.Now,
-             ObjectClasses = objects?.Split(",",StringSplitOptions.RemoveEmptyEntries).ToList(),
-             Categoties = categories?.Split(",",StringSplitOptions.RemoveEmptyEntries).ToList()
-        };
+        return await client!.SummarisePhoto(modelName, filePath);
     }
     
     private async Task<Dictionary<string, Photo>?> GetPhotosToUpdate(List<string> imagePaths)
