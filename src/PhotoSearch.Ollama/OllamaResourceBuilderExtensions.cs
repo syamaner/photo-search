@@ -4,6 +4,9 @@ using Aspire.Hosting.Lifecycle;
 
 namespace PhotoSearch.Ollama;
 
+/// <summary>
+/// Reference: https://raygun.com/blog/enhancing-aspire-with-ai-with-ollama/
+/// </summary>
 public static class OllamaResourceBuilderExtensions
 {
     private const int OllamaContainerPort = 11434;

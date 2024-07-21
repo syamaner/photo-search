@@ -17,32 +17,32 @@ logging.root.setLevel(logging.INFO)
 
 svc = Florence2Service.Florence2Service(os.environ["FLORENCE_MODEL"])
 
-@app.post("/")
-def home():
-    print("Hello World")
-    url = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/transformers/tasks/car.jpg?download=true"
-    image = Image.open(requests.get(url, stream=True).raw)
-    buffered = BytesIO()
-    image.save(buffered, format="JPEG")
-    img_str = base64.b64encode(buffered.getvalue())
+# @app.post("/")
+# def home():
+#     print("Hello World")
+#     url = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/transformers/tasks/car.jpg?download=true"
+#     image = Image.open(requests.get(url, stream=True).raw)
+#     buffered = BytesIO()
+#     image.save(buffered, format="JPEG")
+#     img_str = base64.b64encode(buffered.getvalue())
     
-    summary = None
-    with tracer.start_as_current_span("summarise-florence2"):        
-        logger = logging.getLogger(__name__)
+#     summary = None
+#     with tracer.start_as_current_span("summarise-florence2"):        
+#         logger = logging.getLogger(__name__)
       
-        summary = svc.generate_caption(img_str)
-        object_response = svc.generate_object_list(img_str)
-        logger.info(summary)
-        result = {"summary": summary['<MORE_DETAILED_CAPTION>'], "objects":object_response["<OD>"]['labels']}
-        response1 = json.dumps(result) # make_response(result, 200)  #['<OD>']['labels']      
-        logger.info( response1)
-        return response1
+#         summary = svc.generate_caption(img_str)
+#         object_response = svc.generate_object_list(img_str)
+#         logger.info(summary)
+#         result = {"summary": summary['<MORE_DETAILED_CAPTION>'], "objects":object_response["<OD>"]['labels']}
+#         response1 = json.dumps(result) # make_response(result, 200)  #['<OD>']['labels']      
+#         logger.info( response1)
+#         return response1
     
-    return summary
+#     return summary
 
 
 @app.post('/api/summarise/<filepath>')
-def add_message(filepath):
+def summarise_photo(filepath):
     
     with tracer.start_as_current_span("summarise-florence2"):        
         logger = logging.getLogger(__name__)

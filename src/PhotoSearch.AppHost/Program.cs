@@ -8,8 +8,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var dockerHost = StartupHelper.GetDockerHostValue();
 var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
+var ollamaVisionModel = Environment.GetEnvironmentVariable("VISION_MODEL");
 
-var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: "llava-phi3",
+var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: ollamaVisionModel,
     useGpu: enableNvidiaDocker);
 
 var rmqUsername = builder.AddParameter("rmqUsername", secret: true);

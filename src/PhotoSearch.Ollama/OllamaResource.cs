@@ -3,6 +3,9 @@ using Aspire.Hosting.ApplicationModel;
 
 namespace PhotoSearch.Ollama;
 
+/// <summary>
+/// Reference: https://raygun.com/blog/enhancing-aspire-with-ai-with-ollama/
+/// </summary>
 public class OllamaResource : ContainerResource, IResourceWithConnectionString
 {
     private readonly string _host;

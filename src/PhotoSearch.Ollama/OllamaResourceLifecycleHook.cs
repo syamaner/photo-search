@@ -9,6 +9,9 @@ using OllamaSharp;
 namespace PhotoSearch.Ollama;
 
 // ReSharper disable once ClassNeverInstantiated.Global
+/// <summary>
+/// Reference: https://raygun.com/blog/enhancing-aspire-with-ai-with-ollama/
+/// </summary>
 internal class OllamaResourceLifecycleHook(ResourceNotificationService notificationService)
     : IDistributedApplicationLifecycleHook
 {
