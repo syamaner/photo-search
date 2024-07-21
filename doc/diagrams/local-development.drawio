@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-07-21T15:58:01.981Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" etag="rXmBQ4gthmcG5gCa41pW" version="24.7.1" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2024-07-21T15:59:05.416Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" etag="AcGbqjCkp4EHuqaAYxcA" version="24.7.1" type="github" pages="3">
   <diagram name="development machines" id="C3VDw5aWPiY7srh2QyCc">
     <mxGraphModel dx="2132" dy="741" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -183,7 +183,7 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="JPFFNYfnejPQWuh9EYtm-1" value="ASPIRE Setup - External Docker host" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;perimeterSpacing=1;spacingTop=3;" parent="1" vertex="1">
+        <mxCell id="JPFFNYfnejPQWuh9EYtm-1" value="ASPIRE Setup - External Docker host" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;perimeterSpacing=1;spacingTop=0;spacingLeft=3;strokeColor=none;" parent="1" vertex="1">
           <mxGeometry x="21" y="450" width="786" height="410" as="geometry" />
         </mxCell>
         <mxCell id="JPFFNYfnejPQWuh9EYtm-2" value="Development Machine" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=3;" parent="1" vertex="1">
