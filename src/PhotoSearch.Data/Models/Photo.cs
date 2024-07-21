@@ -17,7 +17,7 @@ public class Photo
     public int Width { get; set; }
     public int Height { get; set; }
     public long SizeKb { get; set; }
-    public List<PhotoSummary?>? PhotoSummaries { get; set; }
+    public Dictionary<string,PhotoSummary>? PhotoSummaries { get; set; }
     public Dictionary<string, string>? Metadata { get; set; }
     public Thumbnail? Thumbnails { get; set; }
 }

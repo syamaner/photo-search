@@ -3,11 +3,11 @@ using OllamaSharp;
 using OllamaSharp.Models;
 using PhotoSearch.Data.Models;
 
-namespace PhotoSearch.Worker;
+namespace PhotoSearch.Worker.Clients;
 
 public class OllamaPhotoSummaryClient(IOllamaApiClient ollamaApiClient) : IPhotoSummaryClient
 {
-    private static readonly string[] SupportedModels = ["llava-phi3","llava:7b","llava:7b"];
+    private static readonly string[] SupportedModels = ["llava-phi3","llava:7b","llava:13b"];
     private const string PromptSummary = "Please provide a detailed description of the attached photo.";
     private const string PromptObjects = "Now please identify object visible in the image as a comma seperated list.";
     private const string PromptCategories =
@@ -40,7 +40,7 @@ public class OllamaPhotoSummaryClient(IOllamaApiClient ollamaApiClient) : IPhoto
             Model = modelName,
             DateGenerated = DateTimeOffset.Now,
             ObjectClasses = objects?.Split(",",StringSplitOptions.RemoveEmptyEntries).ToList(),
-            Categoties = categories?.Split(",",StringSplitOptions.RemoveEmptyEntries).ToList()
+            Categories = categories?.Split(",",StringSplitOptions.RemoveEmptyEntries).ToList()
         };
     }
 

@@ -4,6 +4,10 @@ GET {{PhotoSearch.API_HostAddress}}/photos/summarise/{{model}}
 Accept: application/json
 
 ###
+GET {{PhotoSearch.API_HostAddress}}/photos/summarise/{{florenceModel}}
+Accept: application/json
+
+###
 
 GET {{PhotoSearch.API_HostAddress}}/photos/index/test-photos
 Accept: application/json

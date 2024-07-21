@@ -1,6 +1,6 @@
 using PhotoSearch.Data.Models;
 
-namespace PhotoSearch.Worker;
+namespace PhotoSearch.Worker.Clients;
 
 public interface IPhotoSummaryClient
 {

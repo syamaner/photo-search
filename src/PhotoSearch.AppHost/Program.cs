@@ -2,13 +2,14 @@ using System;
 using Aspire.Hosting;
 using PhotoSearch.AppHost;
 using PhotoSearch.Ollama;
+using FizzyLogic.Aspire.Python.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 var dockerHost = StartupHelper.GetDockerHostValue();
 var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
 
-var ollama = builder.AddOllama(hostIpAddress: dockerHost, modelName: "llava-phi3",
+var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: "llava-phi3",
     useGpu: enableNvidiaDocker);
 
 var rmqUsername = builder.AddParameter("rmqUsername", secret: true);
@@ -18,10 +19,10 @@ var messaging = builder.AddRabbitMQ("messaging", rmqUsername, rmqPassword, 5672)
 
 var pgUsername = builder.AddParameter("pgUsername", secret: true);
 var pgPassword = builder.AddParameter("pgPassword", secret: true);
-var postgres = builder.AddPostgres("postgres", pgUsername, pgPassword, 5432)
+var postgresContainer = builder.AddPostgres("postgres", pgUsername, pgPassword, 5432)
     .WithDataVolume("postgres", false);
-var postgresDb = postgres.AddDatabase("photo-db");
-var pgAdmin = builder.AddContainer("pgadmin", "dpage/pgadmin4")
+var postgresDb = postgresContainer.AddDatabase("photo-db");
+var pgAdminContainer = builder.AddContainer("pgadmin", "dpage/pgadmin4")
     .WithEnvironment("PGADMIN_DEFAULT_EMAIL", "a@a.com")
     .WithEnvironment("PGADMIN_DEFAULT_PASSWORD", pgPassword.Resource.Value)
     .WithReference(postgresDb)
@@ -29,13 +30,19 @@ var pgAdmin = builder.AddContainer("pgadmin", "dpage/pgadmin4")
 
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice")
     .WithReference(messaging)
-    .WithReference(ollama)
+    .WithReference(ollamaContainer)
     .WithReference(postgresDb);
 
-var backgroundService = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice")
+var flaskAppFlorenceApi = builder.AddFlaskProjectWithVirtualEnvironment("florence2api", 
+    "../PhotoSearch.Florence2.API/src")
+    .WithEnvironment("FLORENCE_MODEL",Environment.GetEnvironmentVariable("FLORENCE_MODEL"))
+    .WithEnvironment("PYTHONUNBUFFERED","0");
+
+var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice")
     .WithReference(messaging)
-    .WithReference(ollama)
-    .WithReference(postgresDb);
+    .WithReference(ollamaContainer)
+    .WithReference(postgresDb)
+    .WithReference(flaskAppFlorenceApi);
 
 // If we are using a Docker host that is not our developer machine, there are additional steps.
 if (!string.IsNullOrWhiteSpace(dockerHost))
@@ -47,8 +54,8 @@ if (!string.IsNullOrWhiteSpace(dockerHost))
     messaging.WithContainerRuntimeArgs("-p", $"0.0.0.0:{rabbitMqPort}:{rabbitMqPort}")
         .WithContainerRuntimeArgs("-p", $"0.0.0.0:15672:15672");
     
-    postgres.WithContainerRuntimeArgs("-p", $"0.0.0.0:{potsgreSqlPort}:{potsgreSqlPort}");
-    pgAdmin.WithContainerRuntimeArgs("-p", $"0.0.0.0:8008:80");
+    postgresContainer.WithContainerRuntimeArgs("-p", $"0.0.0.0:{potsgreSqlPort}:{potsgreSqlPort}");
+    pgAdminContainer.WithContainerRuntimeArgs("-p", $"0.0.0.0:8008:80");
     
     // Ensure connection string for containers does not show localhost. Inject the remote Docker host IP instead.
     var postgresqlConnection =
@@ -56,14 +63,12 @@ if (!string.IsNullOrWhiteSpace(dockerHost))
     var rabbitMqConnectionString =
         $"amqp://{rmqUsername.Resource.Value}:{rmqPassword.Resource.Value}@{dockerHost}:{rabbitMqPort}";
 
-    backgroundService
+    backgroundWorker
         .WithEnvironment("ConnectionStrings__photo-db", postgresqlConnection)
         .WithEnvironment("ConnectionStrings__messaging", rabbitMqConnectionString);
-        //.WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:19012");
     apiService
         .WithEnvironment("ConnectionStrings__photo-db", postgresqlConnection)
         .WithEnvironment("ConnectionStrings__messaging", rabbitMqConnectionString);
-    //.WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:19012");
 }
 
 builder.Build().Run();

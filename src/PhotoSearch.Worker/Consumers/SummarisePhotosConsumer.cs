@@ -4,6 +4,7 @@ using OllamaSharp;
 using PhotoSearch.Common.Contracts;
 using PhotoSearch.Data;
 using PhotoSearch.Data.Models;
+using PhotoSearch.Worker.Clients;
 
 namespace PhotoSearch.Worker.Consumers;
 
@@ -33,8 +34,9 @@ public class SummarisePhotosConsumer(
             try
             {
                 var summary = await SummarisePhoto(context.Message.ModelName, filePath);
-                photos[filePath].PhotoSummaries ??= [];
-                photos[filePath].PhotoSummaries?.Add(summary);
+                photos[filePath].PhotoSummaries ??= new Dictionary<string, PhotoSummary>();
+                photos[filePath].PhotoSummaries![context.Message.ModelName] = summary;
+                photoSearchContext.Update(photos[filePath]);
             }
             catch (Exception ex)
             {
@@ -62,10 +64,8 @@ public class SummarisePhotosConsumer(
     {
         Dictionary<string, Photo>? photos = null;
         try
-        { 
-            photos = await photoSearchContext.Photos.Where(
-                photo => photo.PhotoSummaries == null &&  imagePaths.Contains(photo.ExactPath)).ToDictionaryAsync(x => x.ExactPath, x => x);
-            
+        {
+            photos = await photoSearchContext.Photos.ToDictionaryAsync(x => x.ExactPath, x => x);
         }
         catch (Exception ex)
         {

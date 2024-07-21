@@ -7,5 +7,5 @@ public class PhotoSummary
     public required string Description { get; set; }
     
     public List<string>? ObjectClasses { get; set; }
-    public List<string>? Categoties { get; set; }
+    public List<string>? Categories { get; set; }
 }
