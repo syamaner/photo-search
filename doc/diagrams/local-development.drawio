@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-07-21T16:13:30.478Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" etag="1_P_JzzL1wZDbjJ5xXXx" version="24.7.1" type="github" pages="4">
+<mxfile host="app.diagrams.net" modified="2024-07-21T17:09:13.232Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" etag="ZaD3-4oNvbrOYC4Jk30v" version="24.7.1" type="github" pages="4">
   <diagram name="development machines" id="C3VDw5aWPiY7srh2QyCc">
     <mxGraphModel dx="2132" dy="741" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -275,6 +275,9 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="BoPlXpCHXB6dqlYlwGrW-6" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="140" y="205" width="610" height="150" as="geometry" />
+        </mxCell>
         <mxCell id="BoPlXpCHXB6dqlYlwGrW-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="BoPlXpCHXB6dqlYlwGrW-1" target="BoPlXpCHXB6dqlYlwGrW-2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -284,8 +287,8 @@
         <mxCell id="BoPlXpCHXB6dqlYlwGrW-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="BoPlXpCHXB6dqlYlwGrW-2" target="BoPlXpCHXB6dqlYlwGrW-3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="BoPlXpCHXB6dqlYlwGrW-2" value="Docker Host - Docker API / Docker Daemon" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="390" y="250" width="120" height="60" as="geometry" />
+        <mxCell id="BoPlXpCHXB6dqlYlwGrW-2" value="Docker Host&lt;div&gt;(Docker API / Docker Daemon)&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="250" width="130" height="60" as="geometry" />
         </mxCell>
         <mxCell id="BoPlXpCHXB6dqlYlwGrW-3" value="Container Image Registries" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="550" y="250" width="120" height="60" as="geometry" />
