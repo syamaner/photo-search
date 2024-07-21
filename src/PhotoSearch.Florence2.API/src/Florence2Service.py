@@ -24,12 +24,15 @@ def fixed_get_imports(filename: str ):
 class Florence2Service:
     def __init__(self, modelName: str):
         with patch("transformers.dynamic_module_utils.get_imports", fixed_get_imports):
-            logger = logging.getLogger(__name__)        
-            self.model = AutoModelForCausalLM.from_pretrained(f"microsoft/{modelName}", trust_remote_code=True)
-            self.processor = AutoProcessor.from_pretrained(f"microsoft/{modelName}", trust_remote_code=True)
-            self.detailed_caption_prompt = "<MORE_DETAILED_CAPTION>"
-            self.object_detection_prompt = "<OD>"
-            logger.info("Florence2Service initialized")
+            with tracer.start_as_current_span("generate_caption"):
+                logger = logging.getLogger(__name__)    
+                
+                logger.info(f"Initialising Florence2Service with Model {modelName}")    
+                self.model = AutoModelForCausalLM.from_pretrained(f"microsoft/{modelName}", trust_remote_code=True)
+                self.processor = AutoProcessor.from_pretrained(f"microsoft/{modelName}", trust_remote_code=True)
+                self.detailed_caption_prompt = "<MORE_DETAILED_CAPTION>"
+                self.object_detection_prompt = "<OD>"
+                logger.info("Florence2Service initialized")
             
     def generate_caption(self, base64_image: str)->str:
         image = Image.open(BytesIO(base64.b64decode(base64_image)))
