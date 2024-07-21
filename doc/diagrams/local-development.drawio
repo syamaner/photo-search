@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-07-21T15:57:44.027Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" etag="w0SdM_lcJEELjq6fSX_6" version="24.7.1" type="github" pages="3">
+<mxfile host="app.diagrams.net" modified="2024-07-21T15:58:01.981Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" etag="rXmBQ4gthmcG5gCa41pW" version="24.7.1" type="github" pages="3">
   <diagram name="development machines" id="C3VDw5aWPiY7srh2QyCc">
     <mxGraphModel dx="2132" dy="741" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -261,7 +261,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="rBGaQrWJSEaCb6ZkpFH_-6" value="Florence API" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="rBGaQrWJSEaCb6ZkpFH_-6" value="Florence-2 API" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="237" y="750" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="rBGaQrWJSEaCb6ZkpFH_-14" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://static-00.iconduck.com/assets.00/python-icon-128x126-omu7zm7h.png;" vertex="1" parent="1">
