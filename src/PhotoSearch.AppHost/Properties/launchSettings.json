@@ -15,41 +15,19 @@
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "false"
       }
     },
-    "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "applicationUrl": "http://0.0.0.0:15271",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19012",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20074",
-        "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true",
-        "DOCKER_HOST": "ssh://syamaner@192.168.0.158",
-        "ENABLE_NVIDIA_DOCKER": "true",
-        "VISION_MODEL": "llava:7b"
-      }
-    },
     "http-local-host-no-gpu": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://0.0.0.0:15271",
+      "applicationUrl": "http://localhost:15273",
       "environmentVariables": {
-        "ASPNETCORE_URLS":"http://0.0.0.0:15273",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS-":"true",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:19012",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20074",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL-": "http://0.0.0.0:19012",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL-": "http://localhost:20074",
-        "DASHBOARD__FRONTEND__AUTHMODE-":"Unsecured",
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true",
         "DOCKER_HOST": "",
         "ENABLE_NVIDIA_DOCKER": "false",
-        "VISION_MODEL": "llava-phi3"
+        "VISION_MODEL": "llava-phi3",
+        "FLORENCE_MODEL": "Florence-2-base-ft"
       }
     },
     "http-remote-host-with-gpu": {
@@ -61,7 +39,7 @@
         "DOCKER_HOST": "ssh://syamaner@192.168.0.158",
         "ENABLE_NVIDIA_DOCKER": "true",
         "VISION_MODEL": "llava:13b",
-        "FLORENCE_MODEL": "Florence-2-large-ft",
+        "FLORENCE_MODEL": "Florence-2-base-ft",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true"

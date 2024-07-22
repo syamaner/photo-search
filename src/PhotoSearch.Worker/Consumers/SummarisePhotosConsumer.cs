@@ -23,7 +23,8 @@ public class SummarisePhotosConsumer(
         {
             return;
         }
-
+        logger.LogInformation("Summarising {COUNT} photos using {Model}.",photos.Count,
+            context.Message.ModelName);
         foreach (var filePath in context.Message.ImagePaths)
         {
             if (!photos.ContainsKey(filePath))
