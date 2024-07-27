@@ -24,7 +24,7 @@ def fixed_get_imports(filename: str ):
 class Florence2Service:
     def __init__(self, modelName: str):
         with patch("transformers.dynamic_module_utils.get_imports", fixed_get_imports):
-            with tracer.start_as_current_span("generate_caption"):
+            with tracer.start_as_current_span("florence2_service_init"):
                 logger = logging.getLogger(__name__)    
                 
                 logger.info(f"Initialising Florence2Service with Model {modelName}")    
@@ -59,7 +59,7 @@ class Florence2Service:
     def generate_object_list(self, base64_image: str)->str:
         image = Image.open(BytesIO(base64.b64decode(base64_image)))
         inputs = self.processor(text=self.object_detection_prompt, images=image, return_tensors="pt")
-        with tracer.start_span("object_deteciion"):
+        with tracer.start_span("object_detection"):
             logger = logging.getLogger(__name__)        
             try:
                 generated_ids = self.model.generate(

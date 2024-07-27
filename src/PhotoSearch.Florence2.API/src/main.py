@@ -52,9 +52,8 @@ def summarise_photo(filepath):
         logger.info(object_response)
         logger.info(summary)
         result = {"summary": summary['<MORE_DETAILED_CAPTION>'], "objects":object_response["<OD>"]['labels']}
-        response1 = json.dumps(result) # make_response(result, 200)  #['<OD>']['labels']      
-        logger.info( response1)
-      #  logger.error(response)
-        return response1
+        response = json.dumps(result)     
+        logger.info( response)
+        return response
 if __name__ == "__main__":
     app.run(debug=True,host='0.0.0.0')
