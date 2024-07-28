@@ -60,8 +60,8 @@ builder.AddNpmApp("stencil", "../photosearch-frontend")
 
 if (!string.IsNullOrWhiteSpace(dockerHost))
 {
-    builder.UpdateRabbitmqConnectionString(backgroundWorker, messaging, dockerHost);
-    builder.UpdateRabbitmqConnectionString(apiService, messaging, dockerHost);
+    backgroundWorker.UpdateRabbitmqConnectionString(messaging, dockerHost,5672);
+    apiService.UpdateRabbitmqConnectionString(messaging, dockerHost,5672);
 }
 
 

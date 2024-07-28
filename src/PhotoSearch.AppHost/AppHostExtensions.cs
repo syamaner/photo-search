@@ -35,7 +35,7 @@ public static class AppHostExtensions
     }
 
     public static IResourceBuilder<RabbitMQServerResource> AddRabbitMq(this IDistributedApplicationBuilder builder,
-        string name, string? host = null, int publicPort = 5672, params IResourceBuilder<ProjectResource>[]? projects)
+        string name, string? host = null, int publicPort = 5672)
     {
         var rmqUsername = builder.AddParameter("rmqUsername", secret: true);
         var rmqPassword = builder.AddParameter("rmqPassword", secret: true);
@@ -43,54 +43,32 @@ public static class AppHostExtensions
         var messaging = builder.AddRabbitMQ(name, rmqUsername, rmqPassword, publicPort)
             .WithManagementPlugin();
 
-        if (projects != null)
-        {
-            foreach (var project in projects)
-            {
-                project.WithReference(messaging);
-                project.WaitFor(messaging);
-            }
-        }
-
         if (string.IsNullOrWhiteSpace(host)) return messaging;
 
         messaging
             .WithContainerRuntimeArgs("-p", $"0.0.0.0:{publicPort}:{publicPort}")
             .WithContainerRuntimeArgs("-p", $"0.0.0.0:15672:15672");
 
-        if (projects == null) return messaging;
-
-        var connectionString =
-            $"amqp://{rmqUsername.Resource.Value}:{rmqPassword.Resource.Value}@{host}:{publicPort}";
-        var connectionStringKey = $"ConnectionStrings__{name}";
-        foreach (var project in projects)
-        {
-            project
-                .WithEnvironment(connectionStringKey, connectionString);
-        }
-
         return messaging;
     }
 
 
-    public static IResourceBuilder<RabbitMQServerResource> UpdateRabbitmqConnectionString(
-        this IDistributedApplicationBuilder builder,
-        IResourceBuilder<ProjectResource> project, IResourceBuilder<RabbitMQServerResource> messaging, string host)
+    public static IResourceBuilder<RabbitMQServerResource> UpdateRabbitmqConnectionString(this IResourceBuilder<ProjectResource> project,
+        IResourceBuilder<RabbitMQServerResource> messaging, string host, int port)
     {
         var rmqUsername = messaging.Resource.UserNameParameter;
         var rmqPassword = messaging.Resource.PasswordParameter;
 
         if (string.IsNullOrWhiteSpace(host)) return messaging;
 
-        messaging
-            .WithContainerRuntimeArgs("-p", $"0.0.0.0:{messaging.Resource.PrimaryEndpoint.Port}:{messaging.Resource.PrimaryEndpoint.Port}")
-            .WithContainerRuntimeArgs("-p", $"0.0.0.0:15672:15672");
-
         var connectionString =
-            $"amqp://{rmqUsername!.Value}:{rmqPassword.Value}@{host}:{messaging.Resource.PrimaryEndpoint.Port}";
+            $"amqp://{rmqUsername!.Value}:{rmqPassword.Value}@{host}:{port}";
+        
         var connectionStringKey = $"ConnectionStrings__{messaging.Resource.Name}";
+      
         project
             .WithEnvironment(connectionStringKey, connectionString);
+        
         return messaging;
     }
 }
