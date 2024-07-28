@@ -9,8 +9,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
-        <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.0.2" />
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.1.0" />
+        <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.1.0" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.7" />

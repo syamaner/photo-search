@@ -20,12 +20,12 @@ public static class OllamaResourceBuilderExtensions
         int? hostPort = 11438)
     {
         var ollamaResource = new OllamaResource(name, modelName, hostIpAddress, hostPort.ToString()!);
-        builder.Services.TryAddLifecycleHook<OllamaResourceLifecycleHook>();
-        
+
         var ollamaResourceBuilder = builder.AddResource(ollamaResource)
             .WithAnnotation(new ContainerImageAnnotation { Image = "ollama/ollama", Tag = ollamaTag })
             .PublishAsContainer()
-            .WithVolume("ollama", "/root/.ollama")
+            .WithVolume("ollamas", "/root/.ollama")
+            .WithHttpEndpoint(hostPort, OllamaContainerPort)
             .WithExternalHttpEndpoints();
         
         if (useGpu)
@@ -38,10 +38,12 @@ public static class OllamaResourceBuilderExtensions
             ollamaResourceBuilder
                 .WithContainerRuntimeArgs("-p", $"0.0.0.0:{hostPort}:{OllamaContainerPort}");
         }
-        else
-        {
-            ollamaResourceBuilder.WithHttpEndpoint(hostPort, OllamaContainerPort);
-        }
+        // else
+        // {
+        //     ollamaResourceBuilder.WithHttpEndpoint(hostPort, OllamaContainerPort);
+        // }
+ 
+        builder.Services.TryAddLifecycleHook<OllamaResourceLifecycleHook>();
 
         return ollamaResourceBuilder;
     }

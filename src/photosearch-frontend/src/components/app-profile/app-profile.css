@@ -1,0 +1,11 @@
+.app-profile {
+  padding: 10px;
+}
+:host {
+  display: block;
+}
+ 
+#map-container {
+  height: 1200px;
+}
+

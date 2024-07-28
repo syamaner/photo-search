@@ -16,20 +16,13 @@ public static class NominatimResourceBuilderExtensions
         int? hostPort = 8180)
     {
         var nominatimResource = new NominatimResource(name, mapUrl, hostIpAddress, hostPort.ToString()!);
-        builder.Services.TryAddLifecycleHook<NominatimResourceLifecycleHook>();
         
         var nominatimResourceBuilder = builder.AddResource(nominatimResource)
             .WithAnnotation(new ContainerImageAnnotation { Image = "mediagis/nominatim", Tag = imageTag })
             .PublishAsContainer()
-            .WithVolume("nominatim-data-sw", "/nominatim/data")
-            .WithVolume("nominatim-flat-node-sw", "/nominatim/flatnode")
-            .WithVolume("nominatim-postgres-sw", "/var/lib/postgresql/14/main")
             .WithEnvironment("PBF_URL", mapUrl)
-            .WithEnvironment("IMPORT_WIKIPEDIA", "true")
-            .WithContainerRuntimeArgs("--shm-size=8g")
+            .WithEnvironment("IMPORT_WIKIPEDIA", "false")
             .WithEnvironment("IMPORT_GB_POSTCODES", importUkPostcodes ? "true" : "false")
-  //          .WithEnvironment("UPDATE_MODE","continuous")
-           // .WithEnvironment("REPLICATION_URL","https://download.geofabrik.de/europe-updates/")
             .WithExternalHttpEndpoints();
         
         if (!string.IsNullOrWhiteSpace(hostIpAddress))
@@ -42,6 +35,21 @@ public static class NominatimResourceBuilderExtensions
             nominatimResourceBuilder.WithHttpEndpoint(hostPort, ContainerPort);
         }
 
+        builder.Services.TryAddLifecycleHook<NominatimResourceLifecycleHook>();
         return nominatimResourceBuilder;
+    } 
+    public static IResourceBuilder<NominatimResource> WithPersistence(this IResourceBuilder<NominatimResource> builder,
+        string nominatimDataVolumeName="nominatim-data-sw",
+        string nominatimFlatVolumeName = "nominatim-flat-node-sw",
+        string nominatimPostgresqlVolumeName = "nominatim-postgres-sw")
+    {
+        return builder
+                .WithVolume(nominatimDataVolumeName, "/nominatim/data")
+                .WithVolume(nominatimFlatVolumeName, "/nominatim/flatnode")
+                .WithVolume(nominatimPostgresqlVolumeName, "/var/lib/postgresql/14/main")
+                //.WithBindMount("./ddd","/dev/shm")
+                .WithContainerRuntimeArgs("--shm-size=32g")
+                .WithContainerRuntimeArgs("--mount=type=tmpfs,target=/dev/shm");
+            ;
     }
 }

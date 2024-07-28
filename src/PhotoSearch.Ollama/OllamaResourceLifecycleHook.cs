@@ -12,15 +12,15 @@ namespace PhotoSearch.Ollama;
 /// <summary>
 /// Reference: https://raygun.com/blog/enhancing-aspire-with-ai-with-ollama/
 /// </summary>
-internal class OllamaResourceLifecycleHook(ResourceNotificationService notificationService)
+public class OllamaResourceLifecycleHook(ResourceNotificationService notificationService)
     : IDistributedApplicationLifecycleHook
 {
-    public async Task AfterResourcesCreatedAsync(DistributedApplicationModel appModel, CancellationToken cancellationToken = default)
+    public async Task BeforeStartAsync(DistributedApplicationModel appModel, CancellationToken cancellationToken = default)
     {
         foreach (var resource in appModel.Resources.OfType<OllamaResource>())
         {
             Console.WriteLine($"Verifying if models are downloaded for model for {resource.Name}");
-            await notificationService.PublishUpdateAsync(resource,
+            await notificationService.PublishUpdateAsync(resource, resource.Name,
                 state => state with
                 {
                     State = new ResourceStateSnapshot("Initialising", KnownResourceStateStyles.Info)
@@ -28,7 +28,6 @@ internal class OllamaResourceLifecycleHook(ResourceNotificationService notificat
 
             DownloadModel(resource, cancellationToken);
         }
- 
     }
     
     private void DownloadModel(OllamaResource resource, CancellationToken cancellationToken)
@@ -44,7 +43,7 @@ internal class OllamaResourceLifecycleHook(ResourceNotificationService notificat
             {
                 var connectionString = await resource.ConnectionStringExpression.GetValueAsync(cancellationToken);
                 
-                await notificationService.PublishUpdateAsync(resource,
+                await notificationService.PublishUpdateAsync(resource, 
                     state => state with
                     {
                         State = new ResourceStateSnapshot($"Connection string: {connectionString}", KnownResourceStateStyles.Info)
@@ -83,7 +82,7 @@ internal class OllamaResourceLifecycleHook(ResourceNotificationService notificat
             }
             catch (Exception ex)
             {
-                await notificationService.PublishUpdateAsync(resource, state => state with { State = new ResourceStateSnapshot(ex.Message, KnownResourceStateStyles.Error) });
+               await notificationService.PublishUpdateAsync(resource, state => state with { State = new ResourceStateSnapshot(ex.Message, KnownResourceStateStyles.Error) });
             }
 
         }, cancellationToken);
