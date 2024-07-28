@@ -10,7 +10,7 @@ public class ImportPhotosConsumer(IPhotoImporter photoImporter, PhotoSearchConte
 {
     public async Task Consume(ConsumeContext<ImportPhotos> context)
     {
-        var photos = photoImporter.ImportPhotos(context.Message.Directory);
+        var photos = await photoImporter.ImportPhotos(context.Message.Directory);
 
         await photoSearchContext.Photos.AddRangeAsync(photos);
         await photoSearchContext.SaveChangesAsync();

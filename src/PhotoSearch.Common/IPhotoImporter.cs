@@ -4,5 +4,5 @@ namespace PhotoSearch.Common;
 
 public interface IPhotoImporter
 {
-    List<Photo> ImportPhotos(string directory);
+    Task<List<Photo>>ImportPhotos(string directory);
 }

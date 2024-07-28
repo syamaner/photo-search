@@ -29,9 +29,9 @@ public class Florence2PhotoSummaryClient : IPhotoSummaryClient
         
         return new PhotoSummary()
         {
-            Description = response?.Summary,
+            Description = response?.Summary!,
             Model = modelName,
-            ObjectClasses = response.Objects?.Distinct()?.ToList(),
+            ObjectClasses = response!.Objects?.Distinct()?.ToList(),
             DateGenerated = DateTimeOffset.Now
         };
 

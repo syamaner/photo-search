@@ -28,6 +28,122 @@
       <None Remove="TestPhotos\_DSC0640-Enhanced-NR.jpg" />
       <None Remove="TestPhotos\_DSC5639-Enhanced-NR.jpg" />
       <None Remove="TestPhotos\IMG_9849_jpg.jpg" />
+      <None Remove="photos-geocode\test-067.jpg" />
+      <None Remove="photos-geocode\test-068.jpg" />
+      <None Remove="photos-geocode\test-069.jpg" />
+      <None Remove="photos-geocode\test-070.jpg" />
+      <None Remove="photos-geocode\test-071.jpg" />
+      <None Remove="photos-geocode\test-072.jpg" />
+      <None Remove="photos-geocode\test-073.jpg" />
+      <None Remove="photos-geocode\test-074.jpg" />
+      <None Remove="photos-geocode\test-075.jpg" />
+      <None Remove="photos-geocode\test-077.jpg" />
+      <None Remove="photos-geocode\test-078.jpg" />
+      <None Remove="photos-geocode\test-079.jpg" />
+      <None Remove="photos-geocode\test-080.jpg" />
+      <None Remove="photos-geocode\test-081.jpg" />
+      <None Remove="photos-geocode\test-082.jpg" />
+      <None Remove="photos-geocode\test-083.jpg" />
+      <None Remove="photos-geocode\test-085.jpg" />
+      <None Remove="photos-geocode\test-086.jpg" />
+      <None Remove="photos-geocode\test-087.jpg" />
+      <None Remove="photos-geocode\test-088.jpg" />
+      <None Remove="photos-geocode\test-089.jpg" />
+      <None Remove="photos-geocode\test-090.jpg" />
+      <None Remove="photos-geocode\test-091.jpg" />
+      <None Remove="photos-geocode\test-093.jpg" />
+      <None Remove="photos-geocode\test-094.jpg" />
+      <None Remove="photos-geocode\test-095.jpg" />
+      <None Remove="photos-geocode\test-096.jpg" />
+      <None Remove="photos-geocode\test-097.jpg" />
+      <None Remove="photos-geocode\test-098.jpg" />
+      <None Remove="photos-geocode\test-099.jpg" />
+      <None Remove="photos-geocode\test-100.jpg" />
+      <None Remove="photos-geocode\test-101.jpg" />
+      <None Remove="photos-geocode\test-102.jpg" />
+      <None Remove="photos-geocode\test-103.jpg" />
+      <None Remove="photos-geocode\test-104.jpg" />
+      <None Remove="photos-geocode\test-105.jpg" />
+      <None Remove="photos-geocode\test-106.jpg" />
+      <None Remove="photos-geocode\test-107.jpg" />
+      <None Remove="photos-geocode\test-108.jpg" />
+      <None Remove="photos-geocode\test-109.jpg" />
+      <None Remove="photos-geocode\test-110.jpg" />
+      <None Remove="photos-geocode\test-111.jpg" />
+      <None Remove="photos-geocode\test-112.jpg" />
+      <None Remove="photos-geocode\test-113.jpg" />
+      <None Remove="photos-geocode\test-114.jpg" />
+      <None Remove="photos-geocode\test-115.jpg" />
+      <None Remove="photos-geocode\test-116.jpg" />
+      <None Remove="photos-geocode\test-117.jpg" />
+      <None Remove="photos-geocode\test-118.jpg" />
+      <None Remove="photos-geocode\test-119.jpg" />
+      <None Remove="photos-geocode\test-121.jpg" />
+      <None Remove="photos-geocode\test-122.jpg" />
+      <None Remove="photos-geocode\test-123.jpg" />
+      <None Remove="photos-geocode\test-125.jpg" />
+      <None Remove="photos-geocode\test-126.jpg" />
+      <None Remove="photos-geocode\test-127.jpg" />
+      <None Remove="photos-geocode\test-128.jpg" />
+      <None Remove="photos-geocode\test-129.jpg" />
+      <None Remove="photos-geocode\test-130.jpg" />
+      <None Remove="photos-geocode\test-132.jpg" />
+      <None Remove="photos-geocode\test-136.jpg" />
+      <Content Include="photos-geocode\test-136.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-137.jpg" />
+      <Content Include="photos-geocode\test-137.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-138.jpg" />
+      <Content Include="photos-geocode\test-138.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-139.jpg" />
+      <Content Include="photos-geocode\test-139.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-140.jpg" />
+      <Content Include="photos-geocode\test-140.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-141.jpg" />
+      <Content Include="photos-geocode\test-141.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-142.jpg" />
+      <Content Include="photos-geocode\test-142.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-143.jpg" />
+      <Content Include="photos-geocode\test-143.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-144.jpg" />
+      <Content Include="photos-geocode\test-144.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-145.jpg" />
+      <Content Include="photos-geocode\test-145.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-146.jpg" />
+      <Content Include="photos-geocode\test-146.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-147.jpg" />
+      <Content Include="photos-geocode\test-147.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-148.jpg" />
+      <Content Include="photos-geocode\test-148.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="photos-geocode\test-149.jpg" />
+      <Content Include="photos-geocode\test-149.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

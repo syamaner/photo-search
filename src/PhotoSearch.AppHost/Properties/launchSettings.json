@@ -21,6 +21,7 @@
       "launchBrowser": true,
       "applicationUrl": "http://localhost:15273",
       "environmentVariables": {
+        "NOMINATIM_MAP_URL": "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true",
@@ -37,6 +38,7 @@
       "applicationUrl": "http://localhost:15273",
       "environmentVariables": {
         "DOCKER_HOST": "ssh://syamaner@192.168.0.158",
+        "NOMINATIM_MAP_URL": "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf",
         "ENABLE_NVIDIA_DOCKER": "true",
         "VISION_MODEL": "llava:13b",
         "FLORENCE_MODEL": "Florence-2-large-ft",

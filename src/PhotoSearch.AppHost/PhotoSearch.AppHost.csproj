@@ -19,6 +19,7 @@
       <ProjectReference Include="..\PhotoSearch.API\PhotoSearch.API.csproj" />
       <ProjectReference Include="..\PhotoSearch.Common\PhotoSearch.Common.csproj"   IsAspireProjectResource="false"/>
       <ProjectReference Include="..\PhotoSearch.Data\PhotoSearch.Data.csproj"  IsAspireProjectResource="false" />
+      <ProjectReference Include="..\PhotoSearch.Nominatim\PhotoSearch.Nominatim.csproj"  IsAspireProjectResource="false" />
       <ProjectReference Include="..\PhotoSearch.Ollama\PhotoSearch.Ollama.csproj"   IsAspireProjectResource="false"/>
       <ProjectReference Include="..\PhotoSearch.ServiceDefaults\PhotoSearch.ServiceDefaults.csproj"   IsAspireProjectResource="false" />
       <ProjectReference Include="..\PhotoSearch.Worker\PhotoSearch.Worker.csproj" />

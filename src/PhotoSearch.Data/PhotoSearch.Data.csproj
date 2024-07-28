@@ -23,6 +23,9 @@
       <Reference Include="Microsoft.Extensions.Configuration">
         <HintPath>..\..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\8.0.5\Microsoft.Extensions.Configuration.dll</HintPath>
       </Reference>
+      <Reference Include="Microsoft.Extensions.Features">
+        <HintPath>..\..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\8.0.5\Microsoft.Extensions.Features.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
     <ItemGroup>

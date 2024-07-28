@@ -36,7 +36,7 @@ public class SummarisePhotosConsumer(
             {
                 var summary = await SummarisePhoto(context.Message.ModelName, filePath);
                 photos[filePath].PhotoSummaries ??= new Dictionary<string, PhotoSummary>();
-                photos[filePath].PhotoSummaries![context.Message.ModelName] = summary;
+                photos[filePath].PhotoSummaries![context.Message.ModelName] = summary!;
                 photoSearchContext.Update(photos[filePath]);
             }
             catch (Exception ex)

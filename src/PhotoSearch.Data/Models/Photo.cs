@@ -1,3 +1,5 @@
+using PhotoSearch.Data.GeoJson;
+
 namespace PhotoSearch.Data.Models;
 
 public class Photo
@@ -19,5 +21,6 @@ public class Photo
     public long SizeKb { get; set; }
     public Dictionary<string,PhotoSummary>? PhotoSummaries { get; set; }
     public Dictionary<string, string>? Metadata { get; set; }
+    public FeatureCollection? LocationInformation { get; set; }
     public Thumbnail? Thumbnails { get; set; }
 }

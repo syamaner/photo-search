@@ -13,3 +13,9 @@ GET {{PhotoSearch.API_HostAddress}}/photos/index/test-photos
 Accept: application/json
 
 ###
+
+
+GET {{PhotoSearch.API_HostAddress}}/photos/index/photos-geocode
+Accept: application/json
+
+###

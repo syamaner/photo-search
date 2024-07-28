@@ -7,17 +7,30 @@ using Directory = System.IO.Directory;
 
 namespace PhotoSearch.Common;
 
-public class PhotoImporter(ILogger<PhotoImporter> logger) : IPhotoImporter
+public class PhotoImporter(ILogger<PhotoImporter> logger, IReverseGeocoder reverseGeocoder) : IPhotoImporter
 {
     private readonly List<string> _fileExtensionsToInclude = ["jpg"];
     private readonly ILogger<PhotoImporter> _logger = logger;
 
-    public List<Photo> ImportPhotos(string baseDirectory)
+    public async Task<List<Photo>> ImportPhotos(string baseDirectory)
     {
-        return GetImageFiles(baseDirectory).Select(file => GetPhotoInformation(file, baseDirectory)).ToList();
+        var photos = new List<Photo>();
+        foreach (var imageFile in GetImageFiles(baseDirectory))
+        {
+            try
+            {
+                var photo = await GetPhotoInformation(imageFile, baseDirectory);
+                photos.Add(photo);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error importing photo {ImageFile}", imageFile);
+            }
+        }
+       return photos;
     }
 
-    private Photo GetPhotoInformation(string fullPath, string baseDirectory)
+    private async Task<Photo> GetPhotoInformation(string fullPath, string baseDirectory)
     {
         if (string.IsNullOrWhiteSpace(fullPath) || !File.Exists(fullPath))
             throw new ArgumentException($"Invalid argument. The image file {fullPath} does not exits.",
@@ -39,6 +52,10 @@ public class PhotoImporter(ILogger<PhotoImporter> logger) : IPhotoImporter
             FileType = new FileInfo(fullPath).Extension,
             CaptureDateUTC = MetadataHelper.GetImageCaptureTime(metadata)
         };
+        if (photo is { Latitude: not null, Longitude: not null })
+        {
+            photo.LocationInformation = await reverseGeocoder.ReverseGeocode(photo.Latitude.Value, photo.Longitude.Value, CancellationToken.None);
+        }
         return photo;
     }
     
@@ -65,3 +82,4 @@ public class PhotoImporter(ILogger<PhotoImporter> logger) : IPhotoImporter
             _fileExtensionsToInclude.Any(ext => fileName.EndsWith(ext, StringComparison.InvariantCultureIgnoreCase)));
     }
 }
+ 
