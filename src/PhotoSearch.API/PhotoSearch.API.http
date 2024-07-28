@@ -1,4 +1,5 @@
 @PhotoSearch.API_HostAddress = http://localhost:5291
+@PhotoSearch.Nominatim_HostAddress = http://localhost:8180
 
 GET {{PhotoSearch.API_HostAddress}}/photos/summarise/{{model}}
 Accept: application/json
@@ -17,5 +18,11 @@ Accept: application/json
 
 GET {{PhotoSearch.API_HostAddress}}/photos/index/photos-geocode
 Accept: application/json
+
+###
+
+
+GET {{PhotoSearch.Nominatim_HostAddress}}/reverse?format=geojson&namedetails=1&lat=47.378177&lon=8.540192
+
 
 ###
