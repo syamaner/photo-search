@@ -38,9 +38,9 @@ public class NominatimHealthCheck : IHealthCheck
             var searchResponse = await _httpClient.GetAsync(searchUrl, cancellationToken);
             return searchResponse.IsSuccessStatusCode;
         }
-        catch (Exception e)
+        catch
         {
-          //  Console.WriteLine(e);
+            // ignored
         }
 
         return false;

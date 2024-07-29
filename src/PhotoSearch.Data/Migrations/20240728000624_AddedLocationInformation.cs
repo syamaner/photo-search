@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.Features;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using PhotoSearch.Data.GeoJson;
 using PhotoSearch.Data.Models;
 
 #nullable disable

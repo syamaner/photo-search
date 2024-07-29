@@ -13,7 +13,7 @@ public class NominatimResource(
     private readonly string _host = string.IsNullOrWhiteSpace(externalHostIpAddress) ? "localhost" 
         : externalHostIpAddress;
     private EndpointReference? _endpointReference;
-    private const string NominatimEndpointName = "nominatim";
+    private const string NominatimEndpointName = "http";
 
     public string MapsDownloadUrl { get; } = mapsDownloadUrl;
     public EndpointReference Endpoint =>

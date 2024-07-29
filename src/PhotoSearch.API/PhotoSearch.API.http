@@ -1,28 +1,27 @@
-@PhotoSearch.API_HostAddress = http://localhost:5291
-@PhotoSearch.Nominatim_HostAddress = http://localhost:8180
+@API_HostAddress = http://localhost:5291
 
-GET {{PhotoSearch.API_HostAddress}}/photos/summarise/{{model}}
+GET {{API_HostAddress}}/photos/summarise/{{model}}
 Accept: application/json
 
 ###
-GET {{PhotoSearch.API_HostAddress}}/photos/summarise/{{florenceModel}}
-Accept: application/json
-
-###
-
-GET {{PhotoSearch.API_HostAddress}}/photos/index/test-photos
+GET {{API_HostAddress}}/photos/summarise/{{florenceModel}}
 Accept: application/json
 
 ###
 
-
-GET {{PhotoSearch.API_HostAddress}}/photos/index/photos-geocode
+GET {{API_HostAddress}}/photos/index/test-photos
 Accept: application/json
 
 ###
 
 
-GET {{PhotoSearch.Nominatim_HostAddress}}/reverse?format=geojson&namedetails=1&lat=47.378177&lon=8.540192
+GET {{API_HostAddress}}/photos/index/photos-geocode
+Accept: application/json
+
+###
+
+
+GET {{Nominatim_HostAddress}}/reverse?format=geojson&namedetails=1&lat=47.378177&lon=8.540192
 
 
 ###

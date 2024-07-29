@@ -19,7 +19,11 @@ var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: ol
     .WithHealthCheck();
 
 var nominatimContainer =
-    builder.AddNominatim(name:"Nominatim", hostIpAddress: dockerHost, mapUrl: mapUrl!, hostPort: 8180, imageTag: "4.4")
+    builder.AddNominatim(name: "Nominatim",
+            hostIpAddress: dockerHost,
+            mapUrl: mapUrl!,
+            hostPort: 8180,
+            imageTag: "4.4")
         .WithPersistence()
         .WithHealthCheck();
 
@@ -46,16 +50,16 @@ var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgrou
     .WithReference(postgresDb)
     .WithReference(flaskAppFlorenceApi)
     .WithReference(nominatimContainer)
+    .WithReference(messaging)
     .WaitFor(ollamaContainer)
     .WaitFor(nominatimContainer)
-    .WaitFor(messaging)
-    .WithReference(messaging);
+    .WaitFor(messaging);
 
-builder.AddNpmApp("stencil", "../photosearch-frontend")
-    .WithReference(apiService)
-    .WithHttpEndpoint(env: "PORT")
-    .WithExternalHttpEndpoints()
-    .PublishAsDockerFile();
+// builder.AddNpmApp("stencil", "../photosearch-frontend")
+//     .WithReference(apiService)
+//     .WithHttpEndpoint(env: "PORT")
+//     .WithExternalHttpEndpoints()
+//     .PublishAsDockerFile();
 
 
 if (!string.IsNullOrWhiteSpace(dockerHost))

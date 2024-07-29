@@ -28,7 +28,9 @@
         "FLORENCE_MODEL": "Florence-2-base-ft",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true"
+        "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true",
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21268",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22108"
       }
     },
     "http-remote-host-with-gpu": {
@@ -44,7 +46,9 @@
         "FLORENCE_MODEL": "Florence-2-large-ft",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
-        "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true"
+        "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true",
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21268",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22108"
       }
     }
   }

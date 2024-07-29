@@ -8,23 +8,22 @@ namespace PhotoSearch.Nominatim;
 public class NominatimResourceLifecycleHook(ResourceNotificationService notificationService)
     : IDistributedApplicationLifecycleHook
 {
-    public async Task AfterResourcesCreatedAsync(DistributedApplicationModel appModel, CancellationToken cancellationToken = default)
+    public async Task BeforeStartAsync(DistributedApplicationModel appModel, CancellationToken cancellationToken = default)
     {
         foreach (var resource in appModel.Resources.OfType<NominatimResource>())
         {
             Console.WriteLine($"Verifying if the maps are downloaded for {resource.Name}");
-            await notificationService.PublishUpdateAsync(resource,
+            await notificationService.PublishUpdateAsync(resource, resource.Name,
                 state => state with
                 {
                     State = new ResourceStateSnapshot("Initialising", KnownResourceStateStyles.Info)
                 });
 
-            DownloadMaps(resource, cancellationToken);
-        }
- 
+            WatchNominatimStartup(resource, cancellationToken) ;
+        } 
     }
 
-    private void DownloadMaps(NominatimResource resource, CancellationToken cancellationToken)
+    private void WatchNominatimStartup(NominatimResource resource, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(resource.MapsDownloadUrl))
         {
@@ -37,7 +36,7 @@ public class NominatimResourceLifecycleHook(ResourceNotificationService notifica
             using var httpClient = HttpClientFactory.Create();
             httpClient.BaseAddress = new Uri(connectionString!);
             
-            await notificationService.PublishUpdateAsync(resource,
+            await notificationService.PublishUpdateAsync(resource, resource.Name,
                 state => state with
                 {
                     State = new ResourceStateSnapshot($"Connection string: {connectionString}", KnownResourceStateStyles.Info)
@@ -47,7 +46,7 @@ public class NominatimResourceLifecycleHook(ResourceNotificationService notifica
             while (!isReady)
             {
                 isReady = await IsServerReady(httpClient, cancellationToken);
-                await notificationService.PublishUpdateAsync(resource,
+                await notificationService.PublishUpdateAsync(resource, resource.Name,
                     state => state with
                     {
                         State = new ResourceStateSnapshot("Waiting for Nominatim to start", KnownResourceStateStyles.Info)
@@ -58,7 +57,7 @@ public class NominatimResourceLifecycleHook(ResourceNotificationService notifica
                 }
             }
             
-            await notificationService.PublishUpdateAsync(resource,
+            await notificationService.PublishUpdateAsync(resource, resource.Name,
                 state => state with
                 {
                     State = new ResourceStateSnapshot("Nominatim is ready", KnownResourceStateStyles.Success)
@@ -77,8 +76,9 @@ public class NominatimResourceLifecycleHook(ResourceNotificationService notifica
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            // ignored
         }
+
         return false;
     }
 }
