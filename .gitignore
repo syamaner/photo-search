@@ -402,3 +402,4 @@ FodyWeavers.xsd
 **/cache/**/*
 **/.idea/**/*
 /scratchpad
+doc/slide.pdf
