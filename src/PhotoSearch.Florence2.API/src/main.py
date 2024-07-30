@@ -43,9 +43,8 @@ svc = Florence2Service.Florence2Service(os.environ["FLORENCE_MODEL"])
 
 @app.post('/api/summarise/<filepath>')
 def summarise_photo(filepath):
-    
-    with tracer.start_as_current_span("summarise-florence2"):        
-        logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
+    with tracer.start_as_current_span("main"):   
         content = request.json
         summary = svc.generate_caption(content['base64image'])
         object_response = svc.generate_object_list(content['base64image'])
@@ -56,4 +55,5 @@ def summarise_photo(filepath):
         logger.info( response)
         return response
 if __name__ == "__main__":
-    app.run(debug=True,host='0.0.0.0')
+    port = int(os.environ.get('PORT', 8111))
+    app.run(debug=True,host='0.0.0.0',port=port,use_reloader=False)

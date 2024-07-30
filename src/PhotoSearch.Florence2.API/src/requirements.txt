@@ -1,6 +1,6 @@
-flask>=3.0.3
-opentelemetry-distro[otlp]>=0.45b0
-opentelemetry-instrumentation-flask>=0.45b0
+Flask==3.0.3
+opentelemetry-distro[otlp]
+opentelemetry-instrumentation-flask
 pillow>=10.2.0
 transformers[torch]>=4.42.4
 timm>=1.0.7

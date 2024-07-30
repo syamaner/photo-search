@@ -2,7 +2,6 @@ using System;
 using Aspire.Hosting;
 using PhotoSearch.AppHost;
 using PhotoSearch.Ollama;
-using FizzyLogic.Aspire.Python.Hosting;
 using PhotoSearch.AppHost.WaitFor;
 using PhotoSearch.Nominatim;
 
@@ -34,8 +33,9 @@ var messaging =
     builder.AddRabbitMq("messaging", dockerHost, 5672)
         .WithHealthCheck(dockerHost);
 
-var flaskAppFlorenceApi = builder.AddFlaskProjectWithVirtualEnvironment("florence2api", 
-        "../PhotoSearch.Florence2.API/src")
+var flaskAppFlorenceApi = builder.AddPythonProject("florence2api", 
+        "../PhotoSearch.Florence2.API/src", "main.py")
+    .WithEndpoint(targetPort: 8111, scheme: "http", env: "PORT")
     .WithEnvironment("FLORENCE_MODEL",Environment.GetEnvironmentVariable("FLORENCE_MODEL"))
     .WithEnvironment("PYTHONUNBUFFERED","0")
     .WithEnvironment("ASPIRE_ALLOW_UNSECURED_TRANSPORT","true");

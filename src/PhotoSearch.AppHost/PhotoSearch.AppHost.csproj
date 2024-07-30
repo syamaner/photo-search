@@ -11,10 +11,10 @@
     <ItemGroup>
         <PackageReference Include="Aspire.Hosting.AppHost" Version="8.1.0" />
         <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="8.1.0" />
+        <PackageReference Include="Aspire.Hosting.Python" Version="8.1.0" />
         <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="8.1.0" />
         <PackageReference Include="Aspire.Hosting.NodeJs" Version="8.1.0" />
         <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="8.0.1" />
-        <PackageReference Include="FizzyLogic.Aspire.Python.Hosting" Version="0.1.0-preview-2.12" />
     </ItemGroup>
 
     <ItemGroup>
