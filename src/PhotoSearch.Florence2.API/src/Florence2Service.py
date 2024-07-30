@@ -37,7 +37,7 @@ class Florence2Service:
         image = Image.open(BytesIO(base64.b64decode(base64_image)))
         inputs = self.processor(text=self.detailed_caption_prompt, images=image, return_tensors="pt")
         logger = logging.getLogger(__name__)   
-        with tracer.start_as_current_span("generatecaption"):
+        with tracer.start_as_current_span("generate-summary"):
             try:
                 generated_ids = self.model.generate(
                     input_ids=inputs["input_ids"],

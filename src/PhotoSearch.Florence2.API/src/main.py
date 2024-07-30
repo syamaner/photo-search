@@ -16,6 +16,7 @@ logging.root.setLevel(logging.INFO)
 #docker run  -v ./cache:/home/user/hf:rw -p 5051:5000  florencelocal:1
 
 svc = Florence2Service.Florence2Service(os.environ["FLORENCE_MODEL"])
+model = os.environ["FLORENCE_MODEL"]
 
 # @app.post("/")
 # def home():
@@ -44,7 +45,7 @@ svc = Florence2Service.Florence2Service(os.environ["FLORENCE_MODEL"])
 @app.post('/api/summarise/<filepath>')
 def summarise_photo(filepath):
     logger = logging.getLogger(__name__)
-    with tracer.start_as_current_span("main"):   
+    with tracer.start_as_current_span(f"summarise-with-{model}"):   
         content = request.json
         summary = svc.generate_caption(content['base64image'])
         object_response = svc.generate_object_list(content['base64image'])
