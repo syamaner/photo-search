@@ -10,7 +10,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var dockerHost = StartupHelper.GetDockerHostValue();
 var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
-var ollamaVisionModel =  Environment.GetEnvironmentVariable("VISION_MODEL");
+var ollamaVisionModel =  Environment.GetEnvironmentVariable("OLLAMA_MODEL");
 var mapUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL") ?? "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
 var dbName = "photo-db";
  
@@ -37,7 +37,8 @@ var messaging =
 var flaskAppFlorenceApi = builder.AddFlaskProjectWithVirtualEnvironment("florence2api", 
         "../PhotoSearch.Florence2.API/src")
     .WithEnvironment("FLORENCE_MODEL",Environment.GetEnvironmentVariable("FLORENCE_MODEL"))
-    .WithEnvironment("PYTHONUNBUFFERED","0");
+    .WithEnvironment("PYTHONUNBUFFERED","0")
+    .WithEnvironment("ASPIRE_ALLOW_UNSECURED_TRANSPORT","true");
 
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice") 
     .WithReference(ollamaContainer)

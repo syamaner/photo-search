@@ -48,7 +48,7 @@ public static class NominatimResourceBuilderExtensions
     {
         return builder
             .WithVolume(nominatimDataVolumeName, "/nominatim/data")
-            .WithVolume(nominatimFlatVolumeName, "/nominatim/flatnode")
+          //  .WithVolume(nominatimFlatVolumeName, "/nominatim/flatnode")
             .WithVolume(nominatimPostgresqlVolumeName, "/var/lib/postgresql/14/main");
     }
 }

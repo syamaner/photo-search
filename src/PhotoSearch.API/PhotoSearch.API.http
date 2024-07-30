@@ -1,6 +1,6 @@
 @API_HostAddress = http://localhost:5291
 
-GET {{API_HostAddress}}/photos/summarise/{{model}}
+GET {{API_HostAddress}}/photos/summarise/{{ollamaModel}}
 Accept: application/json
 
 ###
