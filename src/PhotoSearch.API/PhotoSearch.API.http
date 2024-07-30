@@ -25,3 +25,8 @@ GET {{Nominatim_HostAddress}}/reverse?format=geojson&namedetails=1&lat=47.378177
 
 
 ###
+
+GET {{API_HostAddress}}/photos
+Accept: application/json
+
+###
