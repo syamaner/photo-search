@@ -29,8 +29,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21268",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22108"
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:21268",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:22108"
       }
     },
     "http-remote-host-with-gpu": {
@@ -47,8 +47,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21268",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22108"
+        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "http://localhost:21268",
+        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:22108"
       }
     }
   }
