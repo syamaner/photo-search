@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PhotoSearch.Data;
@@ -12,9 +13,11 @@ using PhotoSearch.Data.GeoJson;
 namespace PhotoSearch.Data.Migrations
 {
     [DbContext(typeof(PhotoSearchContext))]
-    partial class PhotoSearchContextModelSnapshot : ModelSnapshot
+    [Migration("20240803180706_Location info optional")]
+    partial class Locationinfooptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

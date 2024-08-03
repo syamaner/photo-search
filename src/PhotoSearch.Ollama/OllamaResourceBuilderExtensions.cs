@@ -25,7 +25,7 @@ public static class OllamaResourceBuilderExtensions
             .WithAnnotation(new ContainerImageAnnotation { Image = "ollama/ollama", Tag = ollamaTag })
             .PublishAsContainer()
             .WithVolume("ollamas", "/root/.ollama")
-            .WithHttpEndpoint(hostPort, OllamaContainerPort)
+          //  .WithHttpEndpoint(hostPort, OllamaContainerPort, isProxied:false)
             .WithExternalHttpEndpoints();
         
         if (useGpu)

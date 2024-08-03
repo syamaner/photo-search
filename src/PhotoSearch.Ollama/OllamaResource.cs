@@ -18,8 +18,8 @@ public class OllamaResource : ContainerResource, IResourceWithConnectionString
         if (string.IsNullOrWhiteSpace(modelName)) throw new ArgumentNullException(nameof(modelName));
         
         ModelName = modelName;
-        _host =
-            string.IsNullOrWhiteSpace(externalHostIpAddress) ? "localhost" : externalHostIpAddress;
+        _host = "localhost";
+    //        string.IsNullOrWhiteSpace(externalHostIpAddress) ? "localhost" : externalHostIpAddress;
         _publicPort = publicPort;
     }
 

@@ -75,9 +75,9 @@ public class NominatimResourceLifecycleHook(ResourceNotificationService notifica
                 await nominatimWebInterface.GetFromJsonAsync<NominatimStatusResponse>("/status?format=json", cancellationToken);
             return status is { Status: 0 };
         }
-        catch (Exception e)
+        catch (Exception _)
         {
-            logger.LogError(e, "Failed to check Nominatim status");
+            //logger.LogError(e, "Failed to check Nominatim status");
             // ignored
         }
 

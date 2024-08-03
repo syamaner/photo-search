@@ -29,57 +29,13 @@ public class PhotoSearchContext : DbContext
         modelBuilder.Entity<Photo>()
             .Property(p => p.LocationInformation)
             .HasColumnType("jsonb")
-            .IsRequired();
-        // modelBuilder.Entity<Photo>()
-        //     .OwnsOne(photo => photo.LocationInformation, pb =>
-        //     {
-        //         pb.ToJson();
-        //         // pb.OwnsMany(featureCollection => featureCollection.Features, fnb =>
-        //         // {
-        //         //     fnb.ToJson();
-        //         //     fnb.OwnsOne(feature=>feature.Properties, ftb =>
-        //         //     {
-        //         //         ftb.ToJson();
-        //         //         ftb.OwnsOne(properties=>properties.Address, pb =>
-        //         //         {
-        //         //             pb.ToJson();
-        //         //         });
-        //         //         ftb.OwnsOne(properties => properties.Namedetails, pb =>
-        //         //         {
-        //         //             pb.ToJson();
-        //         //         });
-        //         //     });
-        //         //     fnb.OwnsOne(feature => feature.Geometry, ftb =>
-        //         //     {
-        //         //         ftb.ToJson();
-        //         //     });
-        //         // }); 
-        //     });
-        //
+            .IsRequired(false);
+
         modelBuilder.Entity<Photo>()
             .OwnsOne(c => c.Thumbnails, d =>
             {
                 d.ToJson();
             });
-        // modelBuilder.Entity<Photo>()
-        //     .Property(p => p.Metadata)
-        //     .HasColumnType("jsonb")
-        //     .IsRequired();
-        
-        // modelBuilder.Entity<Photo>()
-        //     .Property(p => p.Thumbnails)
-        //     .HasColumnType("jsonb")
-        //     .IsRequired(false);
-        
-        // modelBuilder.Entity<Photo>()
-        //     .Property(p => p.PhotoSummaries)
-        //     .HasColumnType("jsonb")
-        //     .IsRequired(false);
-        
-        // modelBuilder.Entity<Photo>()
-        //     .Property(p => p.LocationInformation)
-        //     .HasColumnType("jsonb")
-        //     .IsRequired(false);
         
         modelBuilder.Entity<Photo>()
             .Property(p => p.Height)

@@ -20,19 +20,25 @@ public static class NominatimResourceBuilderExtensions
         var nominatimResource = new NominatimResource(name, mapUrl, hostIpAddress, hostPort.ToString()!);
         
         builder.Services.TryAddLifecycleHook<NominatimResourceLifecycleHook>();
-        
+
         var nominatimResourceBuilder = builder.AddResource(nominatimResource)
             .WithAnnotation(new ContainerImageAnnotation { Image = NominatimImage, Tag = imageTag })
             .PublishAsContainer()
             .WithEnvironment("PBF_URL", mapUrl)
             .WithEnvironment("IMPORT_WIKIPEDIA", importWikipediaData ? "true" : "false")
-            .WithEnvironment("IMPORT_GB_POSTCODES", importUkPostcodes ? "true" : "false")
-            .WithExternalHttpEndpoints();
+            .WithEnvironment("IMPORT_GB_POSTCODES", importUkPostcodes ? "true" : "false");
+            //.WithEndpoint(hostPort, ContainerPort, "http", isProxied: false);
         
         if (!string.IsNullOrWhiteSpace(hostIpAddress))
         {
             nominatimResourceBuilder
                 .WithContainerRuntimeArgs("-p", $"0.0.0.0:{hostPort}:{ContainerPort}");
+            foreach (var resourceAnnotation in nominatimResourceBuilder.Resource.Annotations.Where(x =>
+                         x is EndpointAnnotation))
+            {
+                var endpointAnnotation = (EndpointAnnotation)resourceAnnotation;
+                endpointAnnotation.IsProxied = false;
+            }
         }
         else
         {

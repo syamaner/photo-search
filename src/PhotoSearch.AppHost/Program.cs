@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
 using PhotoSearch.AppHost;
 using PhotoSearch.Ollama;
 using PhotoSearch.AppHost.WaitFor;
@@ -12,7 +14,8 @@ var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
 var ollamaVisionModel =  Environment.GetEnvironmentVariable("OLLAMA_MODEL");
 var mapUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL") ?? "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
 var dbName = "photo-db";
- 
+uint postgesPort = 5432;
+
 var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: ollamaVisionModel!,
     useGpu: enableNvidiaDocker)
     .WithHealthCheck();
@@ -26,7 +29,9 @@ var nominatimContainer =
         .WithPersistence()
         .WithHealthCheck();
 
-var postgresContainer = builder.AddPostgreSql(dbName, 5432, dockerHost);
+var postgresContainer = builder.AddPostgreSql(dbName, (int)postgesPort, dockerHost);
+builder.AddPgAdmin(postgresContainer, 8081, dockerHost);
+
 var postgresDb = postgresContainer.AddDatabase(dbName);
 
 var messaging =
@@ -62,12 +67,27 @@ var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgrou
 //     .WithExternalHttpEndpoints()
 //     .PublishAsDockerFile();
 
+// add ssh_user and ssh_key_file (path to the key file) for ser secrets.
+using var sshUtility = new SShUtility(dockerHost, builder.Configuration["ssh_user"],  builder.Configuration["ssh_key_file"]);
 
 if (!string.IsNullOrWhiteSpace(dockerHost))
 {
-    backgroundWorker.UpdateRabbitmqConnectionString(messaging, dockerHost,5672);
-    apiService.UpdateRabbitmqConnectionString(messaging, dockerHost,5672);
+    // Forwards the ports to the docker host machine
+    sshUtility.Connect();
+    // PgAdmin
+    sshUtility.AddForwardedPort(8081, 8081);
+    // Postgres
+    sshUtility.AddForwardedPort(5432, 5432);
+    // RabbitMQ
+    sshUtility.AddForwardedPort(5672, 5672);
+    // RabbitMQ Management
+    sshUtility.AddForwardedPort(15672, 15672);
+    // Nominatim
+    sshUtility.AddForwardedPort(8180, 8180);
+    // Ollama
+    sshUtility.AddForwardedPort(11438, 11438);
 }
 
-
 builder.Build().Run();
+
+ 
