@@ -1,20 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PhotoSearch.Data.Models;
 
 namespace PhotoSearch.Data;
-public class PhotoSearchContextFactory : IDesignTimeDbContextFactory<PhotoSearchContext>
-{
-    public PhotoSearchContext CreateDbContext(string[] args)
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<PhotoSearchContext>();
-        optionsBuilder.UseNpgsql();
-        return new PhotoSearchContext(optionsBuilder.Options, new ConfigurationBuilder().Build());
-    }
-}
+
 public class PhotoSearchContext : DbContext
 {
     public PhotoSearchContext(DbContextOptions<PhotoSearchContext> opt, IConfiguration configuration) : base(opt)
@@ -22,27 +11,75 @@ public class PhotoSearchContext : DbContext
     }
 
     public DbSet<Photo> Photos => Set<Photo>();
+ 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
- 
         modelBuilder.Entity<Photo>()
-            .Property(p => p.Metadata)
-            .HasColumnType("jsonb")
-            .IsRequired();
+            .OwnsOne(c => c.Metadata, d =>
+            {
+                d.ToJson();
+            });
         modelBuilder.Entity<Photo>()
-            .Property(p => p.Thumbnails)
-            .HasColumnType("jsonb")
-            .IsRequired(false);
-        modelBuilder.Entity<Photo>()
-            .Property(p => p.PhotoSummaries)
-            .HasColumnType("jsonb")
-            .IsRequired(false);
+            .OwnsOne(c => c.PhotoSummaries, d =>
+            {
+                d.ToJson();
+            });
+        
         modelBuilder.Entity<Photo>()
             .Property(p => p.LocationInformation)
             .HasColumnType("jsonb")
-            .IsRequired(false);
-
+            .IsRequired();
+        // modelBuilder.Entity<Photo>()
+        //     .OwnsOne(photo => photo.LocationInformation, pb =>
+        //     {
+        //         pb.ToJson();
+        //         // pb.OwnsMany(featureCollection => featureCollection.Features, fnb =>
+        //         // {
+        //         //     fnb.ToJson();
+        //         //     fnb.OwnsOne(feature=>feature.Properties, ftb =>
+        //         //     {
+        //         //         ftb.ToJson();
+        //         //         ftb.OwnsOne(properties=>properties.Address, pb =>
+        //         //         {
+        //         //             pb.ToJson();
+        //         //         });
+        //         //         ftb.OwnsOne(properties => properties.Namedetails, pb =>
+        //         //         {
+        //         //             pb.ToJson();
+        //         //         });
+        //         //     });
+        //         //     fnb.OwnsOne(feature => feature.Geometry, ftb =>
+        //         //     {
+        //         //         ftb.ToJson();
+        //         //     });
+        //         // }); 
+        //     });
+        //
+        modelBuilder.Entity<Photo>()
+            .OwnsOne(c => c.Thumbnails, d =>
+            {
+                d.ToJson();
+            });
+        // modelBuilder.Entity<Photo>()
+        //     .Property(p => p.Metadata)
+        //     .HasColumnType("jsonb")
+        //     .IsRequired();
+        
+        // modelBuilder.Entity<Photo>()
+        //     .Property(p => p.Thumbnails)
+        //     .HasColumnType("jsonb")
+        //     .IsRequired(false);
+        
+        // modelBuilder.Entity<Photo>()
+        //     .Property(p => p.PhotoSummaries)
+        //     .HasColumnType("jsonb")
+        //     .IsRequired(false);
+        
+        // modelBuilder.Entity<Photo>()
+        //     .Property(p => p.LocationInformation)
+        //     .HasColumnType("jsonb")
+        //     .IsRequired(false);
         
         modelBuilder.Entity<Photo>()
             .Property(p => p.Height)
@@ -57,10 +94,10 @@ public class PhotoSearchContext : DbContext
             .Property(p => p.Longitude)
             .IsRequired(false).HasDefaultValue(null);
         modelBuilder.Entity<Photo>()
-            .Property(p => p.CaptureDateUTC)
+            .Property(p => p.CaptureDateUtc)
             .IsRequired(false).HasDefaultValue(null);
         modelBuilder.Entity<Photo>()
-            .Property(p => p.ImportedDateUTC)
+            .Property(p => p.ImportedDateUtc)
             .IsRequired();
         modelBuilder.Entity<Photo>()
             .Property(p => p.PublicUrl)

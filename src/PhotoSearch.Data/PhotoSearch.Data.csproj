@@ -18,6 +18,7 @@
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="8.0.4" />
+      <PackageReference Include="Npgsql.GeoJSON" Version="8.0.3" />
     </ItemGroup>
 
     <ItemGroup>

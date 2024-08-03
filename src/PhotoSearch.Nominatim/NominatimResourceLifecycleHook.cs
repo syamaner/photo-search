@@ -1,11 +1,12 @@
 using System.Net.Http.Json;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Lifecycle;
+using Microsoft.Extensions.Logging;
 using PhotoSearch.Common;
 
 namespace PhotoSearch.Nominatim;
 
-public class NominatimResourceLifecycleHook(ResourceNotificationService notificationService)
+public class NominatimResourceLifecycleHook(ResourceNotificationService notificationService, ILogger<NominatimResourceLifecycleHook> logger)
     : IDistributedApplicationLifecycleHook
 {
     public async Task BeforeStartAsync(DistributedApplicationModel appModel, CancellationToken cancellationToken = default)
@@ -65,7 +66,7 @@ public class NominatimResourceLifecycleHook(ResourceNotificationService notifica
         }, cancellationToken);
     }
 
-    private static async Task<bool> IsServerReady(HttpClient nominatimWebInterface, 
+    private async Task<bool> IsServerReady(HttpClient nominatimWebInterface, 
         CancellationToken cancellationToken = default)
     {
         try
@@ -76,6 +77,7 @@ public class NominatimResourceLifecycleHook(ResourceNotificationService notifica
         }
         catch (Exception e)
         {
+            logger.LogError(e, "Failed to check Nominatim status");
             // ignored
         }
 

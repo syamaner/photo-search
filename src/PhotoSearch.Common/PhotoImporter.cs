@@ -9,10 +9,9 @@ namespace PhotoSearch.Common;
 
 public class PhotoImporter(ILogger<PhotoImporter> logger, IReverseGeocoder reverseGeocoder) : IPhotoImporter
 {
-    private readonly List<string> _fileExtensionsToInclude = ["jpg"];
-    private readonly ILogger<PhotoImporter> _logger = logger;
+    private readonly List<string> _fileExtensionsToInclude = ["jpg"]; 
 
-    public async Task<List<Photo>> ImportPhotos(string baseDirectory)
+    public async Task<List<Photo>> ImportPhotos(string baseDirectory, List<string> existingIds)
     {
         var photos = new List<Photo>();
         foreach (var imageFile in GetImageFiles(baseDirectory))
@@ -20,14 +19,20 @@ public class PhotoImporter(ILogger<PhotoImporter> logger, IReverseGeocoder rever
             try
             {
                 var photo = await GetPhotoInformation(imageFile, baseDirectory);
+                if (existingIds.Contains(photo.RelativePath))
+                {
+                    logger.LogInformation("Skipping {ImageFile} as it already exists in the database.", imageFile);
+                    continue;
+                }
                 photos.Add(photo);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error importing photo {ImageFile}", imageFile);
+                logger.LogError(ex, "Error importing photo {ImageFile}", imageFile);
             }
         }
-       return photos;
+
+        return photos;
     }
 
     private async Task<Photo> GetPhotoInformation(string fullPath, string baseDirectory)
@@ -40,7 +45,7 @@ public class PhotoImporter(ILogger<PhotoImporter> logger, IReverseGeocoder rever
         using var image = new MagickImage(fullPath);
         var photo = new Photo
         {
-            Metadata = metadata,
+            Metadata = metadata.Select(x=>new ExifData{Name=x.Key, Value=x.Value}).ToList(),
             RelativePath = fullPath.Replace(baseDirectory, string.Empty),
             ExactPath = fullPath,
             SizeKb = new FileInfo(fullPath).Length / 1024,
@@ -48,9 +53,9 @@ public class PhotoImporter(ILogger<PhotoImporter> logger, IReverseGeocoder rever
             Height = image.Height,
             Latitude = gpsLocation?.Latitude,
             Longitude = gpsLocation?.Longitude,
-            ImportedDateUTC = DateTime.UtcNow,
+            ImportedDateUtc = DateTime.UtcNow,
             FileType = new FileInfo(fullPath).Extension,
-            CaptureDateUTC = MetadataHelper.GetImageCaptureTime(metadata)
+            CaptureDateUtc = MetadataHelper.GetImageCaptureTime(metadata)
         };
         if (photo is { Latitude: not null, Longitude: not null })
         {
@@ -71,7 +76,7 @@ public class PhotoImporter(ILogger<PhotoImporter> logger, IReverseGeocoder rever
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error reading metadata from {ImagePath}", imagePath);
+            logger.LogError(ex, "Error reading metadata from {ImagePath}", imagePath);
             throw;
         }
     }

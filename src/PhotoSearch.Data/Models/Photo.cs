@@ -1,26 +1,44 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using PhotoSearch.Data.GeoJson;
 
 namespace PhotoSearch.Data.Models;
 
 public class Photo
 {
-    public Photo()
-    {
-        
-    }
-    public required string RelativePath { get; set; }
-    public required string ExactPath { get; set; }
-    public string? PublicUrl { get; set; }
-    public required string FileType { get; set; }
-    public DateTime? CaptureDateUTC { get; set; }
-    public DateTime ImportedDateUTC { get; set; }
-    public double? Latitude { get; set; }
-    public double? Longitude { get; set; }
-    public int Width { get; set; }
-    public int Height { get; set; }
-    public long SizeKb { get; set; }
-    public Dictionary<string,PhotoSummary>? PhotoSummaries { get; set; }
-    public Dictionary<string, string>? Metadata { get; set; }
+    [MaxLength(250)]
+    public required string RelativePath { get; init; }
+    
+    [MaxLength(600)]
+    public required string ExactPath { get; init; }
+    
+    [MaxLength(500)]
+    public string? PublicUrl { get; init; }
+    
+    [MaxLength(30)]
+    public required string FileType { get; init; }
+    public DateTime? CaptureDateUtc { get; init; }
+    public DateTime ImportedDateUtc { get; init; }
+    public double? Latitude { get; init; }
+    public double? Longitude { get; init; }
+    public int Width { get; init; }
+    public int Height { get; init; }
+    public long SizeKb { get; init; }
+    
+
+    public List<PhotoSummary>? PhotoSummaries { get; set; } 
+
+    public List<ExifData>? Metadata { get; init; }
+
     public FeatureCollection? LocationInformation { get; set; }
-    public Thumbnail? Thumbnails { get; set; }
+
+    public Thumbnail? Thumbnails { get; init; }
+}
+
+public class ExifData
+{
+    [MaxLength(250)]
+    public required string Name { get; set; }
+    [MaxLength(500)]
+    public string? Value { get; set; }
 }

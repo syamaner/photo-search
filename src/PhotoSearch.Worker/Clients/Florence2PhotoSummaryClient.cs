@@ -21,24 +21,17 @@ public class Florence2PhotoSummaryClient(HttpClient  httpClient) : IPhotoSummary
             ["base64image"] = base64Image
         };
         var payload = JsonSerializer.Serialize(requestBody);
-        try
-        {
-            var content = new StringContent(payload, Encoding.UTF8, "application/json");
-            var result = await httpClient.PostAsync($"/api/summarise/{imagePath.Replace("/", "-")}", content);
+        var content = new StringContent(payload, Encoding.UTF8, "application/json");
+        var result = await httpClient.PostAsync($"/api/summarise/{imagePath.Replace("/", "-")}", content);
 
-            var response = await result.Content.ReadFromJsonAsync<FlorenceResponse>();
-            return new PhotoSummary()
-            {
-                Description = response?.Summary!,
-                Model = modelName,
-                ObjectClasses = response!.Objects?.Distinct()?.ToList(),
-                DateGenerated = DateTimeOffset.Now
-            };
-        }
-        catch (Exception ex)
+        var response = await result.Content.ReadFromJsonAsync<FlorenceResponse>();
+        return new PhotoSummary()
         {
-            throw ex;
-        }
+            Description = response?.Summary!,
+            Model = modelName,
+            ObjectClasses = response!.Objects?.Distinct()?.ToList(),
+            DateGenerated = DateTimeOffset.Now
+        };
     }
 
     public bool CanHandle(string modelName)

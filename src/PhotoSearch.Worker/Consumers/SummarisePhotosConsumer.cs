@@ -27,17 +27,24 @@ public class SummarisePhotosConsumer(
             context.Message.ModelName);
         foreach (var filePath in context.Message.ImagePaths)
         {
-            if (!photos.ContainsKey(filePath))
+            if (photos.All(p => p.ExactPath != filePath))
             {
                 continue;
             }
 
             try
             {
+                var photo = photos.SingleOrDefault(x=>x.ExactPath==filePath);
+                if(photo==null)
+                    continue;
                 var summary = await SummarisePhoto(context.Message.ModelName, filePath);
-                photos[filePath].PhotoSummaries ??= new Dictionary<string, PhotoSummary>();
-                photos[filePath].PhotoSummaries![context.Message.ModelName] = summary!;
-                photoSearchContext.Update(photos[filePath]);
+                photo!.PhotoSummaries ??= new List<PhotoSummary>();
+                if(photo?.PhotoSummaries.Any(x=>x.Model==context.Message.ModelName)??false)
+                {
+                    photo.PhotoSummaries.RemoveAll(x => x.Model == context.Message.ModelName);
+                }
+                photo!.PhotoSummaries!.Add(summary!);
+                photoSearchContext.Update(photo);
             }
             catch (Exception ex)
             {
@@ -61,12 +68,12 @@ public class SummarisePhotosConsumer(
         return await client!.SummarisePhoto(modelName, filePath);
     }
     
-    private async Task<Dictionary<string, Photo>?> GetPhotosToUpdate(List<string> imagePaths)
+    private async Task<List<Photo>?> GetPhotosToUpdate(List<string> imagePaths)
     {
-        Dictionary<string, Photo>? photos = null;
+        List<Photo>? photos = null;
         try
         {
-            photos = await photoSearchContext.Photos.ToDictionaryAsync(x => x.ExactPath, x => x);
+            photos = await photoSearchContext.Photos.ToListAsync();
         }
         catch (Exception ex)
         {

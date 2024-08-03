@@ -1,4 +1,3 @@
-using Microsoft.Net.Http.Headers;
 using Npgsql;
 using OllamaSharp;
 using PhotoSearch.Common;
@@ -12,6 +11,7 @@ using StringWithQualityHeaderValue = System.Net.Http.Headers.StringWithQualityHe
 var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
+NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
 builder.Services.AddHostedService<Worker>();
 builder.Services.AddTransient<IMigrationService, MigrationService>();
 builder.Services.AddSingleton<IPhotoSummaryClient, OllamaPhotoSummaryClient>();
@@ -47,6 +47,6 @@ builder.AddMasstransit(configurator =>
     configurator.AddConsumer<ImportPhotosConsumer>();
     configurator.AddConsumer<SummarisePhotosConsumer>();
 });
-NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
+
 var host = builder.Build();
 host.Run();

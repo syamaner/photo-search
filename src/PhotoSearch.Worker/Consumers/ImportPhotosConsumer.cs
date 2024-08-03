@@ -1,4 +1,5 @@
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using PhotoSearch.Common;
 using PhotoSearch.Common.Contracts;
 using PhotoSearch.Data;
@@ -10,8 +11,9 @@ public class ImportPhotosConsumer(IPhotoImporter photoImporter, PhotoSearchConte
 {
     public async Task Consume(ConsumeContext<ImportPhotos> context)
     {
-        var photos = await photoImporter.ImportPhotos(context.Message.Directory);
-
+        var existingIds = await photoSearchContext.Photos.Select(x => x.RelativePath).ToListAsync();
+        var photos = await photoImporter.ImportPhotos(context.Message.Directory,existingIds);
+    
         await photoSearchContext.Photos.AddRangeAsync(photos);
         await photoSearchContext.SaveChangesAsync();
 

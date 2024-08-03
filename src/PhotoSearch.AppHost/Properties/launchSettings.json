@@ -1,20 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "applicationUrl": "https://localhost:17218;http://localhost:15271",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "DOTNET_ENVIRONMENT": "Development",
-        "DOTNET_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21268",
-        "DOTNET_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22108",
-        "DOCKER_HOST": "ssh://syamaner@192.168.0.158",
-        "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "false"
-      }
-    },
     "http-local-host-no-gpu": {
       "commandName": "Project",
       "dotnetRunMessages": true,
