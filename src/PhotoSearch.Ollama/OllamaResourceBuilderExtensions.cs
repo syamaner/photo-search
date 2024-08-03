@@ -24,8 +24,8 @@ public static class OllamaResourceBuilderExtensions
         var ollamaResourceBuilder = builder.AddResource(ollamaResource)
             .WithAnnotation(new ContainerImageAnnotation { Image = "ollama/ollama", Tag = ollamaTag })
             .PublishAsContainer()
+            .WithHttpEndpoint(hostPort, OllamaContainerPort, isProxied:false)
             .WithVolume("ollamas", "/root/.ollama")
-          //  .WithHttpEndpoint(hostPort, OllamaContainerPort, isProxied:false)
             .WithExternalHttpEndpoints();
         
         if (useGpu)
@@ -33,16 +33,6 @@ public static class OllamaResourceBuilderExtensions
             ollamaResourceBuilder.WithContainerRuntimeArgs("--gpus=all");
         }
         
-        if (!string.IsNullOrWhiteSpace(hostIpAddress))
-        {
-            ollamaResourceBuilder
-                .WithContainerRuntimeArgs("-p", $"0.0.0.0:{hostPort}:{OllamaContainerPort}");
-        }
-        // else
-        // {
-        //     ollamaResourceBuilder.WithHttpEndpoint(hostPort, OllamaContainerPort);
-        // }
- 
         builder.Services.TryAddLifecycleHook<OllamaResourceLifecycleHook>();
 
         return ollamaResourceBuilder;

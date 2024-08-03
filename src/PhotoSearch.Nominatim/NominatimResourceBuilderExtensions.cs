@@ -27,22 +27,16 @@ public static class NominatimResourceBuilderExtensions
             .WithEnvironment("PBF_URL", mapUrl)
             .WithEnvironment("IMPORT_WIKIPEDIA", importWikipediaData ? "true" : "false")
             .WithEnvironment("IMPORT_GB_POSTCODES", importUkPostcodes ? "true" : "false");
-            //.WithEndpoint(hostPort, ContainerPort, "http", isProxied: false);
         
+            nominatimResourceBuilder.WithHttpEndpoint(hostPort, ContainerPort);
         if (!string.IsNullOrWhiteSpace(hostIpAddress))
         {
-            nominatimResourceBuilder
-                .WithContainerRuntimeArgs("-p", $"0.0.0.0:{hostPort}:{ContainerPort}");
             foreach (var resourceAnnotation in nominatimResourceBuilder.Resource.Annotations.Where(x =>
                          x is EndpointAnnotation))
             {
                 var endpointAnnotation = (EndpointAnnotation)resourceAnnotation;
                 endpointAnnotation.IsProxied = false;
             }
-        }
-        else
-        {
-            nominatimResourceBuilder.WithHttpEndpoint(hostPort, ContainerPort);
         }
 
         return nominatimResourceBuilder;

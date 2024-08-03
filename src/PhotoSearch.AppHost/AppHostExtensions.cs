@@ -20,9 +20,9 @@ public static class AppHostExtensions
         
         var postgreEndpointAnnotation = postgresContainer.Resource.Annotations.FirstOrDefault(x => x is EndpointAnnotation) as EndpointAnnotation;
         postgreEndpointAnnotation!.IsProxied = false; 
-        
-        postgresContainer
-            .WithContainerRuntimeArgs("--net", $"host");
+        postgreEndpointAnnotation.IsExternal = true;
+        // postgresContainer
+        //     .WithContainerRuntimeArgs("--net", $"host");
         return postgresContainer;
     }
     
@@ -37,13 +37,9 @@ public static class AppHostExtensions
             .WithEnvironment("PGADMIN_DEFAULT_PASSWORD", ogResource.Resource.PasswordParameter.Value)
             .WithEnvironment("PGADMIN_LISTEN_PORT", publicPort.ToString())
             .WithVolume("pgadmin-data", "/var/lib/pgadmin")
-            .WithHttpEndpoint(publicPort,publicPort,"http",isProxied:false)
+            .WithHttpEndpoint(publicPort, publicPort, "http", isProxied: false)
             .WithReference(ogResource);
 
-        if (string.IsNullOrWhiteSpace(host)) return pgAdminContainer;
- 
-        pgAdminContainer
-            .WithContainerRuntimeArgs("--net", $"host");
         return pgAdminContainer;
     }
     
@@ -54,8 +50,8 @@ public static class AppHostExtensions
         var rmqPassword = builder.AddParameter("rmqPassword", secret: true);
 
         var rabbitMq = builder.AddRabbitMQ(name, rmqUsername, rmqPassword, ampqPort)
-            .WithManagementPlugin();
-
+            .WithImageTag("3-management");
+        rabbitMq.WithHttpEndpoint(adminPort, adminPort, isProxied: false).WithExternalHttpEndpoints();
         if (string.IsNullOrWhiteSpace(host)) return rabbitMq;
 
         foreach (var resourceAnnotation in rabbitMq.Resource.Annotations.Where(x =>
@@ -65,8 +61,6 @@ public static class AppHostExtensions
             endpointAnnotation.IsProxied = false;
         }
         
-        rabbitMq
-            .WithContainerRuntimeArgs("--net", $"host");
         return rabbitMq;
     }
 }

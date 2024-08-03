@@ -1,7 +1,5 @@
 using System;
-using System.Linq;
 using Aspire.Hosting;
-using Aspire.Hosting.ApplicationModel;
 using PhotoSearch.AppHost;
 using PhotoSearch.Ollama;
 using PhotoSearch.AppHost.WaitFor;

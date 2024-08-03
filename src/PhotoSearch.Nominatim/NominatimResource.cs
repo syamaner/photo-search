@@ -10,8 +10,7 @@ public class NominatimResource(
     string? entrypoint = null)
     : ContainerResource(name, entrypoint), IResourceWithConnectionString
 {
-    private readonly string _host = "localhost";// string.IsNullOrWhiteSpace(externalHostIpAddress) ? "localhost" 
-     //   : externalHostIpAddress;
+    private readonly string _host = "localhost";
     private EndpointReference? _endpointReference;
     private const string NominatimEndpointName = "http";
 
