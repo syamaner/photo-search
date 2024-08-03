@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
@@ -27,12 +28,22 @@ public static class Extensions
         builder.Services.ConfigureHttpClientDefaults(http =>
         {
             // Turn on resilience by default
-            http.AddStandardResilienceHandler();
-
-            // Turn on service discovery by default
-            http.AddServiceDiscovery();
-        });
-
+            http.AddStandardResilienceHandler(o =>
+            {
+                o.AttemptTimeout = new HttpTimeoutStrategyOptions()
+                {
+                    Timeout = TimeSpan.FromSeconds(90)
+                };
+                o.TotalRequestTimeout = new HttpTimeoutStrategyOptions()
+                {
+                    Timeout = TimeSpan.FromSeconds(500)
+                };
+                o.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(200);
+            });
+                // Turn on service discovery by default
+                http.AddServiceDiscovery();
+            });
+       
         // Uncomment the following to restrict the allowed schemes for service discovery.
         // builder.Services.Configure<ServiceDiscoveryOptions>(options =>
         // {

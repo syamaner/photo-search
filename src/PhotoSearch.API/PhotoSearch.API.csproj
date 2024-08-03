@@ -10,11 +10,19 @@
     <ItemGroup>
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.1.0" />
         <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.1.0" />
+        <PackageReference Include="FastEndpoints" Version="5.28.0" />
+        <PackageReference Include="FastEndpoints.DiagnosticSources" Version="1.2.1" />
+        <PackageReference Include="FastEndpoints.Generator" Version="5.28.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="FastEndpoints.OpenTelemetry" Version="2.3.0" />
+        <PackageReference Include="FastEndpoints.Swagger" Version="5.28.0" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.7" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
     </ItemGroup>
 
     <ItemGroup>

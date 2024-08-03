@@ -1,14 +1,13 @@
+using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using ImageMagick;
 using PhotoSearch.Data.Models;
-using RestSharp;
 
 namespace PhotoSearch.Worker.Clients;
 
-public class Florence2PhotoSummaryClient : IPhotoSummaryClient
+public class Florence2PhotoSummaryClient(HttpClient  httpClient) : IPhotoSummaryClient
 {
-    private static readonly string? FlorenceUrl = Environment.GetEnvironmentVariable("services__florence2api__http__0");
-    private readonly RestClientOptions _options = new($"{FlorenceUrl}/api");
     private static readonly string[] SupportedModels = ["Florence-2-large","Florence-2-large-ft","Florence-2-base-ft","Florence-2-base"];
 
     public async Task<PhotoSummary> SummarisePhoto(string modelName, string imagePath)
@@ -22,19 +21,24 @@ public class Florence2PhotoSummaryClient : IPhotoSummaryClient
             ["base64image"] = base64Image
         };
         var payload = JsonSerializer.Serialize(requestBody);
-        
-        using var client = new RestClient(_options);
-        var request = new RestRequest($"summarise/{imagePath.Replace("/", "-")}", Method.Post).AddJsonBody(payload);
-        var response = await client.PostAsync<FlorenceResponse>(request);
-        
-        return new PhotoSummary()
+        try
         {
-            Description = response?.Summary!,
-            Model = modelName,
-            ObjectClasses = response!.Objects?.Distinct()?.ToList(),
-            DateGenerated = DateTimeOffset.Now
-        };
+            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+            var result = await httpClient.PostAsync($"/api/summarise/{imagePath.Replace("/", "-")}", content);
 
+            var response = await result.Content.ReadFromJsonAsync<FlorenceResponse>();
+            return new PhotoSummary()
+            {
+                Description = response?.Summary!,
+                Model = modelName,
+                ObjectClasses = response!.Objects?.Distinct()?.ToList(),
+                DateGenerated = DateTimeOffset.Now
+            };
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
     public bool CanHandle(string modelName)

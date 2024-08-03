@@ -1,5 +1,4 @@
 using MassTransit;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using PhotoSearch.Common.Contracts;
@@ -16,8 +15,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.AddRabbitMQClient("messaging");
 builder.AddMasstransit();
+
 NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
 builder.AddNpgsqlDbContext<PhotoSearchContext>("photo-db");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

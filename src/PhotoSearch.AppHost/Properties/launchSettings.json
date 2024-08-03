@@ -25,7 +25,7 @@
         "NOMINATIM_MAP_URL": "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf",
         "ENABLE_NVIDIA_DOCKER": "false",
         "OLLAMA_MODEL": "llava-phi3",
-        "FLORENCE_MODEL": "Florence-2-base-ft",
+        "FLORENCE_MODEL": "Florence-2-large-ft",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
         "ASPIRE_ALLOW_UNSECURED_TRANSPORT" : "true",
