@@ -26,7 +26,7 @@ public class Photo
     public long SizeKb { get; init; }
     
 
-    public List<PhotoSummary>? PhotoSummaries { get; set; } 
+    public Dictionary<string,PhotoSummary>? PhotoSummaries { get; set; } 
 
     public List<ExifData>? Metadata { get; init; }
 

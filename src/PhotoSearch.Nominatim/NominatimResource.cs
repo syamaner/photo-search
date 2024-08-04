@@ -5,7 +5,6 @@ namespace PhotoSearch.Nominatim;
 public class NominatimResource(
     string name,
     string mapsDownloadUrl,
-    string externalHostIpAddress,
     string port = "8180",
     string? entrypoint = null)
     : ContainerResource(name, entrypoint), IResourceWithConnectionString

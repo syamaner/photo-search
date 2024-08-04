@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PhotoSearch.Data;
@@ -14,9 +15,11 @@ using PhotoSearch.Data.Models;
 namespace PhotoSearch.Data.Migrations
 {
     [DbContext(typeof(PhotoSearchContext))]
-    partial class PhotoSearchContextModelSnapshot : ModelSnapshot
+    [Migration("20240804164655_summaries as dictionary")]
+    partial class summariesasdictionary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

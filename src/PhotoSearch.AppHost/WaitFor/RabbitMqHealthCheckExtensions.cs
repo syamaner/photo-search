@@ -13,11 +13,9 @@ public static class RabbitMqHealthCheckExtensions
     /// Adds a health check to the RabbitMQ server resource.
     /// </summary>
     public static IResourceBuilder<RabbitMQServerResource> WithHealthCheck(
-        this IResourceBuilder<RabbitMQServerResource> builder, string? host)
+        this IResourceBuilder<RabbitMQServerResource> builder)
     {
-        return builder.WithAnnotation(HealthCheckAnnotation.Create(cs => !string.IsNullOrWhiteSpace(host)
-            ? new RabbitMQHealthCheck(new RabbitMQHealthCheckOptions
-                { ConnectionUri = new Uri(cs.Replace("localhost", host)) })
-            : new RabbitMQHealthCheck(new RabbitMQHealthCheckOptions { ConnectionUri = new Uri(cs) })));
+        return builder.WithAnnotation(HealthCheckAnnotation.Create(cs => 
+            new RabbitMQHealthCheck(new RabbitMQHealthCheckOptions { ConnectionUri = new Uri(cs) })));
     }
 }

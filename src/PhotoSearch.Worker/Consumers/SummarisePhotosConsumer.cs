@@ -38,12 +38,13 @@ public class SummarisePhotosConsumer(
                 if(photo==null)
                     continue;
                 var summary = await SummarisePhoto(context.Message.ModelName, filePath);
-                photo!.PhotoSummaries ??= new List<PhotoSummary>();
-                if(photo?.PhotoSummaries.Any(x=>x.Model==context.Message.ModelName)??false)
+                photo!.PhotoSummaries ??=  new Dictionary<string, PhotoSummary>();
+                if (photo?.PhotoSummaries.ContainsKey(context.Message.ModelName)??false)
                 {
-                    photo.PhotoSummaries.RemoveAll(x => x.Model == context.Message.ModelName);
+                    photo.PhotoSummaries.Remove(context.Message.ModelName);
                 }
-                photo!.PhotoSummaries!.Add(summary!);
+       
+                photo!.PhotoSummaries!.Add(context.Message.ModelName, summary!);
                 photoSearchContext.Update(photo);
             }
             catch (Exception ex)

@@ -9,7 +9,7 @@ public class GetPhotosEndpoint(PhotoSearchContext photoSearchContext): Endpoint<
 {
     public override void Configure()
     {
-        Get("/photos");
+        Get("/photos/{modelName}");
         AllowAnonymous();
         Description(builder=>builder.WithName("GetPhotos")
             .WithOpenApi());
@@ -22,10 +22,8 @@ public class GetPhotosEndpoint(PhotoSearchContext photoSearchContext): Endpoint<
         var results = photos.OrderBy(x => new Random(Environment.TickCount).Next())
             .Take(5).Select(x => new
             {
-                x.RelativePath, Summary = x.PhotoSummaries?
-                    .Where(y => y.Model.Contains("flor", StringComparison.OrdinalIgnoreCase))
-                    .FirstOrDefault()
-                    ?.Description
+               x.RelativePath,
+               Descriptions=x.PhotoSummaries
             }).ToList();
 
     

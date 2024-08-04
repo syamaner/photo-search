@@ -8,17 +8,18 @@ public static class NominatimResourceBuilderExtensions
 {
     private const int ContainerPort = 8080;
     private const string NominatimImage = "mediagis/nominatim";
+
     public static IResourceBuilder<NominatimResource> AddNominatim(this IDistributedApplicationBuilder builder,
         string mapUrl,
-        string hostIpAddress = "",
+        bool isRemoteDockerHost,
         string imageTag = "4.4",
         string name = "Nominatim",
         bool importUkPostcodes = false,
         bool importWikipediaData = false,
         int? hostPort = 8180)
     {
-        var nominatimResource = new NominatimResource(name, mapUrl, hostIpAddress, hostPort.ToString()!);
-        
+        var nominatimResource = new NominatimResource(name, mapUrl, hostPort.ToString()!);
+
         builder.Services.TryAddLifecycleHook<NominatimResourceLifecycleHook>();
 
         var nominatimResourceBuilder = builder.AddResource(nominatimResource)
@@ -27,20 +28,21 @@ public static class NominatimResourceBuilderExtensions
             .WithEnvironment("PBF_URL", mapUrl)
             .WithEnvironment("IMPORT_WIKIPEDIA", importWikipediaData ? "true" : "false")
             .WithEnvironment("IMPORT_GB_POSTCODES", importUkPostcodes ? "true" : "false");
-        
-            nominatimResourceBuilder.WithHttpEndpoint(hostPort, ContainerPort);
-        if (!string.IsNullOrWhiteSpace(hostIpAddress))
+
+        nominatimResourceBuilder.WithHttpEndpoint(hostPort, ContainerPort, "http");
+
+        if (!isRemoteDockerHost) return nominatimResourceBuilder;
+
+        foreach (var resourceAnnotation in nominatimResourceBuilder.Resource.Annotations.Where(x =>
+                     x is EndpointAnnotation))
         {
-            foreach (var resourceAnnotation in nominatimResourceBuilder.Resource.Annotations.Where(x =>
-                         x is EndpointAnnotation))
-            {
-                var endpointAnnotation = (EndpointAnnotation)resourceAnnotation;
-                endpointAnnotation.IsProxied = false;
-            }
+            var endpointAnnotation = (EndpointAnnotation)resourceAnnotation;
+            endpointAnnotation.IsProxied = false;
         }
 
         return nominatimResourceBuilder;
-    } 
+    }
+
     public static IResourceBuilder<NominatimResource> WithPersistence(this IResourceBuilder<NominatimResource> builder,
         string nominatimDataVolumeName="nominatim-data",
         string nominatimFlatVolumeName = "nominatim-flat-node",

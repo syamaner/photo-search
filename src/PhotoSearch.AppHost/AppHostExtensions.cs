@@ -17,19 +17,20 @@ public static class AppHostExtensions
                 .WithDataVolume("postgres", false);
         
         if (string.IsNullOrWhiteSpace(host)) return postgresContainer;
+        //
+        postgresContainer
+            .WithContainerRuntimeArgs("--add-host", "host.docker.internal:host-gateway");
+
+        if(postgresContainer.Resource.Annotations.FirstOrDefault(x => x is EndpointAnnotation) is not EndpointAnnotation endpointAnnotation) return postgresContainer;
         
-        var postgreEndpointAnnotation = postgresContainer.Resource.Annotations.FirstOrDefault(x => x is EndpointAnnotation) as EndpointAnnotation;
-        postgreEndpointAnnotation!.IsProxied = false; 
-        postgreEndpointAnnotation.IsExternal = true;
-        // postgresContainer
-        //     .WithContainerRuntimeArgs("--net", $"host");
+        endpointAnnotation!.IsProxied = false; 
+        endpointAnnotation.IsExternal = true;
         return postgresContainer;
     }
     
     public static  IResourceBuilder<ContainerResource>  AddPgAdmin(this IDistributedApplicationBuilder builder, 
         IResourceBuilder<PostgresServerResource> ogResource, 
         int publicPort,
-        string? host,
         string pgAdminLogin = "a@a.com")
     {
         var pgAdminContainer = builder.AddContainer("pgadmin", "dpage/pgadmin4")
@@ -40,24 +41,30 @@ public static class AppHostExtensions
             .WithHttpEndpoint(publicPort, publicPort, "http", isProxied: false)
             .WithReference(ogResource);
 
+        pgAdminContainer
+            .WithContainerRuntimeArgs("--add-host", "host.docker.internal:host-gateway");
         return pgAdminContainer;
     }
     
     public static IResourceBuilder<RabbitMQServerResource> AddRabbitMq(this IDistributedApplicationBuilder builder,
-        string name, string? host = null, int ampqPort = 5672, int adminPort=15672)
+        string name, bool isRemoteDockerHost, int ampqPort = 5672, int adminPort = 15672)
     {
         var rmqUsername = builder.AddParameter("rmqUsername", secret: true);
         var rmqPassword = builder.AddParameter("rmqPassword", secret: true);
 
         var rabbitMq = builder.AddRabbitMQ(name, rmqUsername, rmqPassword, ampqPort)
             .WithImageTag("3-management");
-        rabbitMq.WithHttpEndpoint(adminPort, adminPort, isProxied: false).WithExternalHttpEndpoints();
-        if (string.IsNullOrWhiteSpace(host)) return rabbitMq;
+        
+        rabbitMq.WithHttpEndpoint(adminPort, adminPort, "http")
+            .WithExternalHttpEndpoints();
 
-        foreach (var resourceAnnotation in rabbitMq.Resource.Annotations.Where(x =>
+        if (!isRemoteDockerHost) return rabbitMq;
+
+
+        foreach (var annotation in rabbitMq.Resource.Annotations.Where(x =>
                      x is EndpointAnnotation))
         {
-            var endpointAnnotation = (EndpointAnnotation)resourceAnnotation;
+            var endpointAnnotation = (EndpointAnnotation)annotation;
             endpointAnnotation.IsProxied = false;
         }
         

@@ -21,10 +21,9 @@ public class PhotoSearchContext : DbContext
                 d.ToJson();
             });
         modelBuilder.Entity<Photo>()
-            .OwnsOne(c => c.PhotoSummaries, d =>
-            {
-                d.ToJson();
-            });
+            .Property(p => p.PhotoSummaries)
+            .HasColumnType("jsonb")
+            .IsRequired(false);
         
         modelBuilder.Entity<Photo>()
             .Property(p => p.LocationInformation)

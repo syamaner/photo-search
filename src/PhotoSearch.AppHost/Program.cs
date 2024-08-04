@@ -10,9 +10,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 var dockerHost = StartupHelper.GetDockerHostValue();
 var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
 var ollamaVisionModel =  Environment.GetEnvironmentVariable("OLLAMA_MODEL");
-var mapUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL") ?? "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
+var mapDownloadUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL") ?? "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
 var dbName = "photo-db";
-uint postgesPort = 5432;
+uint dbPort = 5432;
 
 var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: ollamaVisionModel!,
     useGpu: enableNvidiaDocker)
@@ -20,23 +20,20 @@ var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: ol
 
 var nominatimContainer =
     builder.AddNominatim(name: "Nominatim",
-            hostIpAddress: dockerHost,
-            mapUrl: mapUrl!,
-            hostPort: 8180,
-            imageTag: "4.4")
+            isRemoteDockerHost: !string.IsNullOrWhiteSpace(dockerHost),
+            mapUrl: mapDownloadUrl!)
         .WithPersistence()
         .WithHealthCheck();
 
-var postgresContainer = builder.AddPostgreSql(dbName, (int)postgesPort, dockerHost);
+var postgresContainer = builder.AddPostgreSql(dbName, (int)dbPort, dockerHost);
 builder.AddPgAdmin(postgresContainer, 8081, dockerHost);
-
 var postgresDb = postgresContainer.AddDatabase(dbName);
 
 var messaging =
-    builder.AddRabbitMq("messaging", dockerHost, 5672)
-        .WithHealthCheck(dockerHost);
+    builder.AddRabbitMq("messaging", !string.IsNullOrWhiteSpace(dockerHost), 5672)
+        .WithHealthCheck();
 
-var flaskAppFlorenceApi = builder.AddPythonProject("florence2api", 
+var florence3Api = builder.AddPythonProject("florence2api", 
         "../PhotoSearch.Florence2.API/src", "main.py")
     .WithEndpoint(targetPort: 8111, scheme: "http", env: "PORT")
     .WithEnvironment("FLORENCE_MODEL",Environment.GetEnvironmentVariable("FLORENCE_MODEL"))
@@ -52,7 +49,7 @@ var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice")
 var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice")
     .WithReference(ollamaContainer)
     .WithReference(postgresDb)
-    .WithReference(flaskAppFlorenceApi)
+    .WithReference(florence3Api)
     .WithReference(nominatimContainer)
     .WithReference(messaging)
     .WaitFor(ollamaContainer)
@@ -66,7 +63,7 @@ var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgrou
 //     .PublishAsDockerFile();
 
 // add ssh_user and ssh_key_file (path to the key file) for ser secrets.
-using var sshUtility = new SShUtility(dockerHost, builder.Configuration["ssh_user"],  builder.Configuration["ssh_key_file"]);
+using var sshUtility = new SShUtility(dockerHost, builder.Configuration["ssh_user"]!,  builder.Configuration["ssh_key_file"]!);
 
 if (!string.IsNullOrWhiteSpace(dockerHost))
 {
