@@ -7,28 +7,28 @@ namespace PhotoSearch.AppHost;
 
 public class SShUtility: IDisposable
 {
+    private readonly List<ForwardedPortLocal> _forwardedPorts = [];
 
-    private readonly List<ForwardedPortLocal> forwardedPorts = new();
-
-    private readonly SshClient client = null;
+    private readonly SshClient _client;
     public SShUtility(string host, string username, string sshKeyPath)
     { 
         var pk = new PrivateKeyFile(sshKeyPath);
-        IPrivateKeySource[] keyFiles = new[] { pk };
+        IPrivateKeySource[] keyFiles = { pk };
 
-        client = new SshClient(host, username, keyFiles);
+        _client = new SshClient(host, username, keyFiles);
     }
     
     public void Connect()
     {
-        client.Connect();
+        _client.Connect();
     }
     
     public void AddForwardedPort(int localPort, int remotePort)
     {
         var port = new ForwardedPortLocal("localhost", (uint)localPort, "localhost", (uint)remotePort);
-        client.AddForwardedPort(port);
-        port.Exception += delegate(object sender, ExceptionEventArgs e)
+        _client.AddForwardedPort(port);
+        _forwardedPorts.Add(port);
+        port.Exception += delegate(object? sender, ExceptionEventArgs e)
         {
             Console.WriteLine(e.Exception.ToString());
         };
@@ -37,12 +37,12 @@ public class SShUtility: IDisposable
 
     public void Dispose()
     {
-        foreach (var forwardedPort in forwardedPorts)
+        foreach (var forwardedPort in _forwardedPorts)
         {
             forwardedPort.Stop();
         }
-        client?.Disconnect();
-        client?.Dispose();
+        _client?.Disconnect();
+        _client?.Dispose();
     }
 }
  
