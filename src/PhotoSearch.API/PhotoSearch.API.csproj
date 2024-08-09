@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.1.0" />
+        <PackageReference Include="Aspire.MongoDB.Driver" Version="8.1.0" />
         <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.1.0" />
         <PackageReference Include="FastEndpoints" Version="5.28.0" />
         <PackageReference Include="FastEndpoints.DiagnosticSources" Version="1.2.1" />
@@ -20,14 +20,212 @@
         <PackageReference Include="FastEndpoints.Swagger" Version="5.28.0" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.7" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-158.jpg">
+        <Link>test-photos/test-158.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-159.jpg">
+        <Link>test-photos/test-159.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-160.jpg">
+        <Link>test-photos/test-160.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-161.jpg">
+        <Link>test-photos/test-161.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-162.jpg">
+        <Link>test-photos/test-162.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-163.jpg">
+        <Link>test-photos/test-163.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-164.jpg">
+        <Link>test-photos/test-164.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-165.jpg">
+        <Link>test-photos/test-165.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-166.jpg">
+        <Link>test-photos/test-166.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-167.jpg">
+        <Link>test-photos/test-167.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-168.jpg">
+        <Link>test-photos/test-168.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-169.jpg">
+        <Link>test-photos/test-169.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-170.jpg">
+        <Link>test-photos/test-170.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-171.jpg">
+        <Link>test-photos/test-171.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-172.jpg">
+        <Link>test-photos/test-172.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-173.jpg">
+        <Link>test-photos/test-173.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-174.jpg">
+        <Link>test-photos/test-174.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-175.jpg">
+        <Link>test-photos/test-175.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-176.jpg">
+        <Link>test-photos/test-176.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-177.jpg">
+        <Link>test-photos/test-177.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-178.jpg">
+        <Link>test-photos/test-178.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-179.jpg">
+        <Link>test-photos/test-179.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-180.jpg">
+        <Link>test-photos/test-180.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-181.jpg">
+        <Link>test-photos/test-181.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-182.jpg">
+        <Link>test-photos/test-182.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-183.jpg">
+        <Link>test-photos/test-183.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-184.jpg">
+        <Link>test-photos/test-184.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-185.jpg">
+        <Link>test-photos/test-185.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-186.jpg">
+        <Link>test-photos/test-186.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-187.jpg">
+        <Link>test-photos/test-187.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-188.jpg">
+        <Link>test-photos/test-188.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-189.jpg">
+        <Link>test-photos/test-189.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-190.jpg">
+        <Link>test-photos/test-190.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-191.jpg">
+        <Link>test-photos/test-191.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-192.jpg">
+        <Link>test-photos/test-192.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-193.jpg">
+        <Link>test-photos/test-193.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-194.jpg">
+        <Link>test-photos/test-194.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-195.jpg">
+        <Link>test-photos/test-195.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-196.jpg">
+        <Link>test-photos/test-196.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-197.jpg">
+        <Link>test-photos/test-197.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-198.jpg">
+        <Link>test-photos/test-198.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-199.jpg">
+        <Link>test-photos/test-199.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-200.jpg">
+        <Link>test-photos/test-200.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-201.jpg">
+        <Link>test-photos/test-201.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-202.jpg">
+        <Link>test-photos/test-202.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-203.jpg">
+        <Link>test-photos/test-203.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-204.jpg">
+        <Link>test-photos/test-204.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-205.jpg">
+        <Link>test-photos/test-205.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-206.jpg">
+        <Link>test-photos/test-206.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\PhotoSearch.Worker\test-photos\test-207.jpg">
+        <Link>test-photos/test-207.jpg</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
 

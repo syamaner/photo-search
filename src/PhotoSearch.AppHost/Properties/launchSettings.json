@@ -8,7 +8,7 @@
       "applicationUrl": "http://localhost:15273",
       "environmentVariables": {
         "DOCKER_HOST": "",
-        "NOMINATIM_MAP_URL": "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf",
+        "NOMINATIM_MAP_URL": "https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf",
         "ENABLE_NVIDIA_DOCKER": "false",
         "OLLAMA_MODEL": "llava-phi3",
         "FLORENCE_MODEL": "Florence-2-large-ft",
@@ -26,7 +26,7 @@
       "applicationUrl": "http://localhost:15273",
       "environmentVariables": {
         "DOCKER_HOST": "ssh://syamaner@192.168.0.158",
-        "NOMINATIM_MAP_URL": "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf",
+        "NOMINATIM_MAP_URL": "https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf",
         "ENABLE_NVIDIA_DOCKER": "true",
         "OLLAMA_MODEL": "llava:13b",
         "FLORENCE_MODEL": "Florence-2-large-ft",

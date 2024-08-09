@@ -1,8 +1,7 @@
 using MassTransit;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using OllamaSharp;
 using PhotoSearch.Common.Contracts;
-using PhotoSearch.Data;
 using PhotoSearch.Data.Models;
 using PhotoSearch.Worker.Clients;
 
@@ -10,7 +9,7 @@ namespace PhotoSearch.Worker.Consumers;
 
 public class SummarisePhotosConsumer(
     IOllamaApiClient ollamaApiClient,
-    PhotoSearchContext photoSearchContext, 
+    IMongoCollection<Photo> collection, 
     IEnumerable<IPhotoSummaryClient> photoSummaryClients,
     ILogger<ImportPhotosConsumer> logger) : IConsumer<SummarisePhotos>
 {
@@ -18,7 +17,7 @@ public class SummarisePhotosConsumer(
     {
         var photos = await GetPhotosToUpdate(context.Message.ImagePaths);
         ollamaApiClient.SelectedModel = context.Message.ModelName;
-
+        int updateCount = 0;
         if (photos == null || photos.Count == 0)
         {
             return;
@@ -45,7 +44,11 @@ public class SummarisePhotosConsumer(
                 }
        
                 photo!.PhotoSummaries!.Add(context.Message.ModelName, summary!);
-                photoSearchContext.Update(photo);
+                var replaceOneResult = await collection.ReplaceOneAsync(
+                    doc => doc.RelativePath ==photo.RelativePath, 
+                    photo);
+
+                updateCount += (int)replaceOneResult.MatchedCount;
             }
             catch (Exception ex)
             {
@@ -53,7 +56,7 @@ public class SummarisePhotosConsumer(
             }
         }
 
-        var updateCount = await photoSearchContext.SaveChangesAsync();
+        
         logger.LogInformation("Summarised {COUNT} photos using {Model}.",updateCount,
             context.Message.ModelName);
     }
@@ -74,7 +77,7 @@ public class SummarisePhotosConsumer(
         List<Photo>? photos = null;
         try
         {
-            photos = await photoSearchContext.Photos.ToListAsync();
+            photos = await collection.AsQueryable().ToListAsync();
         }
         catch (Exception ex)
         {

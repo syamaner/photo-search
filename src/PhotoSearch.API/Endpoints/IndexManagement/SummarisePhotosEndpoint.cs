@@ -1,13 +1,13 @@
 using PhotoSearch.Common.Contracts;
 using FastEndpoints;
 using MassTransit;
-using Microsoft.EntityFrameworkCore;
-using PhotoSearch.Data;
+using MongoDB.Driver;
+using PhotoSearch.Data.Models;
 
 
 namespace PhotoSearch.API.Endpoints.IndexManagement;
 
-public class SummarisePhotosEndpoint(IBus bus, PhotoSearchContext photoSearchContext) : Endpoint<SummarisePhotosRequest>
+public class SummarisePhotosEndpoint(IBus bus, IMongoCollection<Photo> collection ) : Endpoint<SummarisePhotosRequest>
 {
     public override void Configure()
     {
@@ -19,8 +19,8 @@ public class SummarisePhotosEndpoint(IBus bus, PhotoSearchContext photoSearchCon
 
     public override async Task HandleAsync(SummarisePhotosRequest r, CancellationToken c)
     {
-        var pathsWithoutSummary = await photoSearchContext.Photos
-            .Select(p => p.ExactPath).ToListAsync(cancellationToken: c);
+        var pathsWithoutSummary =  collection.AsQueryable()
+            .Select(p => p.ExactPath).ToList();
         if (pathsWithoutSummary.Count == 0) await SendAsync("no photos to summarise!", cancellation: c);
 
         await bus.Publish(new SummarisePhotos(pathsWithoutSummary, r.ModelName), c);

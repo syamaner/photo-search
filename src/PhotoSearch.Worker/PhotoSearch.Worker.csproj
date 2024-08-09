@@ -9,11 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.1.0" />
+        <PackageReference Include="Aspire.MongoDB.Driver" Version="8.1.0" />
         <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.1.0" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.7" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
     </ItemGroup>
 
@@ -88,59 +86,217 @@
       <None Remove="photos-geocode\test-130.jpg" />
       <None Remove="photos-geocode\test-132.jpg" />
       <None Remove="photos-geocode\test-136.jpg" />
-      <Content Include="photos-geocode\test-136.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-137.jpg" />
-      <Content Include="photos-geocode\test-137.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-138.jpg" />
-      <Content Include="photos-geocode\test-138.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-139.jpg" />
-      <Content Include="photos-geocode\test-139.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-140.jpg" />
-      <Content Include="photos-geocode\test-140.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-141.jpg" />
-      <Content Include="photos-geocode\test-141.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-142.jpg" />
-      <Content Include="photos-geocode\test-142.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-143.jpg" />
-      <Content Include="photos-geocode\test-143.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-144.jpg" />
-      <Content Include="photos-geocode\test-144.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-145.jpg" />
-      <Content Include="photos-geocode\test-145.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-146.jpg" />
-      <Content Include="photos-geocode\test-146.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-147.jpg" />
-      <Content Include="photos-geocode\test-147.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="photos-geocode\test-148.jpg" />
-      <Content Include="photos-geocode\test-148.jpg">
+      <None Remove="photos-geocode\test-149.jpg" />
+      <None Remove="test-photos\test-158.jpg" />
+      <Content Include="test-photos\test-158.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="photos-geocode\test-149.jpg" />
-      <Content Include="photos-geocode\test-149.jpg">
+      <None Remove="test-photos\test-159.jpg" />
+      <Content Include="test-photos\test-159.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-160.jpg" />
+      <Content Include="test-photos\test-160.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-161.jpg" />
+      <Content Include="test-photos\test-161.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-162.jpg" />
+      <Content Include="test-photos\test-162.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-163.jpg" />
+      <Content Include="test-photos\test-163.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-164.jpg" />
+      <Content Include="test-photos\test-164.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-165.jpg" />
+      <Content Include="test-photos\test-165.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-166.jpg" />
+      <Content Include="test-photos\test-166.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-167.jpg" />
+      <Content Include="test-photos\test-167.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-168.jpg" />
+      <Content Include="test-photos\test-168.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-169.jpg" />
+      <Content Include="test-photos\test-169.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-170.jpg" />
+      <Content Include="test-photos\test-170.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-171.jpg" />
+      <Content Include="test-photos\test-171.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-172.jpg" />
+      <Content Include="test-photos\test-172.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-173.jpg" />
+      <Content Include="test-photos\test-173.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-174.jpg" />
+      <Content Include="test-photos\test-174.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-175.jpg" />
+      <Content Include="test-photos\test-175.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-176.jpg" />
+      <Content Include="test-photos\test-176.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-177.jpg" />
+      <Content Include="test-photos\test-177.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-178.jpg" />
+      <Content Include="test-photos\test-178.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-179.jpg" />
+      <Content Include="test-photos\test-179.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-180.jpg" />
+      <Content Include="test-photos\test-180.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-181.jpg" />
+      <Content Include="test-photos\test-181.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-182.jpg" />
+      <Content Include="test-photos\test-182.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-183.jpg" />
+      <Content Include="test-photos\test-183.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-184.jpg" />
+      <Content Include="test-photos\test-184.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-185.jpg" />
+      <Content Include="test-photos\test-185.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-186.jpg" />
+      <Content Include="test-photos\test-186.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-187.jpg" />
+      <Content Include="test-photos\test-187.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-188.jpg" />
+      <Content Include="test-photos\test-188.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-189.jpg" />
+      <Content Include="test-photos\test-189.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-190.jpg" />
+      <Content Include="test-photos\test-190.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-191.jpg" />
+      <Content Include="test-photos\test-191.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-192.jpg" />
+      <Content Include="test-photos\test-192.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-193.jpg" />
+      <Content Include="test-photos\test-193.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-194.jpg" />
+      <Content Include="test-photos\test-194.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-195.jpg" />
+      <Content Include="test-photos\test-195.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-196.jpg" />
+      <Content Include="test-photos\test-196.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-197.jpg" />
+      <Content Include="test-photos\test-197.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-198.jpg" />
+      <Content Include="test-photos\test-198.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-199.jpg" />
+      <Content Include="test-photos\test-199.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-200.jpg" />
+      <Content Include="test-photos\test-200.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-201.jpg" />
+      <Content Include="test-photos\test-201.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-202.jpg" />
+      <Content Include="test-photos\test-202.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-203.jpg" />
+      <Content Include="test-photos\test-203.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-204.jpg" />
+      <Content Include="test-photos\test-204.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-205.jpg" />
+      <Content Include="test-photos\test-205.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-206.jpg" />
+      <Content Include="test-photos\test-206.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="test-photos\test-207.jpg" />
+      <Content Include="test-photos\test-207.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>

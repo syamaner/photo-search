@@ -11,8 +11,11 @@ var dockerHost = StartupHelper.GetDockerHostValue();
 var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
 var ollamaVisionModel =  Environment.GetEnvironmentVariable("OLLAMA_MODEL");
 var mapDownloadUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL") ?? "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
-var dbName = "photo-db";
-uint dbPort = 5432;
+
+var mongo = builder.AddMongoDB("mongo")
+    .WithDataVolume("mongo-photo-search", false);
+var mongodb = mongo.AddDatabase("photo-search");
+
 
 var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: ollamaVisionModel!,
     useGpu: enableNvidiaDocker)
@@ -25,9 +28,6 @@ var nominatimContainer =
         .WithPersistence()
         .WithHealthCheck();
 
-var postgresContainer = builder.AddPostgreSql(dbName, (int)dbPort, dockerHost);
-builder.AddPgAdmin(postgresContainer, 8081, dockerHost);
-var postgresDb = postgresContainer.AddDatabase(dbName);
 
 var messaging =
     builder.AddRabbitMq("messaging", !string.IsNullOrWhiteSpace(dockerHost), 5672)
@@ -42,16 +42,16 @@ var florence3Api = builder.AddPythonProject("florence2api",
 
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice") 
     .WithReference(ollamaContainer)
-    .WithReference(postgresDb)
     .WaitFor(messaging)
+    .WithReference(mongodb)
     .WithReference(messaging);
 
 var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice")
     .WithReference(ollamaContainer)
-    .WithReference(postgresDb)
     .WithReference(florence3Api)
     .WithReference(nominatimContainer)
     .WithReference(messaging)
+    .WithReference(mongodb)
     .WaitFor(ollamaContainer)
     .WaitFor(nominatimContainer)
     .WaitFor(messaging);

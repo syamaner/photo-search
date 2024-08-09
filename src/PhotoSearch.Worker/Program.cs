@@ -1,9 +1,8 @@
-using Npgsql;
+using MongoDB.Driver;
 using OllamaSharp;
 using PhotoSearch.Common;
-using PhotoSearch.Data;
+using PhotoSearch.Data.Models;
 using PhotoSearch.ServiceDefaults;
-using PhotoSearch.Worker;
 using PhotoSearch.Worker.Clients;
 using PhotoSearch.Worker.Consumers;
 using StringWithQualityHeaderValue = System.Net.Http.Headers.StringWithQualityHeaderValue;
@@ -11,9 +10,7 @@ using StringWithQualityHeaderValue = System.Net.Http.Headers.StringWithQualityHe
 var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
-NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
-builder.Services.AddHostedService<Worker>();
-builder.Services.AddTransient<IMigrationService, MigrationService>();
+
 builder.Services.AddSingleton<IPhotoSummaryClient, OllamaPhotoSummaryClient>();
 builder.Services.AddTransient<IPhotoImporter, PhotoImporter>();
 
@@ -41,7 +38,17 @@ builder.Services.AddHttpClient<IReverseGeocoder, NominatimReverseGeocoder>((sp, 
 });
 
 builder.AddRabbitMQClient("messaging");
-builder.AddNpgsqlDbContext<PhotoSearchContext>("photo-db");
+builder.AddMongoDBClient("photo-search");
+
+builder.Services.AddScoped<IMongoCollection<Photo>>(x =>
+{
+    var mongoClient = x.GetRequiredService<IMongoClient>();
+    const string collectionName = "photos";
+    var db = mongoClient.GetDatabase("photo-search");
+    db.CreateCollection(collectionName);
+    return db.GetCollection<Photo>(collectionName); 
+});
+
 builder.AddMasstransit(configurator =>
 {
     configurator.AddConsumer<ImportPhotosConsumer>();

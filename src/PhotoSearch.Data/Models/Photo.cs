@@ -1,11 +1,20 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using PhotoSearch.Data.GeoJson;
 
 namespace PhotoSearch.Data.Models;
 
 public class Photo
 {
+    
+    [BsonElement("_id")]
+    [JsonProperty("_id")]
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
     [MaxLength(250)]
     public required string RelativePath { get; init; }
     

@@ -1,11 +1,10 @@
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using PhotoSearch.Data.Models;
 
 namespace PhotoSearch.API.Endpoints.PhotoRetrieval;
 using FastEndpoints;
-using Data;
 
-
-public class GetPhotosEndpoint(PhotoSearchContext photoSearchContext): Endpoint<Models.GetPhotosRequest>
+public class GetPhotosEndpoint(IMongoCollection<Photo> collection): Endpoint<Models.GetPhotosRequest>
 {
     public override void Configure()
     {
@@ -18,7 +17,8 @@ public class GetPhotosEndpoint(PhotoSearchContext photoSearchContext): Endpoint<
 
     public override async Task HandleAsync(Models.GetPhotosRequest r, CancellationToken c)
     { 
-        var photos = await photoSearchContext.Photos.ToListAsync(cancellationToken: c);
+        var photos = await collection.AsQueryable().ToListAsync(cancellationToken: c);
+        
         var results = photos.OrderBy(x => new Random(Environment.TickCount).Next())
             .Take(5).Select(x => new
             {
