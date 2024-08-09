@@ -4,7 +4,7 @@ using PhotoSearch.Data.Models;
 namespace PhotoSearch.API.Endpoints.PhotoRetrieval;
 using FastEndpoints;
 
-public class GetPhotosEndpoint(IMongoCollection<Photo> collection): Endpoint<Models.GetPhotosRequest>
+public class GetPhotosEndpoint(IMongoCollection<Photo> collection): EndpointWithoutRequest<List<Models.GetPhotosResponse>>
 {
     public override void Configure()
     {
@@ -15,18 +15,20 @@ public class GetPhotosEndpoint(IMongoCollection<Photo> collection): Endpoint<Mod
         
     }
 
-    public override async Task HandleAsync(Models.GetPhotosRequest r, CancellationToken c)
+    public override async Task HandleAsync(CancellationToken c)
     { 
         var photos = await collection.AsQueryable().ToListAsync(cancellationToken: c);
-        
-        var results = photos.OrderBy(x => new Random(Environment.TickCount).Next())
-            .Take(5).Select(x => new
-            {
-               x.RelativePath,
-               Descriptions=x.PhotoSummaries
-            }).ToList();
 
-    
+        var results = photos.Select(x => new Models.GetPhotosResponse
+        (
+            x.Id,
+            x.PhotoSummaries?.ToDictionary(x => x.Key, x => x.Value.Description)
+            ?? new Dictionary<string, string>(),
+            x.Latitude,
+            x.Longitude,
+            x.LocationInformation?.Features?.FirstOrDefault()?.Properties?.DisplayName
+        )).ToList();
+
         await SendAsync(results,200, cancellation: c);
     }
     

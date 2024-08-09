@@ -14,14 +14,16 @@ Accept: application/json
 
 ###
 
-
-GET {{API_HostAddress}}/photos/index/photos-geocode
-Accept: application/json
+GET {{Nominatim_HostAddress}}/reverse?format=geojson&namedetails=1&lat=51.503&lon=0.003338
 
 ###
 
+GET {{Nominatim_HostAddress}}/status?format=json
 
-GET {{Nominatim_HostAddress}}/reverse?format=geojson&namedetails=1&lat=47.378177&lon=8.540192
+###
+
+GET {{Nominatim_HostAddress}}/search?q=park
+
 
 
 ###
