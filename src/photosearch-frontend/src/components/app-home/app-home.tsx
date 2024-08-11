@@ -14,8 +14,12 @@ export class AppHome {
           <a href="https://stenciljs.com">stenciljs.com</a> to get started.
         </p>
 
-        <stencil-route-link url="/profile/stencil">
-          <button>Map</button>
+        <stencil-router id="router">
+          <stencil-route url="/photos" component="app-photos" exact={true} />
+        </stencil-router>
+
+        <stencil-route-link url="/photos">
+          <button>View Photos</button>
         </stencil-route-link>
       </div>
     );

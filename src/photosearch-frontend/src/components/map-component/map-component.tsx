@@ -30,7 +30,7 @@ export class MapComponent {
         .setHTML(`<img src='${imgUrl}' data-id="${photo.Id}" loading="lazy"></img>`));
 
       let popupElem = marker.getElement();
-      popupElem.addEventListener('click', (e) => {
+      popupElem.addEventListener('click', () => {
    
         PubSub.publish(EventNames.PhotoSelected, photo);
       

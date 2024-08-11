@@ -2,15 +2,12 @@ import { Component, Host, Prop, h } from '@stencil/core';
 import { MatchResults } from '@stencil-community/router';
 
 @Component({
-  tag: 'app-profile',
-  styleUrl: 'app-profile.css',
+  tag: 'app-photos',
+  styleUrl: 'app-photos.css',
   shadow: true,
 })
-export class AppProfile {
+export class AppPhotos {
   @Prop() match: MatchResults;
-
-
-  
 
   render() {
     

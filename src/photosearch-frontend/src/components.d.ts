@@ -12,7 +12,7 @@ export { PhotoSummary } from "./models/PhotoSummary";
 export namespace Components {
     interface AppHome {
     }
-    interface AppProfile {
+    interface AppPhotos {
         "match": MatchResults;
     }
     interface AppRoot {
@@ -33,11 +33,11 @@ declare global {
         prototype: HTMLAppHomeElement;
         new (): HTMLAppHomeElement;
     };
-    interface HTMLAppProfileElement extends Components.AppProfile, HTMLStencilElement {
+    interface HTMLAppPhotosElement extends Components.AppPhotos, HTMLStencilElement {
     }
-    var HTMLAppProfileElement: {
-        prototype: HTMLAppProfileElement;
-        new (): HTMLAppProfileElement;
+    var HTMLAppPhotosElement: {
+        prototype: HTMLAppPhotosElement;
+        new (): HTMLAppPhotosElement;
     };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
@@ -59,7 +59,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
-        "app-profile": HTMLAppProfileElement;
+        "app-photos": HTMLAppPhotosElement;
         "app-root": HTMLAppRootElement;
         "map-component": HTMLMapComponentElement;
         "photo-summary-view": HTMLPhotoSummaryViewElement;
@@ -68,7 +68,7 @@ declare global {
 declare namespace LocalJSX {
     interface AppHome {
     }
-    interface AppProfile {
+    interface AppPhotos {
         "match"?: MatchResults;
     }
     interface AppRoot {
@@ -83,7 +83,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "app-home": AppHome;
-        "app-profile": AppProfile;
+        "app-photos": AppPhotos;
         "app-root": AppRoot;
         "map-component": MapComponent;
         "photo-summary-view": PhotoSummaryView;
@@ -94,7 +94,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
-            "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
+            "app-photos": LocalJSX.AppPhotos & JSXBase.HTMLAttributes<HTMLAppPhotosElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "map-component": LocalJSX.MapComponent & JSXBase.HTMLAttributes<HTMLMapComponentElement>;
             "photo-summary-view": LocalJSX.PhotoSummaryView & JSXBase.HTMLAttributes<HTMLPhotoSummaryViewElement>;
