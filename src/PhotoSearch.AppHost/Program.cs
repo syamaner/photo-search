@@ -12,8 +12,8 @@ var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
 var ollamaVisionModel =  Environment.GetEnvironmentVariable("OLLAMA_MODEL");
 var mapDownloadUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL") ?? "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
 
-var mongo = builder.AddMongoDB("mongo")
-    .WithDataVolume("mongo-photo-search", false);
+var mongo = builder.AddMongo("mongo", 
+    !string.IsNullOrWhiteSpace(dockerHost), port: 27019);
 var mongodb = mongo.AddDatabase("photo-search");
 
 
@@ -69,10 +69,6 @@ if (!string.IsNullOrWhiteSpace(dockerHost))
 {
     // Forwards the ports to the docker host machine
     sshUtility.Connect();
-    // PgAdmin
-    sshUtility.AddForwardedPort(8081, 8081);
-    // Postgres
-    sshUtility.AddForwardedPort(5432, 5432);
     // RabbitMQ
     sshUtility.AddForwardedPort(5672, 5672);
     // RabbitMQ Management
@@ -81,6 +77,8 @@ if (!string.IsNullOrWhiteSpace(dockerHost))
     sshUtility.AddForwardedPort(8180, 8180);
     // Ollama
     sshUtility.AddForwardedPort(11438, 11438);
+    // MongoDB
+    sshUtility.AddForwardedPort(27019, 27019);
 }
 
 builder.Build().Run();

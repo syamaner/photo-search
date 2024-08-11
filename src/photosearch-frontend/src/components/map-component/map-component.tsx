@@ -2,8 +2,8 @@ import { Component, Env, h } from '@stencil/core';
 import { Map, Marker, Popup, StyleSpecification } from 'maplibre-gl';
 import { PhotoSummary } from '../../models/PhotoSummary';
 
-// import { PubSub } from 'pubsub-js'
-// import { EventNames } from '../../utils/event-names' 
+import { PubSub } from 'pubsub-js'
+import { EventNames } from '../../utils/event-names' 
 
 @Component({ tag: 'map-component', styleUrl: 'map-component.css', shadow: true })
 export class MapComponent {
@@ -22,11 +22,21 @@ export class MapComponent {
     this.data.forEach((photo) => {
       const marker = new Marker({
         draggable: false
-      })        .setLngLat([photo.Longitude, photo.Latitude]);
+      })
+      .setLngLat([photo.Longitude, photo.Latitude]);
 
       const imgUrl = `${Env.API_BASE_URL}/image/${photo.Id}/640/480`;
-      marker.setPopup(new Popup({ className: "apple-popup" }).setHTML(`<img src='${imgUrl}' loading="lazy"></img>`));
+      marker.setPopup(new Popup({ className: "apple-popup" })
+        .setHTML(`<img src='${imgUrl}' data-id="${photo.Id}" loading="lazy"></img>`));
+
+      let popupElem = marker.getElement();
+      popupElem.addEventListener('click', (e) => {
+   
+        PubSub.publish(EventNames.PhotoSelected, photo);
+      
+      });
       this.markers[photo.Id] = marker;
+    
     });
   };
 
@@ -65,11 +75,9 @@ export class MapComponent {
       ],
       zoom: 14
     });
-
     this.data.forEach((photo) => {
-      this.markers[photo.Id].addTo(this.map);   
-    });
-
+      this.markers[photo.Id].addTo(this.map);    
+    }); 
   }
 
   render() {

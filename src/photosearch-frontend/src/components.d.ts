@@ -6,7 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults } from "@stencil-community/router";
+import { PhotoSummary } from "./models/PhotoSummary";
 export { MatchResults } from "@stencil-community/router";
+export { PhotoSummary } from "./models/PhotoSummary";
 export namespace Components {
     interface AppHome {
     }
@@ -17,7 +19,11 @@ export namespace Components {
     }
     interface MapComponent {
     }
-    interface PhotoSummary {
+    interface PhotoSummaryView {
+        "availableModels": Set<string>;
+        "selectedModel": string;
+        "selectedPhoto": PhotoSummary;
+        "selectedSummary": string;
     }
 }
 declare global {
@@ -45,18 +51,18 @@ declare global {
         prototype: HTMLMapComponentElement;
         new (): HTMLMapComponentElement;
     };
-    interface HTMLPhotoSummaryElement extends Components.PhotoSummary, HTMLStencilElement {
+    interface HTMLPhotoSummaryViewElement extends Components.PhotoSummaryView, HTMLStencilElement {
     }
-    var HTMLPhotoSummaryElement: {
-        prototype: HTMLPhotoSummaryElement;
-        new (): HTMLPhotoSummaryElement;
+    var HTMLPhotoSummaryViewElement: {
+        prototype: HTMLPhotoSummaryViewElement;
+        new (): HTMLPhotoSummaryViewElement;
     };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "map-component": HTMLMapComponentElement;
-        "photo-summary": HTMLPhotoSummaryElement;
+        "photo-summary-view": HTMLPhotoSummaryViewElement;
     }
 }
 declare namespace LocalJSX {
@@ -69,14 +75,18 @@ declare namespace LocalJSX {
     }
     interface MapComponent {
     }
-    interface PhotoSummary {
+    interface PhotoSummaryView {
+        "availableModels"?: Set<string>;
+        "selectedModel"?: string;
+        "selectedPhoto"?: PhotoSummary;
+        "selectedSummary"?: string;
     }
     interface IntrinsicElements {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "map-component": MapComponent;
-        "photo-summary": PhotoSummary;
+        "photo-summary-view": PhotoSummaryView;
     }
 }
 export { LocalJSX as JSX };
@@ -87,7 +97,7 @@ declare module "@stencil/core" {
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "map-component": LocalJSX.MapComponent & JSXBase.HTMLAttributes<HTMLMapComponentElement>;
-            "photo-summary": LocalJSX.PhotoSummary & JSXBase.HTMLAttributes<HTMLPhotoSummaryElement>;
+            "photo-summary-view": LocalJSX.PhotoSummaryView & JSXBase.HTMLAttributes<HTMLPhotoSummaryViewElement>;
         }
     }
 }

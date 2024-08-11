@@ -1,11 +1,14 @@
-.app-profile {
+/* .app-profile {
   padding: 10px;
 }
 :host {
   display: block;
 }
- 
+  */
 #map-container {
   height: 640px;
 }
 
+.map-container {
+  min-height: 640px;
+}

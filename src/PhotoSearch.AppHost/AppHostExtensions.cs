@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
@@ -29,5 +30,26 @@ public static class AppHostExtensions
         }
         
         return rabbitMq;
+    }
+    
+    public static IResourceBuilder<MongoDBServerResource> AddMongo(this IDistributedApplicationBuilder builder,
+        string name, bool isRemoteDockerHost, int port = 27017)
+    {
+
+        var mongoDb = builder.AddMongoDB(name, port:port)
+            .WithDataVolume("mongo-photo-search", false);
+
+        if (!isRemoteDockerHost) return mongoDb;
+
+
+        foreach (var annotation in mongoDb.Resource.Annotations.Where(x =>
+                     x is EndpointAnnotation))
+        {
+            var endpointAnnotation = (EndpointAnnotation)annotation;
+            endpointAnnotation.IsProxied = false;
+            Console.WriteLine($"Setting {name} to not be proxied");
+        }
+        
+        return mongoDb;
     }
 }
