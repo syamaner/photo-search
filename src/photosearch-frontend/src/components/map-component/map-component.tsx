@@ -19,6 +19,15 @@ export class MapComponent {
   loadPhotos = async () => {
     const response = await fetch(Env.API_BASE_URL + "/photos/abc");
     this.data = await response.json();
+    this.data.forEach((photo) => {
+      const marker = new Marker({
+        draggable: false
+      })        .setLngLat([photo.Longitude, photo.Latitude]);
+
+      const imgUrl = `${Env.API_BASE_URL}/image/${photo.Id}/640/480`;
+      marker.setPopup(new Popup({ className: "apple-popup" }).setHTML(`<img src='${imgUrl}' loading="lazy"></img>`));
+      this.markers[photo.Id] = marker;
+    });
   };
 
   componentWillLoad = async () => {
@@ -58,17 +67,7 @@ export class MapComponent {
     });
 
     this.data.forEach((photo) => {
-      const marker = new Marker({
-        //color: "#FFFFFF",
-        draggable: false
-      })
-        .setLngLat([photo.Longitude, photo.Latitude])
-        .addTo(this.map);
-      console.log(photo.Address);
-      const imgUrl = `${Env.API_BASE_URL}/image/${photo.Id}/640/480`;
-      marker.setPopup(new Popup({ className: "apple-popup" }).setHTML(`<img src='${imgUrl}' loading="lazy"></img>`));
-      this.markers[photo.Id] = marker;
-
+      this.markers[photo.Id].addTo(this.map);   
     });
 
   }
