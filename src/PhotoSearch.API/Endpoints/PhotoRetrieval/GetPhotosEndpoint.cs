@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors;
 using MongoDB.Driver;
 using PhotoSearch.Data.Models;
 
@@ -14,7 +15,6 @@ public class GetPhotosEndpoint(IMongoCollection<Photo> collection): EndpointWith
             .WithOpenApi());
         
     }
-
     public override async Task HandleAsync(CancellationToken c)
     { 
         var photos = await collection.AsQueryable().ToListAsync(cancellationToken: c);

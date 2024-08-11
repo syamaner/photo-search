@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MatchResults } from "@stencil-community/router";
+export { MatchResults } from "@stencil-community/router";
 export namespace Components {
     interface AppHome {
     }
@@ -15,6 +16,8 @@ export namespace Components {
     interface AppRoot {
     }
     interface MapComponent {
+    }
+    interface PhotoSummary {
     }
 }
 declare global {
@@ -42,11 +45,18 @@ declare global {
         prototype: HTMLMapComponentElement;
         new (): HTMLMapComponentElement;
     };
+    interface HTMLPhotoSummaryElement extends Components.PhotoSummary, HTMLStencilElement {
+    }
+    var HTMLPhotoSummaryElement: {
+        prototype: HTMLPhotoSummaryElement;
+        new (): HTMLPhotoSummaryElement;
+    };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
         "app-profile": HTMLAppProfileElement;
         "app-root": HTMLAppRootElement;
         "map-component": HTMLMapComponentElement;
+        "photo-summary": HTMLPhotoSummaryElement;
     }
 }
 declare namespace LocalJSX {
@@ -59,11 +69,14 @@ declare namespace LocalJSX {
     }
     interface MapComponent {
     }
+    interface PhotoSummary {
+    }
     interface IntrinsicElements {
         "app-home": AppHome;
         "app-profile": AppProfile;
         "app-root": AppRoot;
         "map-component": MapComponent;
+        "photo-summary": PhotoSummary;
     }
 }
 export { LocalJSX as JSX };
@@ -74,6 +87,7 @@ declare module "@stencil/core" {
             "app-profile": LocalJSX.AppProfile & JSXBase.HTMLAttributes<HTMLAppProfileElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "map-component": LocalJSX.MapComponent & JSXBase.HTMLAttributes<HTMLMapComponentElement>;
+            "photo-summary": LocalJSX.PhotoSummary & JSXBase.HTMLAttributes<HTMLPhotoSummaryElement>;
         }
     }
 }

@@ -3,12 +3,13 @@ using FastEndpoints.Swagger;
 using MongoDB.Driver;
 using PhotoSearch.Data.Models;
 using PhotoSearch.ServiceDefaults;
-
+ 
 var builder = WebApplication.CreateBuilder(args);
  
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.AddServiceDefaults();
+builder.Services.AddCors();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -37,7 +38,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
- 
+
+app.UseCors(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.UseFastEndpoints(c => c.Serializer.Options.PropertyNamingPolicy = null)
     .UseSwaggerGen();
 app.Run();

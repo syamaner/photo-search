@@ -1,0 +1,124 @@
+diff --git a/node_modules/@stencil-community/router/dist/collection/components/route-link/route-link.js b/node_modules/@stencil-community/router/dist/collection/components/route-link/route-link.js
+index 7b7a649..99a6057 100644
+--- a/node_modules/@stencil-community/router/dist/collection/components/route-link/route-link.js
++++ b/node_modules/@stencil-community/router/dist/collection/components/route-link/route-link.js
+@@ -263,7 +263,7 @@ export class RouteLink {
+         },
+         "history": {
+             "type": "unknown",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "RouterHistory",
+                 "resolved": "RouterHistory | undefined",
+@@ -283,7 +283,7 @@ export class RouteLink {
+         },
+         "location": {
+             "type": "unknown",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "LocationSegments",
+                 "resolved": "LocationSegments | undefined",
+@@ -303,7 +303,7 @@ export class RouteLink {
+         },
+         "root": {
+             "type": "string",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "string",
+                 "resolved": "string | undefined",
+diff --git a/node_modules/@stencil-community/router/dist/collection/components/route/route.js b/node_modules/@stencil-community/router/dist/collection/components/route/route.js
+index 77ef6aa..d552dcf 100644
+--- a/node_modules/@stencil-community/router/dist/collection/components/route/route.js
++++ b/node_modules/@stencil-community/router/dist/collection/components/route/route.js
+@@ -87,7 +87,7 @@ export class Route {
+     static get properties() { return {
+         "group": {
+             "type": "string",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "string | null",
+                 "resolved": "null | string",
+@@ -251,7 +251,7 @@ export class Route {
+         },
+         "routeViewsUpdated": {
+             "type": "unknown",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "(options: RouteViewOptions) => void",
+                 "resolved": "((options: RouteViewOptions) => void) | undefined",
+@@ -271,7 +271,7 @@ export class Route {
+         },
+         "location": {
+             "type": "unknown",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "LocationSegments",
+                 "resolved": "LocationSegments | undefined",
+@@ -291,7 +291,7 @@ export class Route {
+         },
+         "history": {
+             "type": "unknown",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "RouterHistory",
+                 "resolved": "RouterHistory | undefined",
+@@ -311,7 +311,7 @@ export class Route {
+         },
+         "historyType": {
+             "type": "string",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "HistoryType",
+                 "resolved": "\"browser\" | \"hash\" | undefined",
+diff --git a/node_modules/@stencil-community/router/dist/collection/components/router/router.js b/node_modules/@stencil-community/router/dist/collection/components/router/router.js
+index 4281dad..c7ff4b1 100644
+--- a/node_modules/@stencil-community/router/dist/collection/components/router/router.js
++++ b/node_modules/@stencil-community/router/dist/collection/components/router/router.js
+@@ -79,7 +79,7 @@ export class Router {
+     static get properties() { return {
+         "root": {
+             "type": "string",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "string",
+                 "resolved": "string",
+diff --git a/node_modules/@stencil-community/router/dist/collection/components/switch/switch.js b/node_modules/@stencil-community/router/dist/collection/components/switch/switch.js
+index 994505d..8e6ae7b 100644
+--- a/node_modules/@stencil-community/router/dist/collection/components/switch/switch.js
++++ b/node_modules/@stencil-community/router/dist/collection/components/switch/switch.js
+@@ -87,7 +87,7 @@ export class RouteSwitch {
+     static get properties() { return {
+         "group": {
+             "type": "string",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "string",
+                 "resolved": "string",
+@@ -122,7 +122,7 @@ export class RouteSwitch {
+         },
+         "location": {
+             "type": "unknown",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "LocationSegments",
+                 "resolved": "LocationSegments | undefined",
+@@ -142,7 +142,7 @@ export class RouteSwitch {
+         },
+         "routeViewsUpdated": {
+             "type": "unknown",
+-            "mutable": false,
++            "mutable": true,
+             "complexType": {
+                 "original": "(options: RouteViewOptions) => void",
+                 "resolved": "((options: RouteViewOptions) => void) | undefined",

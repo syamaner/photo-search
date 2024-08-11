@@ -12,12 +12,20 @@
   },
   "devDependencies": {
     "@stencil-community/router": "^1.0.2",
-    "@stencil/core": "2.13.0",
+    "@stencil/core": "4.20.0",
+    "@stencil/postcss": "^2.1.0",
+    "@stencil/sass": "^2.0.0",
+    "@tailwindcss/forms": "^0.5.3",
     "@types/jest": "^27.0.3",
-    "@types/node": "^12.12.6",
+    "@types/node": "^12.20.55",
+    "autoprefixer": "^10.4.13",
+    "cssnano": "^5.1.14",
     "jest": "^27.4.5",
     "jest-cli": "^27.4.5",
-    "puppeteer": "^10.0.0"
+    "patch-package": "^8.0.0",
+    "puppeteer": "^10.0.0",
+    "stencil-tailwind-plugin": "^1.8.0",
+    "tailwindcss": "^3.2.4"
   },
   "license": "MIT",
   "dependencies": {

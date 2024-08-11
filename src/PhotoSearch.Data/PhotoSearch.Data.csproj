@@ -10,7 +10,7 @@
     <ItemGroup>
       <PackageReference Include="Aspire.MongoDB.Driver" Version="8.1.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-      <PackageReference Include="MongoDB.Bson" Version="2.27.0" />
+      <PackageReference Include="MongoDB.Bson" Version="2.28.0" />
       <PackageReference Include="Npgsql.GeoJSON" Version="8.0.3" />
     </ItemGroup>
 

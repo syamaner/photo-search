@@ -6,6 +6,7 @@
     "allowUnreachableCode": false,
     "declaration": false,
     "experimentalDecorators": true,
+    //"types": ["node"],
     "lib": [
       "dom",
       "es2015"

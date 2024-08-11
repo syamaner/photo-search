@@ -56,11 +56,11 @@ var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgrou
     .WaitFor(nominatimContainer)
     .WaitFor(messaging);
 
-// builder.AddNpmApp("stencil", "../photosearch-frontend")
-//     .WithReference(apiService)
-//     .WithHttpEndpoint(env: "PORT")
-//     .WithExternalHttpEndpoints()
-//     .PublishAsDockerFile();
+builder.AddNpmApp("stencil", "../photosearch-frontend")
+    .WithReference(apiService)
+    .WithHttpEndpoint(env: "PORT")
+    .WithExternalHttpEndpoints()
+    .PublishAsDockerFile();
 
 // add ssh_user and ssh_key_file (path to the key file) for ser secrets.
 using var sshUtility = new SShUtility(dockerHost, builder.Configuration["ssh_user"]!,  builder.Configuration["ssh_key_file"]!);

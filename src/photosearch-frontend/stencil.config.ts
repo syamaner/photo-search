@@ -1,5 +1,8 @@
 import { Config } from '@stencil/core';
+import tailwindConfig from './tailwind.config';
+import tailwind, { tailwindHMR } from 'stencil-tailwind-plugin';
 
+import { sass } from '@stencil/sass';
 // https://stenciljs.com/docs/config
 
 export const config: Config = {
@@ -14,4 +17,19 @@ export const config: Config = {
       baseUrl: 'https://myapp.local/',
     },
   ],
+  plugins: [
+    sass(),
+    tailwind({
+      tailwindConf: tailwindConfig,
+      tailwindCssPath: './src/styles/tailwind.css'
+    }),
+    tailwindHMR()
+  ],
+  devServer: {
+    reloadStrategy: 'pageReload'
+  },
+  env: {
+    API_BASE_URL: process.env.services__apiservice__http__0
+  }
 };
+ 
