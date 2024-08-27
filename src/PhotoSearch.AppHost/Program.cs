@@ -1,5 +1,6 @@
 using System;
 using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
 using PhotoSearch.AppHost;
 using PhotoSearch.Ollama;
 using PhotoSearch.AppHost.WaitFor;
@@ -16,8 +17,8 @@ var mongo = builder.AddMongo("mongo",
     !string.IsNullOrWhiteSpace(dockerHost), port: 27019);
 var mongodb = mongo.AddDatabase("photo-search");
 
-builder.AddDockerfile("map-tile-service","./OpenStreetMap/")
-    .WithDockerfile("./OpenStreetMap/")
+builder.AddDockerfile("map-tile-service","./../../Containers/OpenStreetMap/")
+    .WithDockerfile("./../../Containers/OpenStreetMap/")
     .WithVolume("map-tile-db", "/data/database")
     .WithEnvironment("ALLOW_CORS","enabled")
     .WithEnvironment("DOWNLOAD_PBF",
@@ -42,7 +43,8 @@ var messaging =
     builder.AddRabbitMq("messaging", !string.IsNullOrWhiteSpace(dockerHost), 5672)
         .WithHealthCheck();
 
-var florence3Api = builder.AddPythonProject("florence2api", 
+var florence3Api = builder
+    .AddPythonProject("florence2api", 
         "../PhotoSearch.Florence2.API/src", "main.py")
     .WithEndpoint(targetPort: 8111, scheme: "http", env: "PORT")
     .WithEnvironment("FLORENCE_MODEL",Environment.GetEnvironmentVariable("FLORENCE_MODEL"))
@@ -67,7 +69,7 @@ var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgrou
 
 builder.AddNpmApp("stencil", "../photosearch-frontend")
     .WithReference(apiService)
-    .WithHttpEndpoint(env: "PORT")
+    .WithHttpEndpoint(port:3333, targetPort:3333, env: "PORT", isProxied:false)
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
 
@@ -88,6 +90,8 @@ if (!string.IsNullOrWhiteSpace(dockerHost))
     sshUtility.AddForwardedPort(11438, 11438);
     // MongoDB
     sshUtility.AddForwardedPort(27019, 27019);
+    // OSM Tile Server
+    sshUtility.AddForwardedPort(8080, 8080);
 }
 
 builder.Build().Run();

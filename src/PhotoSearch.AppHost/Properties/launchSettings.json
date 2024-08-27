@@ -28,7 +28,7 @@
         "DOCKER_HOST": "ssh://syamaner@192.168.0.158",
         "NOMINATIM_MAP_URL": "https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf",
         "ENABLE_NVIDIA_DOCKER": "true",
-        "OLLAMA_MODEL": "llava:13b",
+        "OLLAMA_MODEL": "llava-llama3",
         "FLORENCE_MODEL": "Florence-2-large-ft",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",

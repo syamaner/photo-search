@@ -9,7 +9,7 @@ import { EventNames } from '../../utils/event-names'
 export class MapComponent {
 
   mapElement: HTMLElement;
-  data: Array<PhotoSummary> = [];
+  photoSummaries: Array<PhotoSummary> = [];
   map: Map | undefined;
 
   markers: {
@@ -17,18 +17,19 @@ export class MapComponent {
   } = {};
 
   loadPhotos = async () => {
-    const response = await fetch(Env.API_BASE_URL + "/photos/abc");
-    this.data = await response.json();
-    this.data.forEach((photo) => {
+
+    const response = await fetch(Env.API_BASE_URL + "/photos");
+    this.photoSummaries = await response.json();
+    this.photoSummaries.forEach((photo) => {
       const marker = new Marker({
         draggable: false
       })
-      .setLngLat([photo.Longitude, photo.Latitude]);
+        .setLngLat([photo.Longitude, photo.Latitude]);
 
       const imgUrl = `${Env.API_BASE_URL}/image/${photo.Id}/1280/1280`;
       marker.setPopup(new Popup({ className: "apple-popup" })
         .setHTML(`<img src='${imgUrl}' data-id="${photo.Id}" loading="lazy"></img>`));
-marker.getPopup().setMaxWidth("400px");
+      marker.getPopup().setMaxWidth("300px");
 
       let popupElem = marker.getElement();
       popupElem.addEventListener('click', () => {
@@ -46,8 +47,8 @@ marker.getPopup().setMaxWidth("400px");
   }
 
   disconnectCallback = () => {
-    this.markers=null;
-    this.map=null;
+    this.markers = null;
+    this.map = null;
   }
 
   componentDidLoad = async () => {
@@ -72,11 +73,11 @@ marker.getPopup().setMaxWidth("400px");
       container: this.mapElement,
       style: style,
       center: [
-        this.data[0].Longitude, this.data[0].Latitude
+        this.photoSummaries[0].Longitude, this.photoSummaries[0].Latitude
       ],
       zoom: 14
     });
-    this.data.forEach((photo) => {
+    this.photoSummaries.forEach((photo) => {
       this.markers[photo.Id].addTo(this.map);
     });
   }

@@ -7,7 +7,7 @@ namespace PhotoSearch.Worker.Clients;
 
 public class OllamaPhotoSummaryClient(IOllamaApiClient ollamaApiClient) : IPhotoSummaryClient
 {
-    private static readonly string[] SupportedModels = ["llava-phi3","llava:7b","llava:13b"];
+    private static readonly string[] SupportedModels = ["llava-phi3","llava:7b","llava:13b","bakllava", "llava-llama3"];
     private const string PromptSummary = "Please provide a detailed description of the attached photo.";
     private const string PromptObjects = "Now please identify object visible in the image as a comma seperated list.";
     private const string PromptCategories =

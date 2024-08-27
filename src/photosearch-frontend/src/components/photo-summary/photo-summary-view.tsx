@@ -44,7 +44,7 @@ export class PhotoSummaryView {
         <Host>
           <slot>
           <form class="flex mb-4 map-container p-3" >
-            <label  class="w-1/4  align-middle pt-2 ">Select an option</label>
+            <label  class="w-1/4  align-middle pt-2 ">Model: </label>
             
             <select id="models" onInput={(event) => this.handleSelect(event)} class="w-3/4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option value='-' selected={true}>Please Select a model.</option>

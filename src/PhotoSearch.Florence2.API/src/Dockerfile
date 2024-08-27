@@ -1,5 +1,4 @@
 FROM bitnami/pytorch:2.3.1-debian-12-r4
- 
 
 USER root
 RUN useradd -m -u 1000 user

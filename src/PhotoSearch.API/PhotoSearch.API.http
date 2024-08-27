@@ -28,7 +28,7 @@ GET {{Nominatim_HostAddress}}/search?q=park
 
 ###
 
-GET {{API_HostAddress}}/photos/{{ollamaModel}}
+GET {{API_HostAddress}}/photos
 Accept: application/json
 
 ###
