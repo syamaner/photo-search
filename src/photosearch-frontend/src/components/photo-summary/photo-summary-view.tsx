@@ -10,10 +10,10 @@ import { PhotoSummary } from '../../models/PhotoSummary';
 })
 export class PhotoSummaryView {
   photoSelectedListenerSubscription: any;
-  @Prop() selectedPhoto: PhotoSummary = undefined;
-  @Prop() availableModels: Set<string> = new Set<string>();
-  @Prop() selectedModel: string;
-  @Prop() selectedSummary: string;
+  @Prop({ mutable: true }) selectedPhoto: PhotoSummary = undefined;
+  @Prop({ mutable: true }) availableModels: Set<string> = new Set<string>();
+  @Prop({ mutable: true }) selectedModel: string;
+  @Prop({ mutable: true }) selectedSummary: string;
   onPhotoSelected = (_msg: string, data: PhotoSummary) => {
     this.selectedPhoto = data;
 

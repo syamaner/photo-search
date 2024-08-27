@@ -16,6 +16,15 @@ var mongo = builder.AddMongo("mongo",
     !string.IsNullOrWhiteSpace(dockerHost), port: 27019);
 var mongodb = mongo.AddDatabase("photo-search");
 
+builder.AddDockerfile("map-tile-service","./OpenStreetMap/")
+    .WithDockerfile("./OpenStreetMap/")
+    .WithVolume("map-tile-db", "/data/database")
+    .WithEnvironment("ALLOW_CORS","enabled")
+    .WithEnvironment("DOWNLOAD_PBF",
+        "https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf")
+    .WithEndpoint(8080,80, "http", isProxied: false)
+    .WithEnvironment("DOWNLOAD_POLY", "http://download.geofabrik.de/europe/united-kingdom/england/greater-london.poly")
+    ;
 
 var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: ollamaVisionModel!,
     useGpu: enableNvidiaDocker)
