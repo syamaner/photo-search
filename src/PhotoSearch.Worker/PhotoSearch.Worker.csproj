@@ -9,9 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.MongoDB.Driver" Version="8.1.0" />
-        <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.1.0" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.4" />
+        <PackageReference Include="Aspire.MongoDB.Driver" Version="8.2.0" />
+        <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.2.0" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.5" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
     </ItemGroup>
 

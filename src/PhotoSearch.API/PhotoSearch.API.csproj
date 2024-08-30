@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.MongoDB.Driver" Version="8.1.0" />
-        <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.1.0" />
+        <PackageReference Include="Aspire.MongoDB.Driver" Version="8.2.0" />
+        <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.2.0" />
         <PackageReference Include="FastEndpoints" Version="5.28.0" />
         <PackageReference Include="FastEndpoints.DiagnosticSources" Version="1.2.1" />
         <PackageReference Include="FastEndpoints.Generator" Version="5.28.0">
@@ -18,9 +18,9 @@
         </PackageReference>
         <PackageReference Include="FastEndpoints.OpenTelemetry" Version="2.3.0" />
         <PackageReference Include="FastEndpoints.Swagger" Version="5.28.0" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.4" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.5" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
     </ItemGroup>
 
     <ItemGroup>
