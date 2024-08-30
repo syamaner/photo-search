@@ -29,7 +29,8 @@ export const config: Config = {
     reloadStrategy: 'pageReload'
   },
   env: {
-    API_BASE_URL: process.env.services__apiservice__http__0
+    API_BASE_URL: process.env.services__apiservice__http__0,
+    MAP_TILE_SERVER: process.env.ConnectionStrings__OSMMapTileServer
   }
 };
  

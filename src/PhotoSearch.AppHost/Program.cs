@@ -1,55 +1,64 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Aspire.Hosting;
-using Aspire.Hosting.ApplicationModel;
 using PhotoSearch.AppHost;
 using PhotoSearch.Ollama;
-using PhotoSearch.AppHost.WaitFor;
+using PhotoSearch.AppHost.WaitFor; 
 using PhotoSearch.Nominatim;
+using PhotoSearch.MapTileServer;
+
+var portMappings = new Dictionary<string,PortMap>
+{
+    { "MapTileService", new PortMap(8080, 80, "MapTileService")},
+    { "RabbitMQ", new PortMap(5672, 5672, "RabbitMQ")},
+    { "RabbitMQManagement", new PortMap(15672, 15672, "RabbitMQManagement")},
+    { "Nominatim", new PortMap(8180, 8080, "Nominatim")}, 
+    { "Ollama",  new PortMap(11438, 11434, "Ollama")},
+    { "MongoDB",  new PortMap(27019, 27019, "MongoDB")},
+    { "Florence3Api",  new PortMap(8111, 8111, "Florence3Api", false)},
+    { "FEPort",  new PortMap(3333, 3333, "FEPort", false)}
+};
 
 var builder = DistributedApplication.CreateBuilder(args);
-
 var dockerHost = StartupHelper.GetDockerHostValue();
 var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
 var ollamaVisionModel =  Environment.GetEnvironmentVariable("OLLAMA_MODEL");
 var mapDownloadUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL") ?? "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
 
-var mongo = builder.AddMongo("mongo", 
-    !string.IsNullOrWhiteSpace(dockerHost), port: 27019);
+var mongo = builder.AddMongo("mongo",
+    !string.IsNullOrWhiteSpace(dockerHost), port: portMappings["MongoDB"].PublicPort);
 var mongodb = mongo.AddDatabase("photo-search");
 
-builder.AddDockerfile("map-tile-service","./../../Containers/OpenStreetMap/")
-    .WithDockerfile("./../../Containers/OpenStreetMap/")
-    .WithVolume("map-tile-db", "/data/database")
-    .WithEnvironment("ALLOW_CORS","enabled")
-    .WithEnvironment("DOWNLOAD_PBF",
-        "https://download.geofabrik.de/europe/united-kingdom/england/greater-london-latest.osm.pbf")
-    .WithEndpoint(8080,80, "http", isProxied: false)
-    .WithEnvironment("DOWNLOAD_POLY", "http://download.geofabrik.de/europe/united-kingdom/england/greater-london.poly")
-    ;
+var osmTileService =builder.AddMapTileServer(!string.IsNullOrWhiteSpace(dockerHost),
+    hostPort: portMappings["MapTileService"].PublicPort, containerPort: portMappings["MapTileService"].PrivatePort);
 
 var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: ollamaVisionModel!,
-    useGpu: enableNvidiaDocker)
+        useGpu: enableNvidiaDocker, hostPort: portMappings["Ollama"].PublicPort,
+        ollamaContainerPort: portMappings["Ollama"].PrivatePort)
     .WithHealthCheck();
 
 var nominatimContainer =
     builder.AddNominatim(name: "Nominatim",
             isRemoteDockerHost: !string.IsNullOrWhiteSpace(dockerHost),
-            mapUrl: mapDownloadUrl!)
+            mapUrl: mapDownloadUrl!,
+            hostPort: portMappings["Nominatim"].PublicPort, 
+            containerPort: portMappings["Nominatim"].PrivatePort)
         .WithPersistence()
         .WithHealthCheck();
 
-
 var messaging =
-    builder.AddRabbitMq("messaging", !string.IsNullOrWhiteSpace(dockerHost), 5672)
+    builder.AddRabbitMq("messaging", !string.IsNullOrWhiteSpace(dockerHost), ampqPort: portMappings["RabbitMQ"].PublicPort,
+            adminPort: portMappings["RabbitMQManagement"].PublicPort)
         .WithHealthCheck();
 
 var florence3Api = builder
-    .AddPythonProject("florence2api", 
+    .AddPythonProject("florence2api",
         "../PhotoSearch.Florence2.API/src", "main.py")
-    .WithEndpoint(targetPort: 8111, scheme: "http", env: "PORT")
-    .WithEnvironment("FLORENCE_MODEL",Environment.GetEnvironmentVariable("FLORENCE_MODEL"))
-    .WithEnvironment("PYTHONUNBUFFERED","0")
-    .WithEnvironment("ASPIRE_ALLOW_UNSECURED_TRANSPORT","true");
+    .WithEndpoint(targetPort: portMappings["Florence3Api"].PublicPort, scheme: "http", env: "PORT")
+    .WithEnvironment("FLORENCE_MODEL", Environment.GetEnvironmentVariable("FLORENCE_MODEL"))
+    .WithEnvironment("PYTHONUNBUFFERED", "0")
+    .WithEnvironment("ASPIRE_ALLOW_UNSECURED_TRANSPORT", "true");
 
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice") 
     .WithReference(ollamaContainer)
@@ -69,7 +78,11 @@ var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgrou
 
 builder.AddNpmApp("stencil", "../photosearch-frontend")
     .WithReference(apiService)
-    .WithHttpEndpoint(port:3333, targetPort:3333, env: "PORT", isProxied:false)
+    .WithReference(osmTileService)
+    .WithHttpEndpoint(port: portMappings["FEPort"].PublicPort, 
+        targetPort: portMappings["FEPort"].PrivatePort, 
+        env: "PORT", 
+        isProxied:false)
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
 
@@ -80,20 +93,13 @@ if (!string.IsNullOrWhiteSpace(dockerHost))
 {
     // Forwards the ports to the docker host machine
     sshUtility.Connect();
-    // RabbitMQ
-    sshUtility.AddForwardedPort(5672, 5672);
-    // RabbitMQ Management
-    sshUtility.AddForwardedPort(15672, 15672);
-    // Nominatim
-    sshUtility.AddForwardedPort(8180, 8180);
-    // Ollama
-    sshUtility.AddForwardedPort(11438, 11438);
-    // MongoDB
-    sshUtility.AddForwardedPort(27019, 27019);
-    // OSM Tile Server
-    sshUtility.AddForwardedPort(8080, 8080);
+    foreach (var portMapping in portMappings.Values.Where(x => x.PortForward))
+    {
+        Console.WriteLine($"Forwarding port {portMapping.PublicPort} to {portMapping.PublicPort}");
+        sshUtility.AddForwardedPort(portMapping.PublicPort, portMapping.PublicPort);
+    } 
 }
 
 builder.Build().Run();
 
- 
+public record PortMap(int PublicPort, int PrivatePort, string Name, bool PortForward = true);

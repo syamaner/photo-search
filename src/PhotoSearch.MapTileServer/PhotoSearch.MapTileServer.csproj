@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>latestmajor</LangVersion>
+        <IsAspireHost>false</IsAspireHost>
+        <ImplicitUsings>true</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Aspire.Hosting" Version="8.2.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\PhotoSearch.Common\PhotoSearch.Common.csproj" />
+    </ItemGroup>
+
+</Project>

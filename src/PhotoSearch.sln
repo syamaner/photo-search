@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoSearch.Tests", "Tests\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoSearch.Nominatim", "PhotoSearch.Nominatim\PhotoSearch.Nominatim.csproj", "{20E4B1EC-6617-4A3D-9C3A-D9973F8E5748}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoSearch.MapTileServer", "PhotoSearch.MapTileServer\PhotoSearch.MapTileServer.csproj", "{3FC6044A-A009-407C-933C-F47CD51422BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{20E4B1EC-6617-4A3D-9C3A-D9973F8E5748}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20E4B1EC-6617-4A3D-9C3A-D9973F8E5748}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20E4B1EC-6617-4A3D-9C3A-D9973F8E5748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FC6044A-A009-407C-933C-F47CD51422BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FC6044A-A009-407C-933C-F47CD51422BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FC6044A-A009-407C-933C-F47CD51422BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FC6044A-A009-407C-933C-F47CD51422BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

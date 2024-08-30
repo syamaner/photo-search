@@ -57,7 +57,7 @@ export class MapComponent {
       sources: {
         osm: {
           type: 'raster',
-          tiles: ["http://localhost:8080/tile/{z}/{x}/{y}.png"],
+          tiles: [`${Env.MAP_TILE_SERVER}/tile/{z}/{x}/{y}.png`],
           tileSize: 256,
           attribution: 'Map tiles by <a target="_top" rel="noopener" href="https://tile.openstreetmap.org/">OpenStreetMap tile servers</a>, under the <a target="_top" rel="noopener" href="https://operations.osmfoundation.org/policies/tiles/">tile usage policy</a>. Data by <a target="_top" rel="noopener" href="http://openstreetmap.org">OpenStreetMap</a>'
         }

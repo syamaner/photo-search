@@ -6,7 +6,6 @@ namespace PhotoSearch.Nominatim;
 
 public static class NominatimResourceBuilderExtensions
 {
-    private const int ContainerPort = 8080;
     private const string NominatimImage = "mediagis/nominatim";
 
     public static IResourceBuilder<NominatimResource> AddNominatim(this IDistributedApplicationBuilder builder,
@@ -16,7 +15,8 @@ public static class NominatimResourceBuilderExtensions
         string name = "Nominatim",
         bool importUkPostcodes = false,
         bool importWikipediaData = false,
-        int? hostPort = 8180)
+        int? hostPort = 8180,
+        int containerPort = 8080)
     {
         var nominatimResource = new NominatimResource(name, mapUrl, hostPort.ToString()!);
 
@@ -29,7 +29,7 @@ public static class NominatimResourceBuilderExtensions
             .WithEnvironment("IMPORT_WIKIPEDIA", importWikipediaData ? "true" : "false")
             .WithEnvironment("IMPORT_GB_POSTCODES", importUkPostcodes ? "true" : "false");
 
-        nominatimResourceBuilder.WithHttpEndpoint(hostPort, ContainerPort, "http");
+        nominatimResourceBuilder.WithHttpEndpoint(hostPort, containerPort, "http");
 
         if (!isRemoteDockerHost) return nominatimResourceBuilder;
 
