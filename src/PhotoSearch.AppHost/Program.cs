@@ -84,6 +84,10 @@ builder.AddNpmApp("stencil", "../photosearch-frontend")
         env: "PORT", 
         isProxied:false)
     .WithExternalHttpEndpoints()
+    .WaitFor(osmTileService)
+    .WaitFor(ollamaContainer)
+    .WaitFor(nominatimContainer)
+    .WaitFor(messaging)
     .PublishAsDockerFile();
 
 // add ssh_user and ssh_key_file (path to the key file) for ser secrets.

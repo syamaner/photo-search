@@ -1,5 +1,6 @@
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
+using Aspire.Hosting.Lifecycle;
 
 namespace PhotoSearch.MapTileServer;
 
@@ -15,7 +16,7 @@ public static class MapTileServerResourceExtensions
     {
         var nominatimResource = new MapTileServerResource(name, hostPort!.Value);
 
-        // builder.Services.TryAddLifecycleHook<NominatimResourceLifecycleHook>();
+        builder.Services.TryAddLifecycleHook<MapTileServerResourceLifecycleHook>();
 
         var resourceBuilder = builder.AddResource(nominatimResource)
             .WithImage("syamaner/osm-tile-server")

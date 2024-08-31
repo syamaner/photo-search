@@ -38,7 +38,7 @@ export class PhotoSummaryView {
   }
 
   render() {
-
+    //const url=`https://maps.google.com/?q=${this.selectedPhoto.Latitude},${this.selectedPhoto.Latitude}`;
     if (this.selectedPhoto) {
       return (
         <Host>
@@ -55,6 +55,12 @@ export class PhotoSummaryView {
             </form>
             <div class="p-3">
               <p class="prose prose-lg">{this.selectedSummary}</p>
+            </div>
+            <div class="p-3">
+              <label class="font-bold">Address:</label>
+              <p class="prose prose-lg">{this.selectedPhoto.Address}</p>
+
+              <p><a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" target='blank' href={`https://maps.google.com/?q=${this.selectedPhoto.Latitude},${this.selectedPhoto.Longitude}`}>Google Maps Link</a> </p>
             </div>
           </slot>
         </Host>
