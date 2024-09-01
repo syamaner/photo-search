@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Cors;
 using MongoDB.Driver;
 using PhotoSearch.Data.Models;
+using YamlDotNet.Core.Tokens;
 
 namespace PhotoSearch.API.Endpoints.PhotoRetrieval;
 using FastEndpoints;
@@ -18,12 +19,16 @@ public class GetPhotosEndpoint(IMongoCollection<Photo> collection): EndpointWith
     public override async Task HandleAsync(CancellationToken c)
     { 
         var photos = await collection.AsQueryable().ToListAsync(cancellationToken: c);
-
+ 
         var results = photos.Select(x => new Models.GetPhotosResponse
         (
             x.Id,
-            x.PhotoSummaries?.ToDictionary(x => x.Key, x => x.Value.Description)
-            ?? new Dictionary<string, string>(),
+            x.PhotoSummaries?.ToDictionary(x =>
+                    x.Key,
+                x =>
+                    new Models.ModelResponse(x.Value.Description, x.Value.Categories, x.Value.ObjectClasses))
+            ?? new Dictionary<string, Models.ModelResponse>()
+            ,
             x.Latitude,
             x.Longitude,
             x.LocationInformation?.Features?.FirstOrDefault()?.Properties?.DisplayName

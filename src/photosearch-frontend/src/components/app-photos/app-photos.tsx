@@ -10,18 +10,19 @@ export class AppPhotos {
   @Prop() match: MatchResults;
 
   render() {
-    
-      return (
-        <Host>
-          <div class="flex mb-4 map-container" >
-          <div class="w-1/2 h-120 " >
+
+    return (
+      <Host>
+        <div class="flex mb-4 map-container" >
+          <div class="w-1/2 h-120" >
             <map-component></map-component>
           </div>
-          <div  class="w-1/2   h-120 ">
+          <div class="w-1/2   h-120">
             <photo-summary-view></photo-summary-view>
-          </div></div>
-        </Host>
-      );
-  
+          </div>
+        </div>
+      </Host>
+    );
+
   }
 }

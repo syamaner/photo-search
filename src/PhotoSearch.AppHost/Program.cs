@@ -74,6 +74,7 @@ var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgrou
     .WithReference(mongodb)
     .WaitFor(ollamaContainer)
     .WaitFor(nominatimContainer)
+    .WaitFor(osmTileService)
     .WaitFor(messaging);
 
 builder.AddNpmApp("stencil", "../photosearch-frontend")

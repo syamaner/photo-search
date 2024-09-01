@@ -21,6 +21,8 @@ export namespace Components {
     }
     interface PhotoSummaryView {
         "availableModels": Set<string>;
+        "categories": Array<string>;
+        "objects": Array<string>;
         "selectedModel": string;
         "selectedPhoto": PhotoSummary;
         "selectedSummary": string;
@@ -77,6 +79,8 @@ declare namespace LocalJSX {
     }
     interface PhotoSummaryView {
         "availableModels"?: Set<string>;
+        "categories"?: Array<string>;
+        "objects"?: Array<string>;
         "selectedModel"?: string;
         "selectedPhoto"?: PhotoSummary;
         "selectedSummary"?: string;
