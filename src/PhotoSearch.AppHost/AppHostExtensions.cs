@@ -1,7 +1,11 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
+using HealthChecks.RabbitMQ;
+using Microsoft.Extensions.DependencyInjection;
+using PhotoSearch.Ollama;
 
 namespace PhotoSearch.AppHost;
 
@@ -12,11 +16,11 @@ public static class AppHostExtensions
     {
         var rmqUsername = builder.AddParameter("rmqUsername", secret: true);
         var rmqPassword = builder.AddParameter("rmqPassword", secret: true);
-
+ 
+   
         var rabbitMq = builder.AddRabbitMQ(name, rmqUsername, rmqPassword, ampqPort)
-            .WithImageTag("3-management");
-        
-        rabbitMq.WithHttpEndpoint(adminPort, adminPort, "http")
+            .WithImageTag("3-management") 
+            .WithHttpEndpoint(adminPort, adminPort, "http")
             .WithExternalHttpEndpoints();
 
         if (!isRemoteDockerHost) return rabbitMq;

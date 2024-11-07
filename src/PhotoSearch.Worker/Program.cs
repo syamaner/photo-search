@@ -10,7 +10,6 @@ using StringWithQualityHeaderValue = System.Net.Http.Headers.StringWithQualityHe
 var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
-
 builder.Services.AddSingleton<IPhotoSummaryClient, OllamaPhotoSummaryClient>();
 builder.Services.AddTransient<IPhotoImporter, PhotoImporter>();
 

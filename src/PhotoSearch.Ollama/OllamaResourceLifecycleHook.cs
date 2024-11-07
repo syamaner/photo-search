@@ -97,7 +97,7 @@ public class OllamaResourceLifecycleHook(ResourceNotificationService notificatio
             try
             {
                 attempt++;
-                isRunning = await ollamaClient.IsRunning(cancellationToken);
+                isRunning = await ollamaClient.IsRunningAsync(cancellationToken);
             }
             catch (Exception)
             {
@@ -109,7 +109,7 @@ public class OllamaResourceLifecycleHook(ResourceNotificationService notificatio
     }
     private async Task<bool> HasModelAsync(OllamaApiClient ollamaClient, string model, CancellationToken cancellationToken)
     {
-        var localModels = await ollamaClient.ListLocalModels(cancellationToken);
+        var localModels = await ollamaClient.ListLocalModelsAsync(cancellationToken);
         return localModels.Any(m => m.Name.StartsWith(model));
     }
     private async Task PullModel(OllamaResource resource, OllamaApiClient ollamaClient, string model, CancellationToken cancellationToken)
@@ -118,24 +118,24 @@ public class OllamaResourceLifecycleHook(ResourceNotificationService notificatio
 
         long percentage = 0;
 
-        await ollamaClient.PullModel(model, async status =>
+        var response =  ollamaClient.PullModelAsync(model, cancellationToken: cancellationToken);
+        await foreach (var status in response)
         {
-            if (status.Total != 0)
+            if (status?.Total == 0) continue;
+            
+            var newPercentage = (long)(status?.Completed / (double)status!.Total * 100)!;
+            if (newPercentage != percentage)
             {
-                var newPercentage = (long)(status.Completed / (double)status.Total * 100);
-                if (newPercentage != percentage)
-                {
-                    percentage = newPercentage;
+                percentage = newPercentage;
 
-                    var percentageState = percentage == 0 ? "Downloading model" : $"Downloading model {percentage} percent";
-                    Console.WriteLine(percentageState);
-                    await notificationService.PublishUpdateAsync(resource,
-                        state => state with
-                        {
-                            State = new ResourceStateSnapshot(percentageState, KnownResourceStateStyles.Info)
-                        });
-                }
+                var percentageState = percentage == 0 ? "Downloading model" : $"Downloading model {percentage} percent";
+                Console.WriteLine(percentageState);
+                await notificationService.PublishUpdateAsync(resource,
+                    state => state with
+                    {
+                        State = new ResourceStateSnapshot(percentageState, KnownResourceStateStyles.Info)
+                    });
             }
-        }, cancellationToken);
+        }
     }
 }

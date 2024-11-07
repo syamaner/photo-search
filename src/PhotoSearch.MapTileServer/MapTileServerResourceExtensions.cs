@@ -1,6 +1,7 @@
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Lifecycle;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PhotoSearch.MapTileServer;
 
@@ -14,17 +15,21 @@ public static class MapTileServerResourceExtensions
         int? hostPort = 8080,
         int containerPort = 80)
     {
-        var nominatimResource = new MapTileServerResource(name, hostPort!.Value);
+        var mapTileServerResource = new MapTileServerResource(name, hostPort!.Value);
 
         builder.Services.TryAddLifecycleHook<MapTileServerResourceLifecycleHook>();
+        builder.Services.AddHealthChecks().AddTypeActivatedCheck<MapTileServerHealthCheck>("maptile-healthcheck",mapTileServerResource.ConnectionStringExpression.ValueExpression);
 
-        var resourceBuilder = builder.AddResource(nominatimResource)
+        
+        var resourceBuilder = builder.AddResource(mapTileServerResource)
             .WithImage("syamaner/osm-tile-server")
             .WithImageTag("2.3.0")
+            .WithContainerName(name)
             .WithEnvironment("DOWNLOAD_PBF", mapUrl)
             .WithEnvironment("DOWNLOAD_POLY", polygonUrl)
             .WithEnvironment("ALLOW_CORS", "enabled")
             .WithVolume("map-tile-db", "/data/database")
+            .WithHealthCheck("maptile-healthcheck")
             .WithEndpoint(hostPort, containerPort, "http",
                 name:"http",
                 isProxied: false)

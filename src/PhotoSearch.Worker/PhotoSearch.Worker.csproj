@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-PhotoSearch.Worker-E733A943-B7A6-4C49-A69C-C895FAE0289D</UserSecretsId>
@@ -9,10 +9,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.MongoDB.Driver" Version="8.2.0" />
-        <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.2.0" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.5" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
+        <PackageReference Include="Aspire.MongoDB.Driver" Version="9.0.0-rc.1.24511.1" />
+        <PackageReference Include="Aspire.RabbitMQ.Client" Version="9.0.0-rc.1.24511.1" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.1-develop.2105" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0-rc.2.24473.5" />
     </ItemGroup>
 
     <ItemGroup>

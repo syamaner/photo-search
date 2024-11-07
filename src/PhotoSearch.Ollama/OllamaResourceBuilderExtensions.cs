@@ -1,6 +1,7 @@
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Lifecycle;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PhotoSearch.Ollama;
 
@@ -20,12 +21,16 @@ public static class OllamaResourceBuilderExtensions
         int ollamaContainerPort = 11434)
     {
         var ollamaResource = new OllamaResource(name, modelName, hostIpAddress, hostPort.ToString()!);
-
+        
+        builder.Services.AddHealthChecks().AddTypeActivatedCheck<OllamaHealthCheck>("ollama-healthcheck",ollamaResource.ConnectionStringExpression.ValueExpression,modelName);
+        
         var ollamaResourceBuilder = builder.AddResource(ollamaResource)
             .WithAnnotation(new ContainerImageAnnotation { Image = "ollama/ollama", Tag = ollamaTag })
+            .WithContainerName("Ollama")
             .PublishAsContainer()
             .WithHttpEndpoint(hostPort, ollamaContainerPort, isProxied:false)
-            .WithVolume("ollamas", "/root/.ollama")
+            .WithHealthCheck("ollama-healthcheck")
+            .WithVolume("ollamas", "/root/.ollama")          
             .WithExternalHttpEndpoints();
         
         if (useGpu)

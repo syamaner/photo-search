@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
+
 using PhotoSearch.Data.GeoJson;
+using ThirdParty.Json.LitJson;
 
 namespace PhotoSearch.Data.Models;
 
@@ -11,7 +13,7 @@ public class Photo
 {
     
     [BsonElement("_id")]
-    [JsonProperty("_id")]
+    [JsonPropertyName("_id")]
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }

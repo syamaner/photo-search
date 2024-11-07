@@ -1,6 +1,7 @@
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Lifecycle;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PhotoSearch.Nominatim;
 
@@ -21,10 +22,13 @@ public static class NominatimResourceBuilderExtensions
         var nominatimResource = new NominatimResource(name, mapUrl, hostPort.ToString()!);
 
         builder.Services.TryAddLifecycleHook<NominatimResourceLifecycleHook>();
+        builder.Services.AddHealthChecks().AddTypeActivatedCheck<NominatimHealthCheck>("nominatim-healthcheck",nominatimResource.ConnectionStringExpression.ValueExpression);
 
         var nominatimResourceBuilder = builder.AddResource(nominatimResource)
             .WithAnnotation(new ContainerImageAnnotation { Image = NominatimImage, Tag = imageTag })
             .PublishAsContainer()
+            .WithContainerName(name)
+            .WithHealthCheck("nominatim-healthcheck")
             .WithEnvironment("PBF_URL", mapUrl)
             .WithEnvironment("IMPORT_WIKIPEDIA", importWikipediaData ? "true" : "false")
             .WithEnvironment("IMPORT_GB_POSTCODES", importUkPostcodes ? "true" : "false");

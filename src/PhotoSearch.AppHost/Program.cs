@@ -4,7 +4,6 @@ using System.Linq;
 using Aspire.Hosting;
 using PhotoSearch.AppHost;
 using PhotoSearch.Ollama;
-using PhotoSearch.AppHost.WaitFor; 
 using PhotoSearch.Nominatim;
 using PhotoSearch.MapTileServer;
 
@@ -24,7 +23,8 @@ var builder = DistributedApplication.CreateBuilder(args);
 var dockerHost = StartupHelper.GetDockerHostValue();
 var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
 var ollamaVisionModel =  Environment.GetEnvironmentVariable("OLLAMA_MODEL");
-var mapDownloadUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL") ?? "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
+var mapDownloadUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL") 
+    ?? "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
 
 var mongo = builder.AddMongo("mongo",
     !string.IsNullOrWhiteSpace(dockerHost), port: portMappings["MongoDB"].PublicPort);
@@ -34,23 +34,21 @@ var osmTileService =builder.AddMapTileServer(!string.IsNullOrWhiteSpace(dockerHo
     hostPort: portMappings["MapTileService"].PublicPort, containerPort: portMappings["MapTileService"].PrivatePort);
 
 var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: ollamaVisionModel!,
-        useGpu: enableNvidiaDocker, hostPort: portMappings["Ollama"].PublicPort,
-        ollamaContainerPort: portMappings["Ollama"].PrivatePort)
-    .WithHealthCheck();
+    useGpu: enableNvidiaDocker, hostPort: portMappings["Ollama"].PublicPort,
+    ollamaContainerPort: portMappings["Ollama"].PrivatePort);
 
 var nominatimContainer =
     builder.AddNominatim(name: "Nominatim",
             isRemoteDockerHost: !string.IsNullOrWhiteSpace(dockerHost),
             mapUrl: mapDownloadUrl!,
-            hostPort: portMappings["Nominatim"].PublicPort, 
+            hostPort: portMappings["Nominatim"].PublicPort,
             containerPort: portMappings["Nominatim"].PrivatePort)
-        .WithPersistence()
-        .WithHealthCheck();
+        .WithPersistence();
 
 var messaging =
-    builder.AddRabbitMq("messaging", !string.IsNullOrWhiteSpace(dockerHost), ampqPort: portMappings["RabbitMQ"].PublicPort,
-            adminPort: portMappings["RabbitMQManagement"].PublicPort)
-        .WithHealthCheck();
+    builder.AddRabbitMq("messaging", !string.IsNullOrWhiteSpace(dockerHost),
+        ampqPort: portMappings["RabbitMQ"].PublicPort,
+        adminPort: portMappings["RabbitMQManagement"].PublicPort);
 
 var florence3Api = builder
     .AddPythonProject("florence2api",
@@ -92,7 +90,8 @@ builder.AddNpmApp("stencil", "../photosearch-frontend")
     .PublishAsDockerFile();
 
 // add ssh_user and ssh_key_file (path to the key file) for ser secrets.
-using var sshUtility = new SShUtility(dockerHost, builder.Configuration["ssh_user"]!,  builder.Configuration["ssh_key_file"]!);
+using var sshUtility = new SShUtility(dockerHost, builder.Configuration["ssh_user"]!, 
+    builder.Configuration["ssh_key_file"]!);
 
 if (!string.IsNullOrWhiteSpace(dockerHost))
 {
