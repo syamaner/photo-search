@@ -10,7 +10,7 @@ public class GetPhotosEndpoint(IMongoCollection<Photo> collection): EndpointWith
 {
     public override void Configure()
     {
-        Get("/photos");
+        Get("/api/photos");
         AllowAnonymous();
         Description(builder=>builder.WithName("GetPhotos")
             .WithOpenApi());

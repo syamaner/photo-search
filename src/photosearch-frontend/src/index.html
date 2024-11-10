@@ -8,7 +8,16 @@
   <meta name="theme-color" content="#16161d">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta http-equiv="x-ua-compatible" content="IE=Edge">
-
+  <!--
+    https://www.w3.org/TR/trace-context/
+    Set the `traceparent` in the server's HTML template code. It should be
+    dynamically generated server side to have the server's request trace Id,
+    a parent span Id that was set on the server's request span, and the trace
+    flags to indicate the server's sampling decision
+    (01 = sampled, 00 = notsampled).
+    '{version}-{traceId}-{spanId}-{sampleDecision}'
+  -->
+  <meta name="traceparent" content="00-ab42124a3c573678d4d8b21ba52df3bf-d21f7bc17caa5aba-01">
   <script type="module" src="/build/app.esm.js"></script>
   <script nomodule src="/build/app.js"></script>
   <link href="/build/app.css" rel="stylesheet">

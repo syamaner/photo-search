@@ -8,7 +8,7 @@ public class IndexPhotosEndpoint(IBus bus) : Endpoint<IndexPhotosRequest>
 {
     public override void Configure()
     {
-        Get("/photos/index/{directory}");
+        Get("/api/photos/index/{directory}");
         AllowAnonymous();
         Description(builder=>builder.WithName("IndexPhotos")
             .WithOpenApi());

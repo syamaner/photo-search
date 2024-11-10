@@ -60,6 +60,7 @@ var florence3Api = builder
 
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice") 
     .WithReference(ollamaContainer)
+    .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL","http://localhost:21268")
     .WaitFor(messaging)
     .WithReference(mongodb)
     .WithReference(messaging);
@@ -67,6 +68,7 @@ var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice")
 var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice")
     .WithReference(ollamaContainer)
     .WithReference(florence3Api)
+    .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL","http://localhost:21268")
     .WithReference(nominatimContainer)
     .WithReference(messaging)
     .WithReference(mongodb)
@@ -77,7 +79,11 @@ var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgrou
 
 builder.AddNpmApp("stencil", "../photosearch-frontend")
     .WithReference(apiService)
-    .WithReference(osmTileService)
+    .WithReference(osmTileService) 
+    
+    .WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT","http://localhost:16175")
+    .WithEnvironment("OTEL_EXPORTER_OTLP_PROTOCOL","http/protobuf")
+
     .WithHttpEndpoint(port: portMappings["FEPort"].PublicPort, 
         targetPort: portMappings["FEPort"].PrivatePort, 
         env: "PORT", 

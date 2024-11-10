@@ -11,7 +11,7 @@ public class SummarisePhotosEndpoint(IBus bus, IMongoCollection<Photo> collectio
 {
     public override void Configure()
     {
-        Get("/photos/summarise/{modelName}");
+        Get("/api/photos/summarise/{modelName}");
         AllowAnonymous();
         Description(builder=>builder.WithName("SummarisePhotos")
             .WithOpenApi());

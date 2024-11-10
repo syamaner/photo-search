@@ -11,34 +11,29 @@ export class MapComponent {
   mapElement: HTMLElement;
   photoSummaries: Array<PhotoSummary> = [];
   map: Map | undefined;
-
+  popup = new Popup({ className: "apple-popup",  closeOnClick: true, maxWidth: "450px", closeOnMove: false, closeButton: false });
   markers: {
     [name: string]: Marker
   } = {};
 
-  loadPhotos = async () => {
+  loadImage = async (url) => {
+    return (
+      fetch(url)
+        .then((resp) => resp.blob())
+        .then((blob) => {
+          return URL.createObjectURL(blob);
+        })
+    );
+  };
 
-    const response = await fetch(Env.API_BASE_URL + "/photos");
+  loadPhotos = async () => {
+    const response = await fetch(Env.API_BASE_URL + "/api/photos");
     this.photoSummaries = await response.json();
     this.photoSummaries.forEach((photo) => {
       const marker = new Marker({
-        draggable: false
-      })
-        .setLngLat([photo.Longitude, photo.Latitude]);
-
-      const imgUrl = `${Env.API_BASE_URL}/image/${photo.Id}/1280/1280`;
-      marker.setPopup(new Popup({ className: "apple-popup" })
-        .setHTML(`<img src='${imgUrl}' data-id="${photo.Id}" loading="lazy"></img>`));
-      marker.getPopup().setMaxWidth("300px");
-
-      let popupElem = marker.getElement();
-      popupElem.addEventListener('click', () => {
-
-        PubSub.publish(EventNames.PhotoSelected, photo);
-
-      });
+        draggable: false,
+      }).setLngLat([photo.Longitude, photo.Latitude]);
       this.markers[photo.Id] = marker;
-
     });
   };
 
@@ -77,8 +72,21 @@ export class MapComponent {
       ],
       zoom: 14
     });
+
     this.photoSummaries.forEach((photo) => {
-      this.markers[photo.Id].addTo(this.map);
+      let marker = this.markers[photo.Id];
+      marker.addTo(this.map);
+      let imgUrl = `${Env.API_BASE_URL}/api/image/${photo.Id}/1280/1280`;
+      marker.getElement().addEventListener('click', () => { 
+          this.loadImage(imgUrl).then((imageData) => {            
+            this.popup.setHTML(`<img src='${imageData}' data-id="${photo.Id}"></img>`);
+            marker.setPopup(this.popup);
+            marker.togglePopup();
+          });
+
+          PubSub.publish(EventNames.PhotoSelected, photo);
+      });
+
     });
   }
 

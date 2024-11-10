@@ -24,12 +24,23 @@
     "jest-cli": "^27.4.5",
     "patch-package": "^8.0.0",
     "puppeteer": "^10.0.0",
+    "rollup-plugin-node-polyfills": "^0.2.1",
     "stencil-tailwind-plugin": "^1.8.0",
     "tailwindcss": "^3.2.4"
   },
   "license": "MIT",
   "dependencies": {
     "@maplibre/ngx-maplibre-gl": "^17.4.3",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/auto-instrumentations-web": "^0.42.0",
+    "@opentelemetry/context-async-hooks": "^1.27.0",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.52.1",
+    "@opentelemetry/instrumentation-document-load": "^0.41.0",
+    "@opentelemetry/instrumentation-fetch": "^0.54.2",
+    "@opentelemetry/instrumentation-long-task": "^0.41.0",
+    "@opentelemetry/instrumentation-user-interaction": "^0.41.0",
+    "@opentelemetry/instrumentation-xml-http-request": "^0.54.2",
+    "@opentelemetry/sdk-trace-web": "^1.27.0",
     "maplibre-gl": "^4.5.0",
     "pubsub-js": "^1.9.4"
   }

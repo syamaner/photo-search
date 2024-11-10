@@ -10,7 +10,7 @@ public class GetImageEndpoint(IMongoCollection<Photo> collection): Endpoint<Mode
     
     public override void Configure()
     {
-        Get("/image/{imageId}/{maxWidth}/{maxHeight}");
+        Get("/api/image/{imageId}/{maxWidth}/{maxHeight}");
         AllowAnonymous();
         Description(builder=>builder.WithName("GetImage")
             .WithOpenApi());
