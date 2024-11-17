@@ -11,6 +11,9 @@ export { MatchResults } from "@stencil-community/router";
 export { PhotoSummary } from "./models/PhotoSummary";
 export namespace Components {
     interface AppHome {
+        "availableModels": Array<string>;
+        "selectedModel": string;
+        "showMessage": boolean;
     }
     interface AppPhotos {
         "match": MatchResults;
@@ -69,6 +72,9 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AppHome {
+        "availableModels"?: Array<string>;
+        "selectedModel"?: string;
+        "showMessage"?: boolean;
     }
     interface AppPhotos {
         "match"?: MatchResults;
