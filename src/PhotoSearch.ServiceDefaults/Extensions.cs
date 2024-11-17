@@ -32,13 +32,13 @@ public static class Extensions
             {
                 o.AttemptTimeout = new HttpTimeoutStrategyOptions()
                 {
-                    Timeout = TimeSpan.FromSeconds(90)
+                    Timeout = TimeSpan.FromMinutes(15)
                 };
                 o.TotalRequestTimeout = new HttpTimeoutStrategyOptions()
                 {
-                    Timeout = TimeSpan.FromSeconds(500)
+                    Timeout = TimeSpan.FromMinutes(45)
                 };
-                o.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(200);
+                o.CircuitBreaker.SamplingDuration = TimeSpan.FromMinutes(30);
             });
                 // Turn on service discovery by default
                 http.AddServiceDiscovery();
@@ -50,6 +50,7 @@ public static class Extensions
         //     options.AllowedSchemes = ["https"];
         // });
 
+        builder.AddOpenAIClient("openaiConnection",  settings => settings.DisableTracing = false);
         return builder;
     }
 
@@ -60,10 +61,14 @@ public static class Extensions
             logging.IncludeFormattedMessage = true;
             logging.IncludeScopes = true;
         });
-
+        builder.Services.AddSingleton<ConsoleMetrics>();
+        
         builder.Services.AddOpenTelemetry()
             .WithMetrics(metrics =>
             {
+                metrics.AddRuntimeInstrumentation();
+                metrics.AddHttpClientInstrumentation();
+                metrics.AddMeter("PhotoSummary.Worker");
                 metrics.AddMeter(InstrumentationOptions.MeterName);
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
@@ -71,6 +76,8 @@ public static class Extensions
             })
             .WithTracing(tracing =>
             {
+                tracing.AddSource(TracingConstants.WorkerActivitySource.Name);
+                tracing.AddSource(TracingConstants.ApiActivitySource.Name);
                 tracing.AddSource(DiagnosticHeaders.DefaultListenerName);
                 tracing.AddAspNetCoreInstrumentation()
                     // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)

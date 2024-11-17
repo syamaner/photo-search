@@ -21,8 +21,9 @@ public static class NominatimResourceBuilderExtensions
     {
         var nominatimResource = new NominatimResource(name, mapUrl, hostPort.ToString()!);
 
-        builder.Services.TryAddLifecycleHook<NominatimResourceLifecycleHook>();
-        builder.Services.AddHealthChecks().AddTypeActivatedCheck<NominatimHealthCheck>("nominatim-healthcheck",nominatimResource.ConnectionStringExpression.ValueExpression);
+        builder.Services.AddHealthChecks()
+            .AddTypeActivatedCheck<NominatimHealthCheck>("nominatim-healthcheck",
+                nominatimResource.ConnectionStringExpression.ValueExpression);
 
         var nominatimResourceBuilder = builder.AddResource(nominatimResource)
             .WithAnnotation(new ContainerImageAnnotation { Image = NominatimImage, Tag = imageTag })
@@ -31,9 +32,9 @@ public static class NominatimResourceBuilderExtensions
             .WithHealthCheck("nominatim-healthcheck")
             .WithEnvironment("PBF_URL", mapUrl)
             .WithEnvironment("IMPORT_WIKIPEDIA", importWikipediaData ? "true" : "false")
-            .WithEnvironment("IMPORT_GB_POSTCODES", importUkPostcodes ? "true" : "false");
-
-        nominatimResourceBuilder.WithHttpEndpoint(hostPort, containerPort, "http");
+            .WithEnvironment("IMPORT_GB_POSTCODES", importUkPostcodes ? "true" : "false")
+            .WithLifetime(ContainerLifetime.Persistent)
+            .WithHttpEndpoint(hostPort, containerPort, "http");
 
         if (!isRemoteDockerHost) return nominatimResourceBuilder;
 

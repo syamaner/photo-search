@@ -8,20 +8,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.MongoDB.Driver" Version="9.0.0-rc.1.24511.1" />
-        <PackageReference Include="Aspire.RabbitMQ.Client" Version="9.0.0-rc.1.24511.1" />
-        <PackageReference Include="FastEndpoints" Version="5.31.0.4-beta" />
+        <PackageReference Include="Aspire.MongoDB.Driver" Version="9.0.0" />
+        <PackageReference Include="Aspire.OpenAI" Version="9.0.0-preview.5.24551.3" />
+        <PackageReference Include="Aspire.RabbitMQ.Client" Version="9.0.0" />
+        <PackageReference Include="FastEndpoints" Version="5.31.0.9-beta" />
         <PackageReference Include="FastEndpoints.DiagnosticSources" Version="1.2.1" />
-        <PackageReference Include="FastEndpoints.Generator" Version="5.31.0.4-beta">
+        <PackageReference Include="FastEndpoints.Generator" Version="5.31.0.9-beta">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FastEndpoints.OpenTelemetry" Version="2.3.0" />
-        <PackageReference Include="FastEndpoints.Swagger" Version="5.31.0.4-beta" />
+        <PackageReference Include="FastEndpoints.Swagger" Version="5.31.0.9-beta" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.1" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0-rc.2.24474.3" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
         <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.9.0-beta.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>

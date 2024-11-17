@@ -4,6 +4,6 @@ namespace PhotoSearch.Worker.Clients;
 
 public interface IPhotoSummaryClient
 {
-    Task<PhotoSummary> SummarisePhoto(string modelName, string imagePath);
+    Task<PhotoSummary> SummarisePhoto(string modelName, string imagePath, string address);
     bool CanHandle(string modelName);
 }

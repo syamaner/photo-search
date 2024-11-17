@@ -9,7 +9,7 @@ Accept: application/json
 
 ###
 
-GET {{API_HostAddress}}/photos/index/test-photos
+GET {{API_HostAddress}}/api/photos/index/test-photos
 Accept: application/json
 
 ###
@@ -28,7 +28,7 @@ GET {{Nominatim_HostAddress}}/search?q=park
 
 ###
 
-GET {{API_HostAddress}}/photos
+GET {{API_HostAddress}}/api/photos
 Accept: application/json
 
 ###

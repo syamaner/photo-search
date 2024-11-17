@@ -13,9 +13,8 @@ builder.Services.AddCors();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.AddRabbitMQClient("messaging");
 builder.AddMasstransit();
- 
+builder.AddRabbitMQClient("messaging");
 builder.AddMongoDBClient("MongoConnection");
 
 builder.Services.AddFastEndpoints()

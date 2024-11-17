@@ -7,8 +7,8 @@ using PhotoSearch.Worker.Clients;
 
 namespace PhotoSearch.Worker.Consumers;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public class SummarisePhotosConsumer(
-    IOllamaApiClient ollamaApiClient,
     IMongoCollection<Photo> collection, 
     IEnumerable<IPhotoSummaryClient> photoSummaryClients,
     ILogger<ImportPhotosConsumer> logger) : IConsumer<SummarisePhotos>
@@ -16,27 +16,23 @@ public class SummarisePhotosConsumer(
     public async Task Consume(ConsumeContext<SummarisePhotos> context)
     {
         var photos = await GetPhotosToUpdate(context.Message.ImagePaths);
-        ollamaApiClient.SelectedModel = context.Message.ModelName;
-        int updateCount = 0;
+        var updateCount = 0;
         if (photos == null || photos.Count == 0)
         {
             return;
         }
         logger.LogInformation("Summarising {COUNT} photos using {Model}.",photos.Count,
             context.Message.ModelName);
-        foreach (var filePath in context.Message.ImagePaths)
+        foreach (var filePath in context.Message.ImagePaths.Where(filePath => photos.Any(p => p.ExactPath == filePath)))
         {
-            if (photos.All(p => p.ExactPath != filePath))
-            {
-                continue;
-            }
-
             try
             {
                 var photo = photos.SingleOrDefault(x=>x.ExactPath==filePath);
                 if(photo==null)
                     continue;
-                var summary = await SummarisePhoto(context.Message.ModelName, filePath);
+                
+                var address = photo.LocationInformation?.Features?.Select(x => x.Properties.DisplayName).FirstOrDefault();
+                var summary = await SummarisePhoto(context.Message.ModelName, filePath, address);
                 photo!.PhotoSummaries ??=  new Dictionary<string, PhotoSummary>();
                 if (photo?.PhotoSummaries.ContainsKey(context.Message.ModelName)??false)
                 {
@@ -61,7 +57,7 @@ public class SummarisePhotosConsumer(
             context.Message.ModelName);
     }
 
-    private async Task<PhotoSummary?> SummarisePhoto(string modelName, string filePath)
+    private async Task<PhotoSummary?> SummarisePhoto(string modelName, string filePath, string address)
     {
         var client = photoSummaryClients.FirstOrDefault(x => x.CanHandle(modelName));
         if (client == null)
@@ -69,7 +65,7 @@ public class SummarisePhotosConsumer(
             logger.LogError("There is no summary client registered for model {Model}",modelName);
         }
         
-        return await client!.SummarisePhoto(modelName, filePath);
+        return await client!.SummarisePhoto(modelName, filePath, address);
     }
     
     private async Task<List<Photo>?> GetPhotosToUpdate(List<string> imagePaths)

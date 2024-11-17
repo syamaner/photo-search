@@ -1,46 +1,55 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
+using Microsoft.Extensions.DependencyInjection;
 using PhotoSearch.AppHost;
+using PhotoSearch.AppHost.DashboardCommands;
 using PhotoSearch.Ollama;
 using PhotoSearch.Nominatim;
 using PhotoSearch.MapTileServer;
 
 var portMappings = new Dictionary<string,PortMap>
 {
-    { "MapTileService", new PortMap(8080, 80, "MapTileService")},
-    { "RabbitMQ", new PortMap(5672, 5672, "RabbitMQ")},
-    { "RabbitMQManagement", new PortMap(15672, 15672, "RabbitMQManagement")},
-    { "Nominatim", new PortMap(8180, 8080, "Nominatim")}, 
-    { "Ollama",  new PortMap(11438, 11434, "Ollama")},
-    { "MongoDB",  new PortMap(27019, 27019, "MongoDB")},
-    { "Florence3Api",  new PortMap(8111, 8111, "Florence3Api", false)},
-    { "FEPort",  new PortMap(3333, 3333, "FEPort", false)}
+    { "MapTileService", new PortMap(8080, 80)},
+    { "RabbitMQ", new PortMap(5672, 5672)},
+    { "RabbitMQManagement", new PortMap(15672, 15672)},
+    { "Nominatim", new PortMap(8180, 8080)}, 
+    { "Ollama",  new PortMap(11438, 11434)},
+    { "MongoDB",  new PortMap(27019, 27019)},
+    { "Florence3Api",  new PortMap(8111, 8111, false)},
+    { "FEPort",  new PortMap(3333, 3333, false)}
 };
 
 var builder = DistributedApplication.CreateBuilder(args);
+
 var dockerHost = StartupHelper.GetDockerHostValue();
 var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
 var ollamaVisionModel =  Environment.GetEnvironmentVariable("OLLAMA_MODEL");
 var mapDownloadUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL") 
-    ?? "http://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
+    ?? "https://download.geofabrik.de/europe/switzerland-latest.osm.pbf";
 
 var mongo = builder.AddMongo("mongo",
-    !string.IsNullOrWhiteSpace(dockerHost), port: portMappings["MongoDB"].PublicPort);
+    !string.IsNullOrWhiteSpace(dockerHost), port: portMappings["MongoDB"].PublicPort)    
+    .WithLifetime(ContainerLifetime.Persistent);
+
 var mongodb = mongo.AddDatabase("photo-search");
 
-var osmTileService =builder.AddMapTileServer(!string.IsNullOrWhiteSpace(dockerHost),
-    hostPort: portMappings["MapTileService"].PublicPort, containerPort: portMappings["MapTileService"].PrivatePort);
+var osmTileService = builder
+    .AddMapTileServer(!string.IsNullOrWhiteSpace(dockerHost),
+        hostPort: portMappings["MapTileService"].PublicPort,
+        containerPort: portMappings["MapTileService"].PrivatePort);
 
 var ollamaContainer = builder.AddOllama(hostIpAddress: dockerHost, modelName: ollamaVisionModel!,
     useGpu: enableNvidiaDocker, hostPort: portMappings["Ollama"].PublicPort,
-    ollamaContainerPort: portMappings["Ollama"].PrivatePort);
+    ollamaContainerPort: portMappings["Ollama"].PrivatePort).WithOllamaDownloadCommand();
 
 var nominatimContainer =
     builder.AddNominatim(name: "Nominatim",
             isRemoteDockerHost: !string.IsNullOrWhiteSpace(dockerHost),
-            mapUrl: mapDownloadUrl!,
+            mapUrl: mapDownloadUrl,
             hostPort: portMappings["Nominatim"].PublicPort,
             containerPort: portMappings["Nominatim"].PrivatePort)
         .WithPersistence();
@@ -58,23 +67,33 @@ var florence3Api = builder
     .WithEnvironment("PYTHONUNBUFFERED", "0")
     .WithEnvironment("ASPIRE_ALLOW_UNSECURED_TRANSPORT", "true");
 
+var openai = builder.AddConnectionString("openaiConnection");
+
+var openAIKey = builder.AddParameter("OpenAIKey", secret: true);
+
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice") 
     .WithReference(ollamaContainer)
-    .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL","http://localhost:21268")
-    .WaitFor(messaging)
     .WithReference(mongodb)
-    .WithReference(messaging);
+    .WithReference(messaging)
+    .WithReference(openai)
+    .WithSummariseCommand()
+    .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL","http://localhost:21268")
+    .WithEnvironment("OpenAIKey",openAIKey.Resource.Value)
+    .WaitFor(messaging);
 
-var backgroundWorker = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice")
+var unused = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice")
+    .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL", "http://localhost:21268")
     .WithReference(ollamaContainer)
     .WithReference(florence3Api)
-    .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL","http://localhost:21268")
     .WithReference(nominatimContainer)
-    .WithReference(messaging)
     .WithReference(mongodb)
+    .WithReference(messaging)
+    .WithReference(openai)
+    .WithEnvironment("OpenAIKey",openAIKey.Resource.Value)
     .WaitFor(ollamaContainer)
+    .WaitFor(florence3Api)
     .WaitFor(nominatimContainer)
-    .WaitFor(osmTileService)
+    .WaitFor(mongodb)
     .WaitFor(messaging);
 
 builder.AddNpmApp("stencil", "../photosearch-frontend")
@@ -112,4 +131,4 @@ if (!string.IsNullOrWhiteSpace(dockerHost))
 
 builder.Build().Run();
 
-public record PortMap(int PublicPort, int PrivatePort, string Name, bool PortForward = true);
+public record PortMap(int PublicPort, int PrivatePort, bool PortForward = true);

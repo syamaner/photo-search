@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -10,8 +11,10 @@ public class Florence2PhotoSummaryClient(HttpClient  httpClient) : IPhotoSummary
 {
     private static readonly string[] SupportedModels = ["Florence-2-large","Florence-2-large-ft","Florence-2-base-ft","Florence-2-base"];
 
-    public async Task<PhotoSummary> SummarisePhoto(string modelName, string imagePath)
+    public async Task<PhotoSummary> SummarisePhoto(string modelName, string imagePath, string address)
     {
+        
+        var stopwath = new Stopwatch();
         using var image = new MagickImage(imagePath);
         var imageBytes = image.ToByteArray();
         var base64Image = Convert.ToBase64String(imageBytes);
@@ -28,9 +31,15 @@ public class Florence2PhotoSummaryClient(HttpClient  httpClient) : IPhotoSummary
         return new PhotoSummary()
         {
             Description = response?.Summary!,
-            Model = modelName,
+            //Model = modelName,
             ObjectClasses = response!.Objects?.Distinct()?.ToList(),
-            DateGenerated = DateTimeOffset.Now
+            DateGenerated = DateTimeOffset.Now,
+            PromptSummary =
+                new PromptSummary(["todo"], modelName, stopwath.Elapsed,
+                    new Dictionary<string, object>()
+                    {
+                        ["todo"] = "todo"
+                    })
         };
     }
 

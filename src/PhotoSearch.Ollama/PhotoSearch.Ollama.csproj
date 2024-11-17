@@ -8,8 +8,8 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Aspire.Hosting" Version="9.0.0-rc.1.24511.1" />
-        <PackageReference Include="OllamaSharp" Version="4.0.3" />
+        <PackageReference Include="Aspire.Hosting" Version="9.0.0" />
+        <PackageReference Include="OllamaSharp" Version="4.0.7" />
     </ItemGroup>
     
 </Project>

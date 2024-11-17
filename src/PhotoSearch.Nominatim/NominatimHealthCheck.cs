@@ -20,8 +20,8 @@ public class NominatimHealthCheck : IHealthCheck
         var ready = await IsServerReady(cancellationToken);
         Console.WriteLine(ready ? "Nominatim container is ready." : "Nominatim container is not ready yet.");
         return ready
-            ? HealthCheckResult.Healthy("Nominatim is ready")
-            : HealthCheckResult.Unhealthy("Nominatim is not ready yet");
+            ? HealthCheckResult.Healthy()
+            : HealthCheckResult.Unhealthy();
     }
 
     private async Task<bool> IsServerReady(CancellationToken cancellationToken = default)
@@ -31,7 +31,7 @@ public class NominatimHealthCheck : IHealthCheck
         {
             var status =
                 await _httpClient.GetFromJsonAsync<NominatimStatusResponse>("/status?format=json", cancellationToken);
-            if (status == null || status.Status != 0)
+            if (status is not { Status: 0 })
             {
                 return false;
             }

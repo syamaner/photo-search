@@ -15,7 +15,7 @@ public static class OllamaResourceBuilderExtensions
         string modelName,
         string hostIpAddress= "",
         bool useGpu = true,
-        string ollamaTag = "latest",
+        string ollamaTag = "0.4.2",
         string name = "Ollama", 
         int? hostPort = 11438, 
         int ollamaContainerPort = 11434)
@@ -30,7 +30,8 @@ public static class OllamaResourceBuilderExtensions
             .PublishAsContainer()
             .WithHttpEndpoint(hostPort, ollamaContainerPort, isProxied:false)
             .WithHealthCheck("ollama-healthcheck")
-            .WithVolume("ollamas", "/root/.ollama")          
+            .WithVolume("ollamas", "/root/.ollama") 
+            .WithLifetime(ContainerLifetime.Persistent)         
             .WithExternalHttpEndpoints();
         
         if (useGpu)

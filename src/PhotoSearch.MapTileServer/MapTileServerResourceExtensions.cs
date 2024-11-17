@@ -17,7 +17,6 @@ public static class MapTileServerResourceExtensions
     {
         var mapTileServerResource = new MapTileServerResource(name, hostPort!.Value);
 
-        builder.Services.TryAddLifecycleHook<MapTileServerResourceLifecycleHook>();
         builder.Services.AddHealthChecks().AddTypeActivatedCheck<MapTileServerHealthCheck>("maptile-healthcheck",mapTileServerResource.ConnectionStringExpression.ValueExpression);
 
         
@@ -33,6 +32,7 @@ public static class MapTileServerResourceExtensions
             .WithEndpoint(hostPort, containerPort, "http",
                 name:"http",
                 isProxied: false)
+            .WithLifetime(ContainerLifetime.Persistent)
             .PublishAsContainer();
 
  

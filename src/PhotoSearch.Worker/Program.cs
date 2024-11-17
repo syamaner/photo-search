@@ -12,21 +12,27 @@ builder.AddServiceDefaults();
 
 builder.Services.AddSingleton<IPhotoSummaryClient, OllamaPhotoSummaryClient>();
 builder.Services.AddTransient<IPhotoImporter, PhotoImporter>();
-
-//builder.Services.AddTransient<IPhotoSummaryClient, Florence2PhotoSummaryClient>();
+builder.Services.AddSingleton<IPhotoSummaryClient, OpenAiPhotoSummaryClient>();
 
 builder.Services.AddHttpClient<IPhotoSummaryClient, Florence2PhotoSummaryClient>((sp, httpClient) =>
 {
     var cs = sp.GetRequiredService<IConfiguration>().GetChildren();
-//private static readonly string? FlorenceUrl = Environment.GetEnvironmentVariable("services__florence2api__http__0");
     var connectionString = sp.GetRequiredService<IConfiguration>().GetSection("services:florence2api:http:0");
-    httpClient.BaseAddress = new Uri(connectionString.Value!);
-    
+    httpClient.BaseAddress = new Uri(connectionString.Value!);    
 });
+
+
 builder.Services.AddSingleton<IOllamaApiClient>(sp =>
 {
     var lamaConnectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Ollama");
-    return new OllamaApiClient(new Uri(lamaConnectionString!));
+    var httpClient = new HttpClient()
+    {
+        Timeout = TimeSpan.FromMinutes(5),
+        BaseAddress = new Uri(lamaConnectionString!)
+    };
+    var client =new OllamaApiClient(httpClient);
+
+    return client;
 });
 
 builder.Services.AddHttpClient<IReverseGeocoder, NominatimReverseGeocoder>((sp, httpClient) =>
@@ -52,6 +58,7 @@ builder.AddMasstransit(configurator =>
 {
     configurator.AddConsumer<ImportPhotosConsumer>();
     configurator.AddConsumer<SummarisePhotosConsumer>();
+    configurator.AddConsumer<BatchSummarisePhotosConsumer>();
 });
 
 var host = builder.Build();
