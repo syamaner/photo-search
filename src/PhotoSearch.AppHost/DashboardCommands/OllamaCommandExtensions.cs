@@ -42,12 +42,13 @@ internal static class OllamaCommandExtensions
         
         var logger = context.ServiceProvider.GetRequiredService<ILogger<Program>>();
         
-        ResourceNotificationService notificationService = context.ServiceProvider.GetRequiredService<ResourceNotificationService>();
+        var notificationService = context.ServiceProvider.GetRequiredService<ResourceNotificationService>();
         
         var url = builder.Resource.GetEndpoints().First().Url;
         var ollamaClient = new OllamaApiClient(new Uri(url!));
         var modelNames = Environment.GetEnvironmentVariable("OLLAMA_MODELS_TO_DOWNLOAD")
             ?.Split([','], StringSplitOptions.RemoveEmptyEntries);
+        
         if (modelNames == null || modelNames.Length == 0)
         {
             return new ExecuteCommandResult()

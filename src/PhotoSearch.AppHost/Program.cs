@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
-using Microsoft.Extensions.DependencyInjection;
 using PhotoSearch.AppHost;
 using PhotoSearch.AppHost.DashboardCommands;
 using PhotoSearch.Ollama;
@@ -20,7 +18,8 @@ var portMappings = new Dictionary<string,PortMap>
     { "Ollama",  new PortMap(11438, 11434)},
     { "MongoDB",  new PortMap(27019, 27019)},
     { "Florence3Api",  new PortMap(8111, 8111, false)},
-    { "FEPort",  new PortMap(3333, 3333, false)}
+    { "FEPort",  new PortMap(3333, 3333, false)},
+    { "JupyterPort",  new PortMap(8888, 8888, true)}
 };
 
 var builder = DistributedApplication.CreateBuilder(args);
@@ -70,6 +69,10 @@ var florence3Api = builder
 var openai = builder.AddConnectionString("openaiConnection");
 
 var openAIKey = builder.AddParameter("OpenAIKey", secret: true);
+
+var j = builder.AddJupyter("jupyter", !string.IsNullOrWhiteSpace(dockerHost), "secret",portMappings["JupyterPort"].PublicPort)
+    .WithReference(mongodb);
+
 
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice") 
     .WithReference(ollamaContainer)

@@ -5,6 +5,7 @@ using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
 using HealthChecks.RabbitMQ;
 using Microsoft.Extensions.DependencyInjection;
+using PhotoSearch.AppHost.DashboardCommands;
 using PhotoSearch.Ollama;
 
 namespace PhotoSearch.AppHost;
@@ -36,7 +37,29 @@ public static class AppHostExtensions
         
         return rabbitMq;
     }
-    
+
+    public static IResourceBuilder<ContainerResource> AddJupyter(this IDistributedApplicationBuilder builder,
+        string name, bool isRemoteDockerHost, string token="secret", int port = 8888)
+    {
+        string image = "quay.io/jupyter/pytorch-notebook";
+        string tag = isRemoteDockerHost ? "cuda12-python-3.11.8" : "latest";
+        var jupyter = builder.AddContainer(name, image)
+            .WithImageTag(tag)  
+            .WithLifetime(ContainerLifetime.Persistent)
+            .WithContainerRuntimeArgs("--entrypoint=start-notebook.sh")
+            .WithArgs($"--NotebookApp.token={token}")
+            .WithHttpEndpoint(port, port, "http", "jupyter",isProxied:false)
+            .WithUploadNoteBookCommand(token, "http://localhost:8888")
+            .WithDownloadNoteBookCommand(token, "http://localhost:8888")
+            .WithExternalHttpEndpoints();
+
+        if(isRemoteDockerHost)
+            jupyter.WithContainerRuntimeArgs("--gpus=all");
+      
+        return jupyter;
+
+    }
+
     public static IResourceBuilder<MongoDBServerResource> AddMongo(this IDistributedApplicationBuilder builder,
         string name, bool isRemoteDockerHost, int port = 27017)
     {
