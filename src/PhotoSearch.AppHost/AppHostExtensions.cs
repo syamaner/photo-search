@@ -1,12 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
 using Aspire.Hosting;
 using Aspire.Hosting.ApplicationModel;
-using HealthChecks.RabbitMQ;
-using Microsoft.Extensions.DependencyInjection;
 using PhotoSearch.AppHost.DashboardCommands;
-using PhotoSearch.Ollama;
 
 namespace PhotoSearch.AppHost;
 
@@ -17,8 +13,6 @@ public static class AppHostExtensions
     {
         var rmqUsername = builder.AddParameter("rmqUsername", secret: true);
         var rmqPassword = builder.AddParameter("rmqPassword", secret: true);
- 
-   
         var rabbitMq = builder.AddRabbitMQ(name, rmqUsername, rmqPassword, ampqPort)
             .WithImageTag("3-management") 
             .WithHttpEndpoint(adminPort, adminPort, "http")
@@ -26,8 +20,6 @@ public static class AppHostExtensions
             .WithExternalHttpEndpoints();
 
         if (!isRemoteDockerHost) return rabbitMq;
-
-
         foreach (var annotation in rabbitMq.Resource.Annotations.Where(x =>
                      x is EndpointAnnotation))
         {
@@ -41,8 +33,8 @@ public static class AppHostExtensions
     public static IResourceBuilder<ContainerResource> AddJupyter(this IDistributedApplicationBuilder builder,
         string name, bool isRemoteDockerHost, string token="secret", int port = 8888)
     {
-        string image = "quay.io/jupyter/pytorch-notebook";
-        string tag = isRemoteDockerHost ? "cuda12-python-3.11.8" : "latest";
+        var image = "quay.io/jupyter/pytorch-notebook";
+        var tag = isRemoteDockerHost ? "cuda12-python-3.11.8" : "latest";
         var jupyter = builder.AddContainer(name, image)
             .WithImageTag(tag)  
             .WithLifetime(ContainerLifetime.Persistent)
@@ -51,8 +43,8 @@ public static class AppHostExtensions
             .WithHttpEndpoint(port, port, "http", "jupyter",isProxied:false)
             .WithUploadNoteBookCommand(token, "http://localhost:8888")
             .WithDownloadNoteBookCommand(token, "http://localhost:8888")
-            .WithExternalHttpEndpoints();
-
+            .WithExternalHttpEndpoints(); 
+        
         if(isRemoteDockerHost)
             jupyter.WithContainerRuntimeArgs("--gpus=all");
       

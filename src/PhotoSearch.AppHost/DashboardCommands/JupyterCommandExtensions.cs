@@ -97,16 +97,16 @@ internal static class JupyterCommandExtensions
         IResourceBuilder<ContainerResource> builder,
         ExecuteCommandContext context, string jupyterToken, string jupyterUrl)
     {
-        using var httpclient = CreateHttpClient(builder, jupyterToken);        
+        using var httpclient = CreateHttpClient(builder, jupyterToken);
         var queryParams = new Dictionary<string, string>()
         {
             { "type", "file" },
             { "format", "text" },
             { "content", "1" }
-        };      
+        };
         var requestUri = QueryHelpers.AddQueryString($"/api/contents/{NotebookFilename}", queryParams);
         var result = await httpclient.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUri));
-        
+
         if (!result.IsSuccessStatusCode)
         {
             var errorMessage = await result.Content.ReadAsStringAsync();
@@ -116,10 +116,10 @@ internal static class JupyterCommandExtensions
                 ErrorMessage = errorMessage
             };
         }
-        
+
         var noteBookContent = await result.Content.ReadAsStringAsync();
         var destination = Path.Combine(Directory.GetCurrentDirectory(), "Notebooks", NotebookFilename);
-        
+
         // only need the content property from the response
         var rootNode = JsonNode.Parse(noteBookContent)!;
         var contentNode = rootNode!["content"]!;
@@ -145,7 +145,7 @@ internal static class JupyterCommandExtensions
             ? ResourceCommandState.Enabled
             : ResourceCommandState.Disabled;
     }
-    
+
     public static IResourceBuilder<ContainerResource> WithDownloadNoteBookCommand(
         this IResourceBuilder<ContainerResource> builder, string jupyterToken, string jupyterUrl)
     {
@@ -159,7 +159,7 @@ internal static class JupyterCommandExtensions
 
         return builder;
     }
-    
+
     private static string Base64Encode(string plainText)
     {
         var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);

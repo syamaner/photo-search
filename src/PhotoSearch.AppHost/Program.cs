@@ -118,6 +118,7 @@ builder.AddNpmApp("stencil", "../photosearch-frontend")
     .WaitFor(nominatimContainer)
     .WaitFor(messaging)
     .PublishAsDockerFile();
+ 
 
 // add ssh_user and ssh_key_file (path to the key file) for ser secrets.
 using var sshUtility = new SShUtility(dockerHost, builder.Configuration["ssh_user"]!, 
@@ -135,5 +136,4 @@ if (!string.IsNullOrWhiteSpace(dockerHost))
 }
 
 builder.Build().Run();
-
 public record PortMap(int PublicPort, int PrivatePort, bool PortForward = true);
