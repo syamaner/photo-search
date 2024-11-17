@@ -1,6 +1,7 @@
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using MongoDB.Driver;
+using OllamaSharp;
 using PhotoSearch.Data.Models;
 using PhotoSearch.ServiceDefaults;
  
@@ -27,6 +28,19 @@ builder.Services.AddScoped<IMongoCollection<Photo>>(x =>
     const string collectionName = "photos";
     var db = mongoClient.GetDatabase("photo-search"); 
     return db.GetCollection<Photo>(collectionName); 
+});
+
+builder.Services.AddSingleton<IOllamaApiClient>(sp =>
+{
+    var lamaConnectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Ollama");
+    var httpClient = new HttpClient()
+    {
+        Timeout = TimeSpan.FromMinutes(5),
+        BaseAddress = new Uri(lamaConnectionString!)
+    };
+    var client =new OllamaApiClient(httpClient);
+
+    return client;
 });
 
 var app = builder.Build();

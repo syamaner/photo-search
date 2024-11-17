@@ -17,7 +17,7 @@ public class ListModelsEndpoint(IOllamaApiClient ollamaApiClient) : EndpointWith
     {
         var response = await ollamaApiClient.ListLocalModelsAsync(c);
         List<string> modelNames = response.Select(x => x.Name).ToList();
-        
+        modelNames.Add("Florence-2-large");
         await SendAsync(modelNames, cancellation: c);    
     }
 }

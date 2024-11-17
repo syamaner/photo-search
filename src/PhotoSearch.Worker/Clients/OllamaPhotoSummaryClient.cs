@@ -31,7 +31,8 @@ public class OllamaPhotoSummaryClient(IOllamaApiClient ollamaApiClient) : IPhoto
 
     public bool CanHandle(string modelName)
     {
-        return SupportedModels.Contains(modelName, StringComparer.OrdinalIgnoreCase);
+ //       return SupportedModels.Contains(modelName, StringComparer.OrdinalIgnoreCase);
+        return SupportedModels.Any(x => modelName.Contains(x, StringComparison.CurrentCultureIgnoreCase));
     }
 
     public async Task<PhotoSummary> SummarisePhoto(string modelName, string imagePath, string address)

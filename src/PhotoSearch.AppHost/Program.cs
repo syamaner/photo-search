@@ -79,6 +79,8 @@ var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice")
     .WithSummariseCommand()
     .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL","http://localhost:21268")
     .WithEnvironment("OpenAIKey",openAIKey.Resource.Value)
+    .WaitFor(ollamaContainer)
+    .WaitFor(mongodb)
     .WaitFor(messaging);
 
 var unused = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice")
