@@ -1,10 +1,11 @@
 @API_HostAddress = http://localhost:5291
 
-GET {{API_HostAddress}}/photos/summarise/{{ollamaModel}}
+GET {{API_HostAddress}}/photos/summarise/{{ollamaModel}}&
 Accept: application/json
 
 ###
-GET {{API_HostAddress}}/photos/summarise/{{florenceModel}}
+GET {{API_HostAddress}}/api/photos/summarise/batch?ModelNames=llama3.2-vision&ModelNames=llava-llama3&ModelNames=llava:13b&ModelNAmes=llava:7b&ModelNames=llava-phi3&ModelNames=Florence-2-large-ft
+
 Accept: application/json
 
 ###
@@ -32,5 +33,7 @@ GET {{API_HostAddress}}/api/photos
 Accept: application/json
 
 ###
- 
+
+GET {{API_HostAddress}}/api/photos/evaluate
+Accept: application/json
 

@@ -34,7 +34,7 @@ var mongo = builder.AddMongo("mongo",
     !string.IsNullOrWhiteSpace(dockerHost), port: portMappings["MongoDB"].PublicPort)    
     .WithLifetime(ContainerLifetime.Persistent);
 
-var mongodb = mongo.AddDatabase("photo-search");
+var mongodb = mongo.AddDatabase("photo-search").WithResetDatabaseCommand();
 
 var osmTileService = builder
     .AddMapTileServer(!string.IsNullOrWhiteSpace(dockerHost),
@@ -70,9 +70,8 @@ var openai = builder.AddConnectionString("openaiConnection");
 
 var openAIKey = builder.AddParameter("OpenAIKey", secret: true);
 
-var j = builder.AddJupyter("jupyter", !string.IsNullOrWhiteSpace(dockerHost), "secret",portMappings["JupyterPort"].PublicPort)
+var jupyterNotebook = builder.AddJupyter("jupyter", !string.IsNullOrWhiteSpace(dockerHost), "secret",portMappings["JupyterPort"].PublicPort)
     .WithReference(mongodb);
-
 
 var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice") 
     .WithReference(ollamaContainer)
@@ -95,6 +94,7 @@ var unused = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice"
     .WithReference(messaging)
     .WithReference(openai)
     .WithEnvironment("OpenAIKey",openAIKey.Resource.Value)
+    .WithEnvironment("ConnectionStrings__ollamaConnection","Endpoint=http://localhost:11438;Key=sk-proj;")
     .WaitFor(ollamaContainer)
     .WaitFor(florence3Api)
     .WaitFor(nominatimContainer)
@@ -103,11 +103,9 @@ var unused = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice"
 
 builder.AddNpmApp("stencil", "../photosearch-frontend")
     .WithReference(apiService)
-    .WithReference(osmTileService) 
-    
+    .WithReference(osmTileService)     
     .WithEnvironment("OTEL_EXPORTER_OTLP_ENDPOINT","http://localhost:16175")
     .WithEnvironment("OTEL_EXPORTER_OTLP_PROTOCOL","http/protobuf")
-
     .WithHttpEndpoint(port: portMappings["FEPort"].PublicPort, 
         targetPort: portMappings["FEPort"].PrivatePort, 
         env: "PORT", 
@@ -135,5 +133,9 @@ if (!string.IsNullOrWhiteSpace(dockerHost))
     } 
 }
 
-builder.Build().Run();
+var b = builder.Build();
+
+b.Run();
+
+//builder.Build().Run();
 public record PortMap(int PublicPort, int PrivatePort, bool PortForward = true);

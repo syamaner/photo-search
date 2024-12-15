@@ -13,7 +13,7 @@ export class AppHome {
 
   @Prop({ mutable: true }) showMessage: boolean = false;
   private handleClick = async () => {
-    const response = await fetch(Env.API_BASE_URL + "/api/photos/summarise/batch?ModelNames=" + this.selectedModel);
+    const response = await fetch(Env.API_BASE_URL + "/api/photos/summarise/" + this.selectedModel);
     if (response.status == 200) {
       this.showMessage = true;
       setTimeout(() => {

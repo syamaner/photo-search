@@ -14,7 +14,7 @@ public class ImportPhotosConsumer(IPhotoImporter photoImporter, IMongoCollection
         
         var photos = await photoImporter.ImportPhotos(context.Message.Directory,existingIds);
 
-        if (photos.Any())
+        if (photos.Count != 0)
         {
             await collection.InsertManyAsync(photos);
             await bus.Publish<PhotoSummary>(new { ImagePaths = photos.Select(p => p.ExactPath).ToArray() });

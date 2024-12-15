@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 using PhotoSearch.Data.GeoJson;
-using ThirdParty.Json.LitJson;
 
 namespace PhotoSearch.Data.Models;
 
@@ -35,7 +33,7 @@ public class Photo
     public int Width { get; init; }
     public int Height { get; init; }
     public long SizeKb { get; init; }
-    
+    public string Base64Data { get; init; }
 
     public Dictionary<string,PhotoSummary>? PhotoSummaries { get; set; } 
 

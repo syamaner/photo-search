@@ -41,8 +41,12 @@ public class BatchSummarisePhotosConsumer(
                     var photo = photos.SingleOrDefault(x => x.ExactPath == photoPath);
                     if (photo == null)
                         continue;
+                    if(photo.PhotoSummaries!=null && photo.PhotoSummaries.ContainsKey(modelName)&& !string.IsNullOrWhiteSpace(photo.PhotoSummaries[modelName].Description))
+                    {
+                        continue;
+                    }
                     var address = photo.LocationInformation?.Features?.Select(x => x.Properties.DisplayName).FirstOrDefault();
-                    var summary = await SummarisePhoto(modelName, photoPath, address);
+                    var summary = await SummarisePhoto(modelName, photoPath, photo.Base64Data,address);
                     photo!.PhotoSummaries ??= new Dictionary<string, PhotoSummary>();
                     if (photo?.PhotoSummaries.ContainsKey(modelName) ?? false)
                     {
@@ -66,8 +70,9 @@ public class BatchSummarisePhotosConsumer(
         }
     }
 
-    private async Task<PhotoSummary?> SummarisePhoto(string modelName, string filePath, string address)
+    private async Task<PhotoSummary?> SummarisePhoto(string modelName, string filePath, string base64Image, string address)
     {
+      //  modelName = "gpt-4o-mini";
         Stopwatch stopwatch = new();
         stopwatch.Start();
         using var summaryActivity = TracingConstants.WorkerActivitySource.StartActivity("Call photoSummaryClients");
@@ -78,7 +83,7 @@ public class BatchSummarisePhotosConsumer(
             return null;
         }
 
-        var results = await client!.SummarisePhoto(modelName, filePath, address);
+        var results = await client!.SummarisePhoto(modelName, filePath, base64Image,address);
         stopwatch.Stop();
         metrics.PhotoSummarised(modelName, 1);
         metrics.PhotoSummaryTiming(modelName, filePath, stopwatch.Elapsed.TotalSeconds);

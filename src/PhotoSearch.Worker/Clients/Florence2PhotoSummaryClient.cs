@@ -11,17 +11,17 @@ public class Florence2PhotoSummaryClient(HttpClient  httpClient) : IPhotoSummary
 {
     private static readonly string[] SupportedModels = ["Florence-2-large","Florence-2-large-ft","Florence-2-base-ft","Florence-2-base"];
 
-    public async Task<PhotoSummary> SummarisePhoto(string modelName, string imagePath, string address)
+    public async Task<PhotoSummary> SummarisePhoto(string modelName, string imagePath, string base64Image, string address)
     {
         
         var stopwath = new Stopwatch();
         using var image = new MagickImage(imagePath);
         var imageBytes = image.ToByteArray();
-        var base64Image = Convert.ToBase64String(imageBytes);
+        var base64String =  !string.IsNullOrWhiteSpace(base64Image) ? base64Image : Convert.ToBase64String(imageBytes);
         var requestBody = new Dictionary<string, string>
         {
             ["imagePath"] = imagePath,
-            ["base64image"] = base64Image
+            ["base64image"] = base64String
         };
         var payload = JsonSerializer.Serialize(requestBody);
         var content = new StringContent(payload, Encoding.UTF8, "application/json");

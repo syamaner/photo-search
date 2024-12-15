@@ -1,6 +1,5 @@
 using MassTransit;
 using MongoDB.Driver;
-using OllamaSharp;
 using PhotoSearch.Common.Contracts;
 using PhotoSearch.Data.Models;
 using PhotoSearch.Worker.Clients;
@@ -32,7 +31,7 @@ public class SummarisePhotosConsumer(
                     continue;
                 
                 var address = photo.LocationInformation?.Features?.Select(x => x.Properties.DisplayName).FirstOrDefault();
-                var summary = await SummarisePhoto(context.Message.ModelName, filePath, address);
+                var summary = await SummarisePhoto(context.Message.ModelName, filePath, photo.Base64Data,address);
                 photo!.PhotoSummaries ??=  new Dictionary<string, PhotoSummary>();
                 if (photo?.PhotoSummaries.ContainsKey(context.Message.ModelName)??false)
                 {
@@ -57,7 +56,7 @@ public class SummarisePhotosConsumer(
             context.Message.ModelName);
     }
 
-    private async Task<PhotoSummary?> SummarisePhoto(string modelName, string filePath, string address)
+    private async Task<PhotoSummary?> SummarisePhoto(string modelName, string filePath, string base64Image, string address)
     {
         var client = photoSummaryClients.FirstOrDefault(x => x.CanHandle(modelName));
         if (client == null)
@@ -65,7 +64,7 @@ public class SummarisePhotosConsumer(
             logger.LogError("There is no summary client registered for model {Model}",modelName);
         }
         
-        return await client!.SummarisePhoto(modelName, filePath, address);
+        return await client!.SummarisePhoto(modelName, filePath,  base64Image, address);
     }
     
     private async Task<List<Photo>?> GetPhotosToUpdate(List<string> imagePaths)

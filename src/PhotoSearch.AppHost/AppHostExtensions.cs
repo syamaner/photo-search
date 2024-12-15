@@ -16,7 +16,7 @@ public static class AppHostExtensions
         var rabbitMq = builder.AddRabbitMQ(name, rmqUsername, rmqPassword, ampqPort)
             .WithImageTag("3-management") 
             .WithHttpEndpoint(adminPort, adminPort, "http")
-            .WithLifetime(ContainerLifetime.Persistent)
+            .WithLifetime(ContainerLifetime.Session)
             .WithExternalHttpEndpoints();
 
         if (!isRemoteDockerHost) return rabbitMq;

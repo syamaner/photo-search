@@ -42,45 +42,39 @@ export default async () => {
     resource: new Resource(attributes),
   });
 
-  // provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
   provider.addSpanProcessor(new SimpleSpanProcessor(new OTLPTraceExporter(otlpOptions)));
 
   provider.register({
     contextManager: new StackContextManager(),
   });
 
-  // Registering instrumentations
   registerInstrumentations({
     instrumentations: [
-      // new DocumentLoadInstrumentation(),
 
-    getWebAutoInstrumentations({      // load custom configuration for xml-http-request instrumentation
-      '@opentelemetry/instrumentation-xml-http-request': {
-        clearTimingResources: true,
-      }}),
+      getWebAutoInstrumentations({
+        '@opentelemetry/instrumentation-xml-http-request': {
+          clearTimingResources: true,
+        }
+      }),
       new LongTaskInstrumentation({
         observerCallback: (span, longtaskEvent) => {
           span.setAttribute('location.pathname', window.location.pathname)
         }
 
       }),
-      // new UserInteractionInstrumentation(),
-      // new XMLHttpRequestInstrumentation({
-      //   propagateTraceHeaderCorsUrls: [new RegExp('\\/api\\/*')], // Propagate trace header to all URLs
-      // }),
       new FetchInstrumentation({
-        propagateTraceHeaderCorsUrls: [new RegExp('\\/api\\/*')], // Propagate trace header to all URLs
-        ignoreUrls: [new RegExp('\\/tile\\/*')], // Ignore all URLs
+        propagateTraceHeaderCorsUrls: [new RegExp('\\/api\\/*')],
+        ignoreUrls: [new RegExp('\\/tile\\/*')],
       })],
   });
 
   function parseDelimitedValues(s) {
-    const headers = s.split(','); // Split by comma
+    const headers = s.split(',');
     const result = {};
 
     headers.forEach(header => {
-      const [key, value] = header.split('='); // Split by equal sign
-      result[key.trim()] = value.trim(); // Add to the object, trimming spaces
+      const [key, value] = header.split('=');
+      result[key.trim()] = value.trim();
     });
 
 

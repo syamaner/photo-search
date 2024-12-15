@@ -8,3 +8,5 @@ public record SummarisePhotos(List<string> ImagePaths, string ModelName);
 public record BatchSummarisePhotos(List<string> ModelNames);
 
 public record SummarisePhotosFromDirectory(string Directory, string ModelName);
+
+public record EvaluateModelSummaries();

@@ -9,8 +9,8 @@ namespace PhotoSearch.Common;
 
 public class PhotoImporter(ILogger<PhotoImporter> logger, IReverseGeocoder reverseGeocoder) : IPhotoImporter
 {
-    private readonly List<string> _fileExtensionsToInclude = ["jpg"]; 
-
+    private readonly List<string> _fileExtensionsToInclude = ["jpg"];
+    private const uint ThumbnailWidth = 640, ThumbnailHeight = 800;
     public async Task<List<Photo>> ImportPhotos(string baseDirectory, List<string> existingIds)
     {
         var photos = new List<Photo>();
@@ -55,7 +55,8 @@ public class PhotoImporter(ILogger<PhotoImporter> logger, IReverseGeocoder rever
             Longitude = gpsLocation?.Longitude,
             ImportedDateUtc = DateTime.UtcNow,
             FileType = new FileInfo(fullPath).Extension,
-            CaptureDateUtc = MetadataHelper.GetImageCaptureTime(metadata)
+            CaptureDateUtc = MetadataHelper.GetImageCaptureTime(metadata),
+            Base64Data = await CreateThumbnailBase64(fullPath)
         };
         if (photo is { Latitude: not null, Longitude: not null })
         {
@@ -81,6 +82,21 @@ public class PhotoImporter(ILogger<PhotoImporter> logger, IReverseGeocoder rever
         }
     }
     
+  private async Task<string> CreateThumbnailBase64(string fullPath)
+    {
+        using var image = new MagickImage(fullPath);
+        using var thumbnail = image.Clone();
+        thumbnail.Resize(new MagickGeometry(ThumbnailWidth, ThumbnailHeight)
+        {
+            IgnoreAspectRatio = false,
+            Greater = false // Only shrink if larger than dimensions
+        });
+        thumbnail.Format = MagickFormat.Jpg;
+        using var memStream = new MemoryStream();
+        await thumbnail.WriteAsync(memStream);
+        return Convert.ToBase64String(memStream.ToArray());
+    }
+
     private IEnumerable<string> GetImageFiles(string baseDirectory)
     {
         return Directory.EnumerateFiles(baseDirectory, "*", SearchOption.AllDirectories).Where(fileName =>
