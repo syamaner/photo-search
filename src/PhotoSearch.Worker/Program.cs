@@ -1,11 +1,11 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using MongoDB.Driver;
-using OllamaSharp;
 using OpenAI;
 using PhotoSearch.Common;
 using PhotoSearch.Data.Models;
 using PhotoSearch.ServiceDefaults;
+using PhotoSearch.Worker;
 using PhotoSearch.Worker.Clients;
 using PhotoSearch.Worker.Consumers;
 using StringWithQualityHeaderValue = System.Net.Http.Headers.StringWithQualityHeaderValue;
@@ -13,13 +13,10 @@ using StringWithQualityHeaderValue = System.Net.Http.Headers.StringWithQualityHe
 var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
- 
-builder.AddKeyedOpenAIClient("openaiConnection");
- 
-
-builder.Services.AddKeyedSingleton<OpenAIClient>("ollamaConnection", (sp, o) => {
-    var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Ollama");
-    return new OpenAIClient(new ApiKeyCredential("fgxgsdf"), new OpenAIClientOptions()
+builder.AddKeyedOpenAIClient(Constants.OpeanAiConnectionName);
+builder.Services.AddKeyedSingleton<OpenAIClient>(Constants.OllamaConnectionStringName, (sp, _) => {
+    var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString(Constants.OllamaConnectionStringName);
+    return new OpenAIClient(new ApiKeyCredential("key_not_required"), new OpenAIClientOptions()
     {
         Endpoint = new Uri(connectionString + "/v1"),
         NetworkTimeout = TimeSpan.FromSeconds(25),
@@ -27,11 +24,11 @@ builder.Services.AddKeyedSingleton<OpenAIClient>("ollamaConnection", (sp, o) => 
     });
 });
 
-builder.Services.AddSingleton<IPhotoSummaryClient, OllamaPhotoSummaryClient>();
 builder.Services.AddTransient<IPhotoImporter, PhotoImporter>();
-builder.Services.AddSingleton<IPhotoSummaryClient, OpenAiPhotoSummaryClient>();
 builder.Services.AddTransient<IPhotoSummaryEvaluator, OpenAiPhotoSummaryEvaluationClient>();
 
+builder.Services.AddSingleton<IPhotoSummaryClient, OllamaPhotoSummaryClient>();
+builder.Services.AddSingleton<IPhotoSummaryClient, OpenAiPhotoSummaryClient>();
 builder.Services.AddHttpClient<IPhotoSummaryClient, Florence2PhotoSummaryClient>((sp, httpClient) =>
 {
     var connectionString = sp.GetRequiredService<IConfiguration>().GetSection("services:florence2api:http:0");

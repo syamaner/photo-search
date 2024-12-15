@@ -37,7 +37,7 @@ public static class AppHostExtensions
         var tag = isRemoteDockerHost ? "cuda12-python-3.11.8" : "latest";
         var jupyter = builder.AddContainer(name, image)
             .WithImageTag(tag)  
-            .WithLifetime(ContainerLifetime.Persistent)
+            .WithLifetime(ContainerLifetime.Session)
             .WithContainerRuntimeArgs("--entrypoint=start-notebook.sh")
             .WithArgs($"--NotebookApp.token={token}")
             .WithHttpEndpoint(port, port, "http", "jupyter",isProxied:false)

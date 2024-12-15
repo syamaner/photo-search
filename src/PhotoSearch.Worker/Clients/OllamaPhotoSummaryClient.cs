@@ -7,7 +7,7 @@ using PhotoSearch.Data.Models;
 
 namespace PhotoSearch.Worker.Clients;
 
-public class OllamaPhotoSummaryClient([FromKeyedServices("ollamaConnection")]OpenAIClient client) : IPhotoSummaryClient
+public class OllamaPhotoSummaryClient([FromKeyedServices(Constants.OllamaConnectionStringName)]OpenAIClient client) : IPhotoSummaryClient
 {
     private static readonly string[] SupportedModels =
         ["llava-phi3", "llava:7b", "llava:13b", "bakllava", "llava-llama3", "llama3.2-vision"];
@@ -36,9 +36,8 @@ public class OllamaPhotoSummaryClient([FromKeyedServices("ollamaConnection")]Ope
     public async Task<PhotoSummary> SummarisePhoto(string modelName, string imagePath, string base64Image,
         string address)
     {
-        var stopWath = new Stopwatch();
-        stopWath.Start();
-        // Convert base64 to image, resize, and convert back
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
         byte[] imageBytes;
         if (!string.IsNullOrWhiteSpace(base64Image))
         {
@@ -54,12 +53,12 @@ public class OllamaPhotoSummaryClient([FromKeyedServices("ollamaConnection")]Ope
         using var memStream = new MemoryStream();
         await resizedImage.WriteAsync(memStream);
 
-        var img = ChatMessageContentPart.CreateImagePart(new BinaryData(memStream.ToArray()), "image/jpeg",
+        var imagePart = ChatMessageContentPart.CreateImagePart(new BinaryData(memStream.ToArray()), "image/jpeg",
             ChatImageDetailLevel.Auto);
         List<ChatMessage> messages =
         [
             new SystemChatMessage(SystemPrompt),
-            new UserChatMessage(string.Format(PromptSummary, address), img)
+            new UserChatMessage(string.Format(PromptSummary, address), imagePart)
         ];
         var options = new ChatCompletionOptions()
         {
@@ -73,8 +72,9 @@ public class OllamaPhotoSummaryClient([FromKeyedServices("ollamaConnection")]Ope
         messages =
         [
             new SystemChatMessage(SystemPrompt),
-            new UserChatMessage(PromptList, img)
+            new UserChatMessage(PromptList, imagePart)
         ];
+        
         options = new ChatCompletionOptions()
         {
             Temperature = 0.6f,
@@ -106,7 +106,7 @@ public class OllamaPhotoSummaryClient([FromKeyedServices("ollamaConnection")]Ope
             Categories = categories!.Take(10).ToList()!,
             DateGenerated = DateTimeOffset.Now,
             PromptSummary =
-                new PromptSummary([PromptSummary, SystemPrompt], modelName, stopWath.Elapsed,
+                new PromptSummary([PromptSummary, SystemPrompt], modelName, stopwatch.Elapsed,
                     new Dictionary<string, object>()
                     {
                         [nameof(options.Temperature)] = options.Temperature

@@ -12,9 +12,8 @@ public class Florence2PhotoSummaryClient(HttpClient  httpClient) : IPhotoSummary
     private static readonly string[] SupportedModels = ["Florence-2-large","Florence-2-large-ft","Florence-2-base-ft","Florence-2-base"];
 
     public async Task<PhotoSummary> SummarisePhoto(string modelName, string imagePath, string base64Image, string address)
-    {
-        
-        var stopwath = new Stopwatch();
+    {        
+        var stopwatch = new Stopwatch();
         using var image = new MagickImage(imagePath);
         var imageBytes = image.ToByteArray();
         var base64String =  !string.IsNullOrWhiteSpace(base64Image) ? base64Image : Convert.ToBase64String(imageBytes);
@@ -23,9 +22,9 @@ public class Florence2PhotoSummaryClient(HttpClient  httpClient) : IPhotoSummary
             ["imagePath"] = imagePath,
             ["base64image"] = base64String
         };
-        var payload = JsonSerializer.Serialize(requestBody);
-        var content = new StringContent(payload, Encoding.UTF8, "application/json");
-        var result = await httpClient.PostAsync($"/api/summarise/{imagePath.Replace("/", "-")}", content);
+        var requestPayload = JsonSerializer.Serialize(requestBody);
+        var requestContent = new StringContent(requestPayload, Encoding.UTF8, "application/json");
+        var result = await httpClient.PostAsync($"/api/summarise/{imagePath.Replace("/", "-")}", requestContent);
 
         var response = await result.Content.ReadFromJsonAsync<FlorenceResponse>();
         return new PhotoSummary()
@@ -35,7 +34,7 @@ public class Florence2PhotoSummaryClient(HttpClient  httpClient) : IPhotoSummary
             ObjectClasses = response!.Objects?.Distinct()?.ToList(),
             DateGenerated = DateTimeOffset.Now,
             PromptSummary =
-                new PromptSummary(["todo"], modelName, stopwath.Elapsed,
+                new PromptSummary(["todo"], modelName, stopwatch.Elapsed,
                     new Dictionary<string, object>()
                     {
                         ["todo"] = "todo"

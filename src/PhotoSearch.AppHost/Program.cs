@@ -32,7 +32,7 @@ var mapDownloadUrl = Environment.GetEnvironmentVariable("NOMINATIM_MAP_URL")
 
 var mongo = builder.AddMongo("mongo",
     !string.IsNullOrWhiteSpace(dockerHost), port: portMappings["MongoDB"].PublicPort)    
-    .WithLifetime(ContainerLifetime.Persistent);
+    .WithLifetime(ContainerLifetime.Session);
 
 var mongodb = mongo.AddDatabase("photo-search");//.WithResetDatabaseCommand();
 
