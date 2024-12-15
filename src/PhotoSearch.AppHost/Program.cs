@@ -66,7 +66,7 @@ var florence3Api = builder
     .WithEnvironment("PYTHONUNBUFFERED", "0")
     .WithEnvironment("ASPIRE_ALLOW_UNSECURED_TRANSPORT", "true");
 
-var openai = builder.AddConnectionString("openaiConnection");
+var openaiConnection = builder.AddConnectionString("openaiConnection");
 
 var openAIKey = builder.AddParameter("OpenAIKey", secret: true);
 
@@ -77,7 +77,7 @@ var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice")
     .WithReference(ollamaContainer)
     .WithReference(mongodb)
     .WithReference(messaging)
-    .WithReference(openai)
+    .WithReference(openaiConnection)
     .WithSummariseCommand()
     .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL","http://localhost:21268")
     .WithEnvironment("OpenAIKey",openAIKey.Resource.Value)
@@ -92,7 +92,7 @@ var unused = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice"
     .WithReference(nominatimContainer)
     .WithReference(mongodb)
     .WithReference(messaging)
-    .WithReference(openai)
+    .WithReference(openaiConnection)
     .WithEnvironment("OpenAIKey",openAIKey.Resource.Value)
     .WaitFor(ollamaContainer)
     .WaitFor(florence3Api)

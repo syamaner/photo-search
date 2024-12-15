@@ -60,7 +60,7 @@ public class OpenAiPhotoSummaryEvaluationClient([FromKeyedServices("openaiConnec
                                                   """),
                 jsonSchemaIsStrict: true)
         };
-
+        await Task.Delay(20);
         var completion = await client.GetChatClient("gpt-4o").CompleteChatAsync(messages, options);
         using var structuredJson = JsonDocument.Parse(completion.Value.Content[0].Text);
         var score = structuredJson.RootElement.GetProperty("Score").GetDouble();

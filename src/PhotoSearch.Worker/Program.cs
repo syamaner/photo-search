@@ -12,7 +12,10 @@ using StringWithQualityHeaderValue = System.Net.Http.Headers.StringWithQualityHe
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
+
+ 
 builder.AddKeyedOpenAIClient("openaiConnection");
+ 
 
 builder.Services.AddKeyedSingleton<OpenAIClient>("ollamaConnection", (sp, o) => {
     var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Ollama");
@@ -24,23 +27,10 @@ builder.Services.AddKeyedSingleton<OpenAIClient>("ollamaConnection", (sp, o) => 
     });
 });
 
-
-builder.Services.AddSingleton<IOllamaApiClient>(sp =>
-{
-    var lamaConnectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Ollama");
-    var httpClient = new HttpClient()
-    {
-        Timeout = TimeSpan.FromMinutes(5),
-        BaseAddress = new Uri(lamaConnectionString!)
-    };
-    var client =new OllamaApiClient(httpClient);
-
-    return client;
-});
-
 builder.Services.AddSingleton<IPhotoSummaryClient, OllamaPhotoSummaryClient>();
 builder.Services.AddTransient<IPhotoImporter, PhotoImporter>();
 builder.Services.AddSingleton<IPhotoSummaryClient, OpenAiPhotoSummaryClient>();
+builder.Services.AddTransient<IPhotoSummaryEvaluator, OpenAiPhotoSummaryEvaluationClient>();
 
 builder.Services.AddHttpClient<IPhotoSummaryClient, Florence2PhotoSummaryClient>((sp, httpClient) =>
 {
@@ -72,6 +62,7 @@ builder.AddMasstransit(configurator =>
     configurator.AddConsumer<ImportPhotosConsumer>();
     configurator.AddConsumer<SummarisePhotosConsumer>();
     configurator.AddConsumer<BatchSummarisePhotosConsumer>();
+    configurator.AddConsumer<EvaluateModelPerformanceConsumer>();
 });
 
 var host = builder.Build();

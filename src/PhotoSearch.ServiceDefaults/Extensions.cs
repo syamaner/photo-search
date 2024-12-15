@@ -50,7 +50,7 @@ public static class Extensions
         //     options.AllowedSchemes = ["https"];
         // });
 
-        builder.AddOpenAIClient("openaiConnection",  settings => settings.DisableTracing = false);
+        /*builder.AddOpenAIClient("openaiConnection",  settings => settings.DisableTracing = false);*/
         return builder;
     }
 
