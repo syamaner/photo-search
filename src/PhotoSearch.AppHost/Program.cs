@@ -34,7 +34,7 @@ var mongo = builder.AddMongo("mongo",
     !string.IsNullOrWhiteSpace(dockerHost), port: portMappings["MongoDB"].PublicPort)    
     .WithLifetime(ContainerLifetime.Persistent);
 
-var mongodb = mongo.AddDatabase("photo-search").WithResetDatabaseCommand();
+var mongodb = mongo.AddDatabase("photo-search");//.WithResetDatabaseCommand();
 
 var osmTileService = builder
     .AddMapTileServer(!string.IsNullOrWhiteSpace(dockerHost),
@@ -94,7 +94,6 @@ var unused = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice"
     .WithReference(messaging)
     .WithReference(openai)
     .WithEnvironment("OpenAIKey",openAIKey.Resource.Value)
-    .WithEnvironment("ConnectionStrings__ollamaConnection","Endpoint=http://localhost:11438;Key=sk-proj;")
     .WaitFor(ollamaContainer)
     .WaitFor(florence3Api)
     .WaitFor(nominatimContainer)
@@ -133,9 +132,5 @@ if (!string.IsNullOrWhiteSpace(dockerHost))
     } 
 }
 
-var b = builder.Build();
-
-b.Run();
-
-//builder.Build().Run();
+builder.Build().Run();
 public record PortMap(int PublicPort, int PrivatePort, bool PortForward = true);

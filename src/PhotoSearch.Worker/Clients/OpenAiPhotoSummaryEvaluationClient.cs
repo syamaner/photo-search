@@ -11,8 +11,6 @@ namespace PhotoSearch.Worker.Clients;
 public class OpenAiPhotoSummaryEvaluationClient([FromKeyedServices("openaiConnection")] OpenAIClient client)
     : IPhotoSummaryEvaluator
 {
-    private static readonly ConcurrentDictionary<string, OpenAIClient> OpenAiClients = new();
-
     private const string SystemPrompt =
         "You are a highly accurate and fair image summarization evaluation model. "
         + " Your job is to evaluate the quality of summaries generated from images by different computer vision models. \n\n"
@@ -28,11 +26,9 @@ public class OpenAiPhotoSummaryEvaluationClient([FromKeyedServices("openaiConnec
 
     public async Task<PhotoSummaryScore> EvaluatePhotoSummary(string base64Image, ImageSummaryEvaluationRequest summary)
     {
-        byte[] imageBytes;
-
-        imageBytes = Convert.FromBase64String(base64Image);
+        var imageBytes = Convert.FromBase64String(base64Image);
         using var resizedImage = new MagickImage(imageBytes);
-        resizedImage.Resize(new MagickGeometry(200, 200)
+        resizedImage.Resize(new MagickGeometry(256, 256)
         {
             IgnoreAspectRatio = false,
             Greater = false // Only shrink if larger than dimensions

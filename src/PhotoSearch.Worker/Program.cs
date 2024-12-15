@@ -1,6 +1,7 @@
 using System.ClientModel;
 using System.ClientModel.Primitives;
 using MongoDB.Driver;
+using OllamaSharp;
 using OpenAI;
 using PhotoSearch.Common;
 using PhotoSearch.Data.Models;
@@ -23,6 +24,19 @@ builder.Services.AddKeyedSingleton<OpenAIClient>("ollamaConnection", (sp, o) => 
     });
 });
 
+
+builder.Services.AddSingleton<IOllamaApiClient>(sp =>
+{
+    var lamaConnectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("Ollama");
+    var httpClient = new HttpClient()
+    {
+        Timeout = TimeSpan.FromMinutes(5),
+        BaseAddress = new Uri(lamaConnectionString!)
+    };
+    var client =new OllamaApiClient(httpClient);
+
+    return client;
+});
 
 builder.Services.AddSingleton<IPhotoSummaryClient, OllamaPhotoSummaryClient>();
 builder.Services.AddTransient<IPhotoImporter, PhotoImporter>();
