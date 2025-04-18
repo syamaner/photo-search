@@ -10,8 +10,8 @@ public class EvaluatePhotoSummariesEndpoint(IBus bus) : EndpointWithoutRequest
     {
         Get("/api/photos/evaluate");
         AllowAnonymous();
-        Description(builder=>builder.WithName("EvaluatePhotoSummaries")
-            .WithOpenApi());
+        Description(builder => builder.WithName("EvaluatePhotoSummaries"));
+        //  .WithOpenApi());
     }
 
     public override async Task HandleAsync(CancellationToken c)

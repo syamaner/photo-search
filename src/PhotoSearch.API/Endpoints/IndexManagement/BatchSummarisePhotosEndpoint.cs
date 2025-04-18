@@ -12,8 +12,8 @@ public class BatchSummarisePhotosEndpoint(IBus bus, IMongoCollection<Photo> coll
     {
         Get("/api/photos/summarise/batch");
         AllowAnonymous();
-        Description(builder=>builder.WithName("BatchSummarisePhotos")
-            .WithOpenApi());
+        Description(builder=>builder.WithName("BatchSummarisePhotos"));
+//            .WithOpenApi());
     }
 
     public override async Task HandleAsync(BatchSummarisePhotosRequest r, CancellationToken c)

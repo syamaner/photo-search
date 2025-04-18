@@ -13,8 +13,8 @@ public class SummarisePhotosEndpoint(IBus bus, IMongoCollection<Photo> collectio
     {
         Get("/api/photos/summarise/{modelName}");
         AllowAnonymous();
-        Description(builder=>builder.WithName("SummarisePhotos")
-            .WithOpenApi());
+        Description(builder => builder.WithName("SummarisePhotos"));
+        //  .WithOpenApi());
     }
 
     public override async Task HandleAsync(SummarisePhotosRequest r, CancellationToken c)

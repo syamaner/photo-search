@@ -10,9 +10,9 @@ public class IndexPhotosEndpoint(IBus bus) : Endpoint<IndexPhotosRequest>
     {
         Get("/api/photos/index/{directory}");
         AllowAnonymous();
-        Description(builder=>builder.WithName("IndexPhotos")
-            .WithOpenApi());
-        
+        Description(builder => builder.WithName("IndexPhotos"));
+        //    .WithOpenApi());
+
     }
 
     public override async Task HandleAsync(IndexPhotosRequest r, CancellationToken c)

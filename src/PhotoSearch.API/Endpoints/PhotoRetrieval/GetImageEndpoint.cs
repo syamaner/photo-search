@@ -12,9 +12,9 @@ public class GetImageEndpoint(IMongoCollection<Photo> collection): Endpoint<Mode
     {
         Get("/api/image/{imageId}/{maxWidth}/{maxHeight}");
         AllowAnonymous();
-        Description(builder=>builder.WithName("GetImage")
-            .WithOpenApi());
-        
+        Description(builder => builder.WithName("GetImage"));
+        //    .WithOpenApi());
+
     }
 
     public override async Task HandleAsync(Models.GetImageRequest r, CancellationToken c)

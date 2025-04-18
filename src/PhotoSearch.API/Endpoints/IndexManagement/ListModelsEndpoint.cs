@@ -9,8 +9,8 @@ public class ListModelsEndpoint(IOllamaApiClient ollamaApiClient) : EndpointWith
     {
         Get("/api/models/list");
         AllowAnonymous();
-        Description(builder=>builder.WithName("ListModels")
-            .WithOpenApi());
+        Description(builder => builder.WithName("ListModels"));
+        //   .WithOpenApi());
     }
     private static readonly string[] SupportedModels =
     [

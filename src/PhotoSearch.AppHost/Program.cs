@@ -58,14 +58,6 @@ var messaging =
         ampqPort: portMappings["RabbitMQ"].PublicPort,
         adminPort: portMappings["RabbitMQManagement"].PublicPort);
 
-var florence3Api = builder
-    .AddPythonProject("florence2api",
-        "../PhotoSearch.Florence2.API/src", "main.py")
-    .WithEndpoint(targetPort: portMappings["Florence3Api"].PublicPort, scheme: "http", env: "PORT")
-    .WithEnvironment("FLORENCE_MODEL", Environment.GetEnvironmentVariable("FLORENCE_MODEL"))
-    .WithEnvironment("PYTHONUNBUFFERED", "0")
-    .WithEnvironment("ASPIRE_ALLOW_UNSECURED_TRANSPORT", "true");
-
 var openaiConnection = builder.AddConnectionString("openaiConnection");
 
 var openAIKey = builder.AddParameter("OpenAIKey", secret: true);
@@ -88,14 +80,14 @@ var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice")
 var unused = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice")
     .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL", "http://localhost:21268")
     .WithReference(ollamaContainer)
-    .WithReference(florence3Api)
+    //.WithReference(florence3Api)
     .WithReference(nominatimContainer)
     .WithReference(mongodb)
     .WithReference(messaging)
     .WithReference(openaiConnection)
     .WithEnvironment("OpenAIKey",openAIKey.Resource.Value)
     .WaitFor(ollamaContainer)
-    .WaitFor(florence3Api)
+  //  .WaitFor(florence3Api)
     .WaitFor(nominatimContainer)
     .WaitFor(mongodb)
     .WaitFor(messaging);

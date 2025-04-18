@@ -8,10 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FastEndpoints.Attributes" Version="5.32.0.6-beta" />
-      <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.2.0" />
+      <PackageReference Include="FastEndpoints.Attributes" Version="6.1.0-beta.4" />
+      <PackageReference Include="FastEndpoints.Messaging.Core" Version="6.1.0-beta.4" />
+      <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.6.0" />
       <PackageReference Include="MetadataExtractor" Version="2.9.0-rc2" />
-      <PackageReference Include="OllamaSharp" Version="4.0.11" />
+      <PackageReference Include="OllamaSharp" Version="5.1.13" />
     </ItemGroup>
 
     <ItemGroup>

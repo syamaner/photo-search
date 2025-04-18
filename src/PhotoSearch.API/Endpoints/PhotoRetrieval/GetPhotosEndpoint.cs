@@ -12,9 +12,9 @@ public class GetPhotosEndpoint(IMongoCollection<Photo> collection): EndpointWith
     {
         Get("/api/photos");
         AllowAnonymous();
-        Description(builder=>builder.WithName("GetPhotos")
-            .WithOpenApi());
-        
+        Description(builder => builder.WithName("GetPhotos"));
+        //     .WithOpenApi());
+
     }
     public override async Task HandleAsync(CancellationToken c)
     { 

@@ -29,11 +29,6 @@ builder.Services.AddTransient<IPhotoSummaryEvaluator, OpenAiPhotoSummaryEvaluati
 
 builder.Services.AddSingleton<IPhotoSummaryClient, OllamaPhotoSummaryClient>();
 builder.Services.AddSingleton<IPhotoSummaryClient, OpenAiPhotoSummaryClient>();
-builder.Services.AddHttpClient<IPhotoSummaryClient, Florence2PhotoSummaryClient>((sp, httpClient) =>
-{
-    var connectionString = sp.GetRequiredService<IConfiguration>().GetSection("services:florence2api:http:0");
-    httpClient.BaseAddress = new Uri(connectionString.Value!);    
-});
 
 builder.Services.AddHttpClient<IReverseGeocoder, NominatimReverseGeocoder>((sp, httpClient) =>
 {
