@@ -10,7 +10,7 @@ namespace PhotoSearch.Worker.Clients;
 public class OllamaPhotoSummaryClient([FromKeyedServices(Constants.OllamaConnectionStringName)]OpenAIClient client) : IPhotoSummaryClient
 {
     private static readonly string[] SupportedModels =
-        ["llava-phi3", "llava:7b", "llava:13b", "bakllava", "llava-llama3", "llama3.2-vision"];
+        ["llava:34b","llama3.2-vision","gemma3:27b","mistral-small3.1"];
 
     private const string SystemPrompt = """
                                         You are an expert image analyst tasked with providing detailed and accurate summaries of photos. For every photo, follow these steps:
