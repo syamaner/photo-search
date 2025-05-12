@@ -27,7 +27,7 @@ public class BatchSummarisePhotosConsumer(
 
         foreach (var modelName in context.Message.ModelNames)
         {
-            activity.AddTag("Model", modelName);
+            activity!.AddTag("Model", modelName);
             logger.LogInformation("Summarising {COUNT} photos using {Model}.", photos.Count, modelName);
 
             var updateCount = 0;
@@ -35,7 +35,7 @@ public class BatchSummarisePhotosConsumer(
             {
                 
                 using var summaryActivity = TracingConstants.WorkerActivitySource.StartActivity("Summarise Photo");
-                summaryActivity.AddTag("Photo", photoPath);
+                summaryActivity!.AddTag("Photo", photoPath);
                 try
                 {
                     var photo = photos.SingleOrDefault(x => x.ExactPath == photoPath);
@@ -46,7 +46,7 @@ public class BatchSummarisePhotosConsumer(
                         continue;
                     }
                     var address = photo.LocationInformation?.Features?.Select(x => x.Properties.DisplayName).FirstOrDefault();
-                    var summary = await SummarisePhoto(modelName, photoPath, photo.Base64Data,address);
+                    var summary = await SummarisePhoto(modelName, photoPath, photo.Base64Data,address!);
                     photo!.PhotoSummaries ??= new Dictionary<string, PhotoSummary>();
                     if (photo?.PhotoSummaries.ContainsKey(modelName) ?? false)
                     {

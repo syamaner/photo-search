@@ -31,7 +31,7 @@ public class SummarisePhotosConsumer(
                     continue;
                 
                 var address = photo.LocationInformation?.Features?.Select(x => x.Properties.DisplayName).FirstOrDefault();
-                var summary = await SummarisePhoto(context.Message.ModelName, filePath, photo.Base64Data,address);
+                var summary = await SummarisePhoto(context.Message.ModelName, filePath, photo.Base64Data,address!);
                 photo!.PhotoSummaries ??=  new Dictionary<string, PhotoSummary>();
                 if (photo?.PhotoSummaries.ContainsKey(context.Message.ModelName)??false)
                 {

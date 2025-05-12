@@ -19,6 +19,7 @@ internal static class JupyterCommandExtensions
 {
     private const string NotebookFilename = "comparison.ipynb";
 
+    [Obsolete("Obsolete")]
     public static IResourceBuilder<ContainerResource> WithUploadNoteBookCommand(
         this IResourceBuilder<ContainerResource> builder, string jupyterToken, string jupyterUrl)
     {
@@ -104,7 +105,7 @@ internal static class JupyterCommandExtensions
             { "format", "text" },
             { "content", "1" }
         };
-        var requestUri = QueryHelpers.AddQueryString($"/api/contents/{NotebookFilename}", queryParams);
+        var requestUri = QueryHelpers.AddQueryString($"/api/contents/{NotebookFilename}", queryString: queryParams!);
         var result = await httpclient.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUri));
 
         if (!result.IsSuccessStatusCode)
@@ -146,6 +147,7 @@ internal static class JupyterCommandExtensions
             : ResourceCommandState.Disabled;
     }
 
+    [Obsolete("Obsolete")]
     public static IResourceBuilder<ContainerResource> WithDownloadNoteBookCommand(
         this IResourceBuilder<ContainerResource> builder, string jupyterToken, string jupyterUrl)
     {

@@ -2,6 +2,10 @@ using FastEndpoints;
 using FastEndpoints.Swagger;
 using MongoDB.Driver;
 using OllamaSharp;
+using PhotoSearch.API;
+using PhotoSearch.API.Extensions;
+using PhotoSearch.API.Ingestion;
+using PhotoSearch.API.Models;
 using PhotoSearch.Data.Models;
 using PhotoSearch.ServiceDefaults;
  
@@ -18,6 +22,8 @@ builder.AddMasstransit();
 builder.AddRabbitMQClient("messaging");
 builder.AddMongoDBClient("MongoConnection");
 
+
+
 builder.Services.AddFastEndpoints()
     .SwaggerDocument();
 builder.AddMongoDBClient("photo-search");
@@ -29,6 +35,15 @@ builder.Services.AddScoped<IMongoCollection<Photo>>(x =>
     var db = mongoClient.GetDatabase("photo-search"); 
     return db.GetCollection<Photo>(collectionName); 
 });
+
+// add the coconfiguration section "ModelConfiguration" map to ModelConfiguration
+builder.Services.Configure<ModelConfiguration>(builder.Configuration.GetSection("ModelConfiguration"));
+
+builder.AddSemanticKernelModels();
+
+builder.Services.AddSingleton<IngestionPipeline>();
+builder.Services.AddSingleton<IChunker,GitIngestChunker>();
+
 
 builder.Services.AddSingleton<IOllamaApiClient>(sp =>
 {

@@ -9,6 +9,7 @@ using PhotoSearch.Ollama;
 using PhotoSearch.Nominatim;
 using PhotoSearch.MapTileServer;
 
+// int grpcPort = 6334, int httpPort = 6333
 var portMappings = new Dictionary<string,PortMap>
 {
     { "MapTileService", new PortMap(8080, 80)},
@@ -19,10 +20,14 @@ var portMappings = new Dictionary<string,PortMap>
     { "MongoDB",  new PortMap(27019, 27019)},
     { "Florence3Api",  new PortMap(8111, 8111, false)},
     { "FEPort",  new PortMap(3333, 3333, false)},
-    { "JupyterPort",  new PortMap(8888, 8888, true)}
+    { "JupyterPort",  new PortMap(8888, 8888, true)},
+    { "QdrantGrpcPort",  new PortMap(6334, 6334, true)},
+    { "QdrantHttpPort",  new PortMap(6333, 6333, true)}
 };
 
 var builder = DistributedApplication.CreateBuilder(args);
+
+var vectorStoreVectorName = Environment.GetEnvironmentVariable("VECTOR_STORE_VECTOR_NAME") ?? "page_content_vector";
 
 var dockerHost = StartupHelper.GetDockerHostValue();
 var enableNvidiaDocker = StartupHelper.NvidiaDockerEnabled();
@@ -35,6 +40,13 @@ var mongo = builder.AddMongo("mongo",
     .WithLifetime(ContainerLifetime.Session);
 
 var mongodb = mongo.AddDatabase("photo-search");//.WithResetDatabaseCommand();
+var vectorStore = builder.AddQdrant1("qdrant",!string.IsNullOrWhiteSpace(dockerHost));
+
+    /*builder.AddQdrant(Constants.ConnectionStringNames.Qdrant)
+    .WithImageTag("v1.13.0-unprivileged")
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithDataVolume("qdrant", false);*/
+//    .WithBindMount( "./data/qdrant","/qdrant/storage"); //if using Podman on windows, this might be necessary :z
 
 var osmTileService = builder
     .AddMapTileServer(!string.IsNullOrWhiteSpace(dockerHost),
@@ -70,24 +82,25 @@ var apiService = builder.AddProject<Projects.PhotoSearch_API>("apiservice")
     .WithReference(mongodb)
     .WithReference(messaging)
     .WithReference(openaiConnection)
+    .WithReference(vectorStore)
     .WithSummariseCommand()
     .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL","http://localhost:21268")
+    .WithEnvironment("ModelConfiguration__VectorStoreVectorName",vectorStoreVectorName)
     .WithEnvironment("OpenAIKey",openAIKey.Resource.Value)
     .WaitFor(ollamaContainer)
     .WaitFor(mongodb)
+    .WaitFor(vectorStore)
     .WaitFor(messaging);
 
 var unused = builder.AddProject<Projects.PhotoSearch_Worker>("backgroundservice")
     .WithEnvironment("DOTNET_DASHBOARD_OTLP_ENDPOINT_URL", "http://localhost:21268")
     .WithReference(ollamaContainer)
-    //.WithReference(florence3Api)
     .WithReference(nominatimContainer)
     .WithReference(mongodb)
     .WithReference(messaging)
     .WithReference(openaiConnection)
     .WithEnvironment("OpenAIKey",openAIKey.Resource.Value)
     .WaitFor(ollamaContainer)
-  //  .WaitFor(florence3Api)
     .WaitFor(nominatimContainer)
     .WaitFor(mongodb)
     .WaitFor(messaging);

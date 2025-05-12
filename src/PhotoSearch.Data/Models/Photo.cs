@@ -14,7 +14,8 @@ public class Photo
     [JsonPropertyName("_id")]
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
+
     [MaxLength(250)]
     public required string RelativePath { get; init; }
     
@@ -33,7 +34,7 @@ public class Photo
     public int Width { get; init; }
     public int Height { get; init; }
     public long SizeKb { get; init; }
-    public string Base64Data { get; init; }
+    public string Base64Data { get; init; } = null!;
 
     public Dictionary<string,PhotoSummary>? PhotoSummaries { get; set; } 
 

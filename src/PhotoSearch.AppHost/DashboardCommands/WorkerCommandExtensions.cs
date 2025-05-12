@@ -13,6 +13,7 @@ namespace PhotoSearch.AppHost.DashboardCommands;
 
 internal static class WorkerCommandExtensions
 {
+    [Obsolete("Obsolete")]
     public static IResourceBuilder<ProjectResource> WithSummariseCommand(
         this IResourceBuilder<ProjectResource> builder)
     {

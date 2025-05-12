@@ -14,6 +14,7 @@ namespace PhotoSearch.AppHost.DashboardCommands;
 
 internal static class MongoDbCommands 
 {
+    [Obsolete("Obsolete")]
     public static IResourceBuilder<MongoDBDatabaseResource> WithResetDatabaseCommand(
         this IResourceBuilder<MongoDBDatabaseResource> builder)
     {

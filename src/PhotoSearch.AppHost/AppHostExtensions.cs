@@ -30,6 +30,7 @@ public static class AppHostExtensions
         return rabbitMq;
     }
 
+    [Obsolete("Obsolete")]
     public static IResourceBuilder<ContainerResource> AddJupyter(this IDistributedApplicationBuilder builder,
         string name, bool isRemoteDockerHost, string token="secret", int port = 8888)
     {
@@ -71,5 +72,35 @@ public static class AppHostExtensions
         }
         
         return mongoDb;
+    }
+    
+    
+    public static IResourceBuilder<QdrantServerResource> AddQdrant1(this IDistributedApplicationBuilder builder,
+        string name, bool isRemoteDockerHost)
+    {
+
+        var vectorStore = builder.AddQdrant(Constants.ConnectionStringNames.Qdrant)
+            .WithImageTag("v1.13.0-unprivileged")
+            .WithLifetime(ContainerLifetime.Persistent)
+            .WithDataVolume("qdrant", false);
+//    .WithBindMount( "./data/qdrant","/qdrant/storage"); //if using Podman on windows, this might be necessary :z
+
+        /*
+        var mongoDb = builder.AddMongoDB(name, port:port)
+            .WithDataVolume("mongo-photo-search", false);
+            */
+
+        if (!isRemoteDockerHost) return vectorStore;
+
+
+        foreach (var annotation in vectorStore.Resource.Annotations.Where(x =>
+                     x is EndpointAnnotation))
+        {
+            var endpointAnnotation = (EndpointAnnotation)annotation;
+            endpointAnnotation.IsProxied = false;
+            Console.WriteLine($"Setting {name} to not be proxied");
+        }
+        
+        return vectorStore;
     }
 }

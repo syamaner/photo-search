@@ -17,6 +17,7 @@ namespace PhotoSearch.AppHost.DashboardCommands;
 
 internal static class OllamaCommandExtensions
 {
+    [Obsolete("Obsolete")]
     public static IResourceBuilder<OllamaResource> WithOllamaDownloadCommand(
         this IResourceBuilder<OllamaResource> builder)
     {

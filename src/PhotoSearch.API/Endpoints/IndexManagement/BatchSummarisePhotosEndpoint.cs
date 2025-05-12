@@ -8,6 +8,8 @@ namespace PhotoSearch.API.Endpoints.IndexManagement;
 
 public class BatchSummarisePhotosEndpoint(IBus bus, IMongoCollection<Photo> collection ) : Endpoint<BatchSummarisePhotosRequest>
 {
+    private readonly IMongoCollection<Photo> _collection = collection;
+
     public override void Configure()
     {
         Get("/api/photos/summarise/batch");

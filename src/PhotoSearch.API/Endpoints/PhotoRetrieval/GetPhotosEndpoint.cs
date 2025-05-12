@@ -26,12 +26,12 @@ public class GetPhotosEndpoint(IMongoCollection<Photo> collection): EndpointWith
             x.PhotoSummaries?.ToDictionary(x =>
                     x.Key,
                 x =>
-                    new Models.ModelResponse(x.Value?.Description, x.Value?.Categories ?? [], x.Value?.ObjectClasses ?? []))
+                    new Models.ModelResponse(x.Value?.Description!, x.Value?.Categories ?? [], x.Value?.ObjectClasses ?? []))
             ?? new Dictionary<string, Models.ModelResponse>()
             ,
             x.Latitude,
             x.Longitude,
-            x.LocationInformation?.Features?.FirstOrDefault()?.Properties?.DisplayName,
+            x.LocationInformation?.Features?.FirstOrDefault()?.Properties?.DisplayName!,
             x.Base64Data
         )).ToList();
 
