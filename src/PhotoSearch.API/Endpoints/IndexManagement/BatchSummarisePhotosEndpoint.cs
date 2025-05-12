@@ -19,8 +19,15 @@ public class BatchSummarisePhotosEndpoint(IBus bus, IMongoCollection<Photo> coll
     }
 
     public override async Task HandleAsync(BatchSummarisePhotosRequest r, CancellationToken c)
-    { 
-        await bus.Publish(new BatchSummarisePhotos(r.ModelNames), c);
-        await SendAsync("Message sent!", cancellation: c);
+    {
+        try
+        {
+            await bus.Publish(new BatchSummarisePhotos(r.ModelNames), c);
+            await SendAsync("Message sent!", cancellation: c);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }

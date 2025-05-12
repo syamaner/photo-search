@@ -1,0 +1,23 @@
+# Core packages
+llama-cpp-python>=0.2.25  # Base package for llama.cpp Python bindings
+fastapi>=0.110.0  # Required for server API
+uvicorn>=0.27.0  # ASGI server for FastAPI
+pydantic>=2.0.0  # Data validation 
+
+# Server components
+python-multipart>=0.0.6  # Handling multipart uploads (for images)
+pillow>=10.0.0  # Image processing
+
+# Optional but recommended
+numpy<2.0,>=1.17 # Array operations
+requests>=2.31.0  # For API calls
+
+sse-starlette
+starlette-context
+pydantic-settings
+huggingface-hub
+
+opentelemetry-distro
+opentelemetry-exporter-otlp-proto-grpc
+opentelemetry-instrumentation-flask
+gunicorn

@@ -406,3 +406,5 @@ doc/slide.pdf
 Containers/OpenStreetMap/database/**/*
 src/PhotoSearch.AppHost/OpenStreetMap/test.sh
 Containers/OpenStreetMap/test.sh
+**/.venv/**/*
+

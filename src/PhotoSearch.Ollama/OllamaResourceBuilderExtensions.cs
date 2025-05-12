@@ -15,7 +15,7 @@ public static class OllamaResourceBuilderExtensions
         string modelName,
         string hostIpAddress= "",
         bool useGpu = true,
-        string ollamaTag = "0.6.6-rc2",
+        string ollamaTag = "0.6.9-rc0",
         string name = "Ollama", 
         int? hostPort = 11438, 
         int ollamaContainerPort = 11434)

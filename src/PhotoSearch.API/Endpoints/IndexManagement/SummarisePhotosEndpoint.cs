@@ -14,7 +14,7 @@ public class SummarisePhotosEndpoint(IBus bus, IMongoCollection<Photo> collectio
         Get("/api/photos/summarise/{modelName}");
         AllowAnonymous();
         Description(builder => builder.WithName("SummarisePhotos"));
-        //  .WithOpenApi());
+        
     }
 
     public override async Task HandleAsync(SummarisePhotosRequest r, CancellationToken c)
@@ -22,9 +22,14 @@ public class SummarisePhotosEndpoint(IBus bus, IMongoCollection<Photo> collectio
             var pathsWithoutSummary = collection.AsQueryable()
                 .Select(p => p.ExactPath).ToList();
             if (pathsWithoutSummary.Count == 0) await SendAsync("no photos to summarise!", cancellation: c);
-
-            await bus.Publish(new SummarisePhotos(pathsWithoutSummary, r.ModelName), c);
-            await SendAsync("Message sent!", cancellation: c);
-    
+            try
+            {
+                await bus.Publish(new SummarisePhotos(pathsWithoutSummary, r.ModelName), c);
+                await SendAsync("Message sent!", cancellation: c);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
     }
 }

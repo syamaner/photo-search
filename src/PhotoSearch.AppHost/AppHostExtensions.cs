@@ -83,12 +83,6 @@ public static class AppHostExtensions
             .WithImageTag("v1.13.0-unprivileged")
             .WithLifetime(ContainerLifetime.Persistent)
             .WithDataVolume("qdrant", false);
-//    .WithBindMount( "./data/qdrant","/qdrant/storage"); //if using Podman on windows, this might be necessary :z
-
-        /*
-        var mongoDb = builder.AddMongoDB(name, port:port)
-            .WithDataVolume("mongo-photo-search", false);
-            */
 
         if (!isRemoteDockerHost) return vectorStore;
 

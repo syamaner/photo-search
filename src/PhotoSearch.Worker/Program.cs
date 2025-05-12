@@ -14,12 +14,13 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
 builder.AddKeyedOpenAIClient(Constants.OpeanAiConnectionName);
+
 builder.Services.AddKeyedSingleton<OpenAIClient>(Constants.OllamaConnectionStringName, (sp, _) => {
     var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString(Constants.OllamaConnectionStringName);
     return new OpenAIClient(new ApiKeyCredential("key_not_required"), new OpenAIClientOptions()
     {
         Endpoint = new Uri(connectionString + "/v1"),
-        NetworkTimeout = TimeSpan.FromSeconds(25),
+        NetworkTimeout = TimeSpan.FromMinutes(25),
         RetryPolicy = new ClientRetryPolicy(6)
     });
 });
